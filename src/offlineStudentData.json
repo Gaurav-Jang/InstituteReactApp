@@ -1,0 +1,14 @@
+[
+  { "label": "Jan", "student": 24 },
+  { "label": "Feb", "student": 8 },
+  { "label": "Mar", "student": 53 },
+  { "label": "Apr", "student": 37 },
+  { "label": "May", "student": 77 },
+  { "label": "Jun", "student": 60 },
+  { "label": "Jul", "student": 99 },
+  { "label": "Aug", "student": 43 },
+  { "label": "Sep", "student": 90 },
+  { "label": "Oct", "student": 80 },
+  { "label": "Nov", "student": 16 },
+  { "label": "Dec", "student": 120 }
+]
