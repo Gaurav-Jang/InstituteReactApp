@@ -1,15 +1,13 @@
-import PropTypes from "prop-types"; // prop type
-import { useEffect, useState } from "react"; // react hooks
-import { FiUpload } from "react-icons/fi"; // react icons
-// popups
-import ErrorPopup from "../../validation/ErrorPopup"; // error popup
-// import SuccessPopup from "../../validation/SuccessPopup"; // success popup
-import AddConfirmPopup from "../../validation/AddConfirmPopup"; // add confirm popup
-import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
-import axios from "axios"; // axios (get : post)
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { FiUpload } from "react-icons/fi";
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft";
+import axios from "axios";
+import usePopup from "../../CustomHooks/UsePopup";
 
 const AddStudent = ({ setPagename, setProgress }) => {
-  // navbar + top loading bar
+  const { showPopup, hidePopup, renderPopup } = usePopup();
+
   useEffect(() => {
     setPagename("Add Student");
     setProgress(40);
@@ -42,14 +40,8 @@ const AddStudent = ({ setPagename, setProgress }) => {
     Migrated: false,
   });
 
-  // initially hidden
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
-  // const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [showAddConfirmPopup, setShowAddConfirmPopup] = useState(false);
-
   const [photoPreview, setPhotoPreview] = useState(null);
 
-  // student api
   const setStudentData = () => {
     const dataSet = {
       StudentId: data.StudentId,
@@ -75,16 +67,15 @@ const AddStudent = ({ setPagename, setProgress }) => {
       Migrated: data.Migrated,
     };
 
-    // sending data to APIs endpoint using POST method
     axios
-      .post(InstituteSoft.BaseURL + InstituteSoft.Student.SetStudent, dataSet) // api's endpoint
+      .post(InstituteSoft.BaseURL + InstituteSoft.Student.SetStudent, dataSet)
       .then((response) => {
         console.log(response.data);
-        // setShowSuccessPopup(true);
-        setShowAddConfirmPopup(true);
+        showPopup("success");
       })
       .catch((error) => {
-        console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
+        console.error(error.response ? error.response.data : error.message);
+        showPopup("error");
       });
   };
 
@@ -92,7 +83,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
     const file = e.target.files[0];
     setData({
       ...data,
-      Photo: file, // Corrected here
+      Photo: file,
     });
 
     if (file) {
@@ -106,48 +97,41 @@ const AddStudent = ({ setPagename, setProgress }) => {
     }
   };
 
-  // input handler (onChange)
   const handleInputChange = (e) => {
     const { name, type, checked, value } = e.target;
     setData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
-    setShowErrorPopup(false);
-    // setShowSuccessPopup(false);
-    setShowAddConfirmPopup(false);
+    hidePopup();
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
-      data.StudentFirstName != "" &&
-      data.StudentLastName != "" &&
-      data.Dob != "" &&
-      data.FatherFirstName != "" &&
-      data.FatherLastName != "" &&
-      data.FatherMobileNumber != "" &&
-      data.StudentClassRoomName != "" &&
-      data.Address != ""
-      // data.Remarks != ""
-      // data.Photo != ""
+      data.StudentFirstName !== "" &&
+      data.StudentLastName !== "" &&
+      data.Dob !== "" &&
+      data.FatherFirstName !== "" &&
+      data.FatherLastName !== "" &&
+      data.FatherMobileNumber !== "" &&
+      data.StudentClassRoomName !== "" &&
+      data.Address !== ""
     ) {
       setStudentData();
     } else {
-      debugger;
-      setShowErrorPopup(true);
+      showPopup("error");
     }
   };
 
-  // price field validation
   const numVal = ["e", "E", "+", "-", "."];
 
   return (
     <>
       <div className="w-full min-h-screen flex flex-col justify-between items-center p-4 gap-10 bg-slate-200 dark:bg-[#262450]">
-        {/* main container */}
+        {/* Main Container */}
         <div className="space-y-10 xl:gap-10 xs:gap-0">
-          {/* header text */}
+          {/* Header Text */}
           <div className="space-y-4 md:ml-10 xs:ml-0">
             <p className="text-slate-500 text-lg">Say hello</p>
             <h1 className="dark:text-white text-6xl font-bold">
@@ -159,24 +143,20 @@ const AddStudent = ({ setPagename, setProgress }) => {
             </p>
           </div>
 
-          {/* form */}
+          {/* Form */}
           <div className="md:mx-10 xs:mx-0">
             <form className="needs-validation w-full space-y-5">
-              {/* personal details */}
+              {/* Personal Details */}
               <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
                 Personal Details
               </h1>
 
-              {/* student name */}
+              {/* Student Name */}
               <div>
-                {/* heading */}
                 <label className="form-label">
                   Student Name <span className="text-red-500 text-base">*</span>
                 </label>
-
-                {/* student details */}
                 <div className="flex items-center gap-4 justify-between">
-                  {/* first name */}
                   <input
                     type="text"
                     className="form-control"
@@ -187,8 +167,6 @@ const AddStudent = ({ setPagename, setProgress }) => {
                     onChange={handleInputChange}
                     placeholder="First name"
                   />
-
-                  {/* last name */}
                   <input
                     type="text"
                     className="form-control"
@@ -202,10 +180,9 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 </div>
               </div>
 
-              {/* mobile number */}
+              {/* Mobile Number */}
               <div>
                 <label className="form-label">Mobile Number</label>
-
                 <input
                   type="number"
                   className="form-control"
@@ -222,25 +199,22 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 />
               </div>
 
-              {/* gender */}
+              {/* Gender */}
               <div>
                 <label className="form-label">Gender</label>
-
-                {/* select gender */}
                 <select
                   name="Gender"
                   className="form-select cursor-pointer"
                   value={data.Gender}
                   onChange={handleInputChange}
                 >
-                  {/* gender options */}
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                   <option value="Others">Others</option>
                 </select>
               </div>
 
-              {/* date of birth (dob) */}
+              {/* Date of Birth (DOB) */}
               <div>
                 <label className="form-label">
                   Date of Birth (DOB){" "}
@@ -255,15 +229,12 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 />
               </div>
 
-              {/* father name */}
+              {/* Father Name */}
               <div>
                 <label className="form-label">
                   Father Name <span className="text-base text-red-500">*</span>
                 </label>
-
-                {/* father details */}
                 <div className="flex items-center gap-4 justify-between">
-                  {/* first name */}
                   <input
                     type="text"
                     className="form-control"
@@ -274,8 +245,6 @@ const AddStudent = ({ setPagename, setProgress }) => {
                     onChange={handleInputChange}
                     placeholder="First name"
                   />
-
-                  {/* last name */}
                   <input
                     type="text"
                     className="form-control"
@@ -289,13 +258,12 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 </div>
               </div>
 
-              {/* father mobile number */}
+              {/* Father Mobile Number */}
               <div>
                 <label className="form-label">
                   Father Mobile Number{" "}
                   <span className="text-base text-red-500">*</span>
                 </label>
-
                 <input
                   type="number"
                   className="form-control"
@@ -312,18 +280,15 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 />
               </div>
 
-              {/* additional details */}
+              {/* Additional Details */}
               <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
                 Additional Details:
               </h1>
 
-              {/* mother name */}
+              {/* Mother Name */}
               <div>
                 <label className="form-label">Mother Name</label>
-
-                {/* mother details */}
                 <div className="flex items-center gap-4 justify-between">
-                  {/* first name */}
                   <input
                     type="text"
                     className="form-control"
@@ -334,8 +299,6 @@ const AddStudent = ({ setPagename, setProgress }) => {
                     onChange={handleInputChange}
                     placeholder="First Name"
                   />
-
-                  {/* last name */}
                   <input
                     type="text"
                     className="form-control"
@@ -349,10 +312,9 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 </div>
               </div>
 
-              {/* mother mobile number */}
+              {/* Mother Mobile Number */}
               <div>
                 <label className="form-label">Mother Mobile Number</label>
-
                 <input
                   type="number"
                   className="form-control"
@@ -369,13 +331,12 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 />
               </div>
 
-              {/* classroom name */}
+              {/* Classroom Name */}
               <div>
                 <label className="form-label">
                   Class Room Name{" "}
                   <span className="text-base text-red-500">*</span>
                 </label>
-
                 <input
                   type="text"
                   className="form-control"
@@ -386,13 +347,12 @@ const AddStudent = ({ setPagename, setProgress }) => {
                   onChange={handleInputChange}
                   placeholder="ClassRoom name"
                 />
-
                 <span className="text-slate-500 dark:text-slate-400 text-sm">
                   ClassRoom Name should be between 3-50
                 </span>
               </div>
 
-              {/* address */}
+              {/* Address */}
               <div>
                 <label className="form-label">
                   Address <span className="text-base text-red-500">*</span>
@@ -409,18 +369,15 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 />
               </div>
 
-              {/* category */}
+              {/* Category */}
               <div>
                 <label className="form-label">Category</label>
-
-                {/* select category */}
                 <select
                   name="Category"
                   className="form-select cursor-pointer"
                   value={data.Category}
                   onChange={handleInputChange}
                 >
-                  {/* category options */}
                   <option value="General">General</option>
                   <option value="SC">SC</option>
                   <option value="ST">ST</option>
@@ -428,12 +385,11 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 </select>
               </div>
 
-              {/* photo */}
+              {/* Photo */}
               <div className="space-y-1">
                 <label className="form-label">
                   Photo <span className="text-base text-red-500">*</span>
                 </label>
-
                 <div className="relative flex flex-col gap-2 items-center justify-center">
                   {photoPreview && (
                     <img
@@ -442,14 +398,12 @@ const AddStudent = ({ setPagename, setProgress }) => {
                       className="w-14 h-14 rounded-lg"
                     />
                   )}
-
                   <div>
                     <label
                       htmlFor="photoInput"
                       className="bg-slate-100 text-slate-900 py-4 px-6 rounded-lg text-lg flex items-center justify-center cursor-pointer transition duration-300 hover:bg-slate-300 gap-2"
                     >
                       {photoPreview ? "Change Photo" : "Upload Photo"}
-
                       <input
                         type="file"
                         name="Photo"
@@ -458,10 +412,8 @@ const AddStudent = ({ setPagename, setProgress }) => {
                         className="hidden"
                         id="photoInput"
                       />
-
                       <FiUpload className="" />
                     </label>
-
                     <p className="text-xs text-center text-slate-700 dark:text-slate-300 mt-2">
                       Max file size: 2MB
                     </p>
@@ -469,10 +421,9 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 </div>
               </div>
 
-              {/* remarks */}
+              {/* Remarks */}
               <div>
                 <label className="form-label"></label>
-
                 <input
                   type="text"
                   className="form-control"
@@ -485,15 +436,14 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 />
               </div>
 
-              {/* additional facility details */}
+              {/* Additional Facility Details */}
               <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
                 Additional Facility Details:
               </h1>
               <div className="flex justify-between">
                 <div>
-                  {/* transport */}
+                  {/* Transport */}
                   <div className="form-check form-switch">
-                    {/* transport checkbox buttons */}
                     <label className="form-check-label">
                       Availing Transport
                     </label>
@@ -507,9 +457,8 @@ const AddStudent = ({ setPagename, setProgress }) => {
                     />
                   </div>
 
-                  {/* school */}
+                  {/* School */}
                   <div className="form-check form-switch">
-                    {/* school checkbox buttons */}
                     <label className="form-check-label">Availing School</label>
                     <input
                       className="form-check-input cursor-pointer"
@@ -523,9 +472,8 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 </div>
 
                 <div>
-                  {/* hostel */}
+                  {/* Hostel */}
                   <div className="form-check form-switch">
-                    {/* hostel checkbox buttons */}
                     <label className="form-check-label">Availing Hostel</label>
                     <input
                       className="form-check-input cursor-pointer"
@@ -537,9 +485,8 @@ const AddStudent = ({ setPagename, setProgress }) => {
                     />
                   </div>
 
-                  {/* migrated */}
+                  {/* Migrated */}
                   <div className="form-check form-switch">
-                    {/* migrated checkbox buttons */}
                     <label className="form-check-label">Migrated</label>
                     <input
                       className="form-check-input cursor-pointer"
@@ -553,7 +500,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
                 </div>
               </div>
 
-              {/* submit button */}
+              {/* Submit Button */}
               <div>
                 <button
                   className="btn btn-primary"
@@ -568,8 +515,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
         </div>
       </div>
 
-      {showErrorPopup && <ErrorPopup />}
-      {showAddConfirmPopup && <AddConfirmPopup />}
+      {renderPopup()}
     </>
   );
 };

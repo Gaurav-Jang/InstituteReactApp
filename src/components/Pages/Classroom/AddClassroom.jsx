@@ -1,12 +1,9 @@
 import PropTypes from "prop-types"; // prop type
 import { useEffect, useState } from "react"; // react hooks
 import MainImg from "../../../assets/Classroom/AddClassroomForm.svg"; // form image
-// popups
-import ErrorPopup from "../../validation/ErrorPopup"; // error popup
-// import SuccessPopup from "../../validation/SuccessPopup"; // success popup
-import AddConfirmPopup from "../../validation/AddConfirmPopup"; // add confirm popup
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
+import usePopup from "../../CustomHooks/UsePopup"; // custom hook
 import "./AddClassroom.css";
 
 const AddClassroom = ({
@@ -43,10 +40,8 @@ const AddClassroom = ({
     Price: "",
   });
 
-  // initially hidden
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
-  // const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [showAddConfirmPopup, setShowAddConfirmPopup] = useState(false);
+  // custom hook for popups
+  const { renderPopup, showPopup, hidePopup } = usePopup();
 
   // class api (dropdown)
   const getActiveClass = () => {
@@ -92,11 +87,11 @@ const AddClassroom = ({
       ) // api's endpoint
       .then((response) => {
         console.log(response.data);
-        // setShowSuccessPopup(true);
-        setShowAddConfirmPopup(true);
+        showPopup("success", { message: "Classroom added successfully!" });
       })
       .catch((error) => {
         console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
+        showPopup("error", { message: "Failed to add Classroom." });
       });
   };
 
@@ -107,27 +102,22 @@ const AddClassroom = ({
       ...prevData,
       [name]: value,
     }));
-    setShowErrorPopup(false);
-    // setShowSuccessPopup(false);
-    setShowAddConfirmPopup(false);
+    hidePopup();
   };
 
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
-      data.ClassRoomName != "" &&
-      data.Class != "" &&
-      data.ClassRoomType != "" &&
+      data.ClassRoomName !== "" &&
+      data.Class !== "" &&
+      data.ClassRoomType !== "" &&
       data.Price < 0 &&
-      data.Price != ""
+      data.Price !== ""
     ) {
-      setShowErrorPopup(true);
-      // setShowAddConfirmPopup(false);
-      // showMessage("Failed to add ClassRoom."); // toastify error message
+      showPopup("error", { message: "Price cannot be negative or empty." });
     } else {
       setClassRoomData();
-      // setShowAddConfirmPopup(true);
     }
   };
 
@@ -256,10 +246,8 @@ const AddClassroom = ({
         </div>
       </section>
 
-      {/* error & success popup */}
-      {showErrorPopup && <ErrorPopup />}
-      {showAddConfirmPopup && <AddConfirmPopup onConfirm={setClassRoomData} />}
-      {/* {SuccessPopup && <AddConfirmPopup />} */}
+      {/* popups */}
+      {renderPopup()}
     </div>
   );
 };

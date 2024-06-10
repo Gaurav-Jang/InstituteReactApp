@@ -4,18 +4,14 @@ import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api endpoint
 import { useEffect, useState } from "react"; // hooks
 import { useNavigate } from "react-router-dom"; // for navigation
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md"; // react-icons
-import DeletePopup from "../../validation/DeletePopup"; // delete popup
-import DeleteConfirmPopup from "../../validation/DeleteConfirmPopup"; // delete confirm popup
-// react toast message
-// import { toast, ToastContainer } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import usePopup from "../../CustomHooks/UsePopup"; // custom hook
 
 const EditClassroom = ({ setPagename, setProgress }) => {
   const navigate = useNavigate(); // edit class navigation
   const [activeClassRoom, setActiveClassRoom] = useState([]); // data display
-  const [showDeletePopup, setShowDeletePopup] = useState(false); // delete sweet error
-  const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false); // delete sweet error
   const [classRoomIdToDelete, setClassRoomIdToDelete] = useState(null); // deletion using ClassRoomId
+
+  const { renderPopup, showPopup, hidePopup } = usePopup(); // custom hook for popups
 
   // hook for displaying data
   useEffect(() => {
@@ -32,8 +28,7 @@ const EditClassroom = ({ setPagename, setProgress }) => {
         setActiveClassRoom(response.data); // database data
       })
       .catch((error) => {
-        console.log(error); // console error
-        // showMessage("Failed to fetch data."); // toast error message
+        showPopup("error", { message: "Failed to fetch data." });
       });
   };
 
@@ -57,91 +52,47 @@ const EditClassroom = ({ setPagename, setProgress }) => {
       .get(apiEditData)
       .then((response) => {
         console.log("Classroom Data:", response.data); // console error
-        navigate("/add-classroom", {
+        navigate("/AddClassRoom", {
           state: { classRoomData: response.data },
         }); // navigation to AddClassRoom using ClassRoomId
       })
       .catch((error) => {
         console.log(error); // console error
-        showMessage("Failed to edit classroom."); // toastify error message
+        showPopup("error", { message: "Failed to edit classroom." });
       });
   };
 
   // delete
   const handleDelete = (classRoomId) => {
-    setClassRoomIdToDelete(classRoomId);
-    setShowDeletePopup(true); // delete popup
+    showPopup("delete", {
+      onConfirm: () => confirmDelete(classRoomId), // Capture the ID directly in the closure
+      onCancel: hidePopup,
+    });
   };
 
-  // delete confirmation sweet alert modal
-  const confirmDelete = () => {
+  // Delete confirmation sweet alert modal
+  const confirmDelete = (classRoomId) => {
     const apiDeleteData =
       InstituteSoft.BaseURL +
-      InstituteSoft.ClassRoom.DeleteClassRoom.replace(
-        "{0}",
-        classRoomIdToDelete // api's endpoint
-      );
+      InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId); // Use captured ID directly
     axios
       .get(apiDeleteData)
       .then((response) => {
-        // console.log(response.data);
         getActiveClassRoom(); // Refresh the table data after deletion
-        setShowDeletePopup(false);
-        setShowDeleteConfirmPopup(true);
-        // showSuccessMessage("Data Deleted Successfully!"); // toastify success message
+        hidePopup();
+        showPopup("deleteConfirm", { message: "Data Deleted Successfully!" });
       })
       .catch((error) => {
-        // console.error(error);
-        setShowDeletePopup(false);
-        setShowDeleteConfirmPopup(false);
-        // showMessage("Failed to delete classroom."); // toastify error message
+        hidePopup();
+        showPopup("error", { message: "Failed to delete student." });
       });
   };
-
-  // toastify error message
-  // const showMessage = (msg) => {
-  //   toast.error(msg, {
-  //     position: "top-right",
-  //     autoClose: 3000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //   });
-  // };
-
-  // // toastify success message
-  // const showSuccessMessage = (msg) => {
-  //   toast.success(msg, {
-  //     position: "top-right",
-  //     autoClose: 3000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //   });
-  // };
 
   return (
     <div
       style={{ marginLeft: "250px", marginTop: "50px" }}
-      className=" min-h-screen flex flex-col items-center p-4 gap-10 bg-slate-200 dark:bg-[#262450]"
+      className="min-h-screen flex flex-col items-center p-4 gap-10 bg-slate-200 dark:bg-[#262450]"
     >
-      {/* toast message container */}
-      {/* <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      /> */}
-
       <div className="w-full">
         {/* table */}
         <table className="table table-striped table-bordered theme-light">
@@ -186,9 +137,8 @@ const EditClassroom = ({ setPagename, setProgress }) => {
         </table>
       </div>
 
-      {/* delete popup */}
-      {showDeletePopup && <DeletePopup onConfirm={confirmDelete} />}
-      {showDeleteConfirmPopup && <DeleteConfirmPopup />}
+      {/* popups */}
+      {renderPopup()}
     </div>
   );
 };

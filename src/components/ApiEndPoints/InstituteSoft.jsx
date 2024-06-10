@@ -1,5 +1,5 @@
 const InstituteSoft = {
-  BaseURL: "http://localhost:5002",
+  BaseURL: "https://localhost:7193",
 
   // class room api
   ClassRoom: {
@@ -11,8 +11,10 @@ const InstituteSoft = {
     // post method
     SetClassRoom: "/api/ClassRoom/SetClassRoom",
 
-    // deleted Classroom
+    // deleted ClassRoom
     DeleteClassRoom: "/api/ClassRoom/DeleteClassRoom?ClassRoomId={0}",
+
+    // edit ClassRoom
     EditClassRoom: "/api/ClassRoom/EditClassRoom?ClassRoomId={0}",
   },
 
@@ -25,6 +27,9 @@ const InstituteSoft = {
 
     //Delete Student
     DeleteStudent: "/api/Student/DeleteStudent?StudentId={0}",
+
+    // edit Student
+    EditStudent: "/api/Student/EditStudent?StudentId={0}",
   },
 };
 
