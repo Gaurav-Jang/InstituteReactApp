@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"; // react hooks
 import MainImg from "../../../assets/Classroom/AddClassroomForm.svg"; // form image
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
-import usePopup from "../../CustomHooks/UsePopup"; // custom hook
+import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "./AddClassroom.css";
 
 const AddClassroom = ({

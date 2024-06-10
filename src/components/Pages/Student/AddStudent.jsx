@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { FiUpload } from "react-icons/fi";
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft";
 import axios from "axios";
-import usePopup from "../../CustomHooks/UsePopup";
+import usePopup from "../../CustomHooks/usePopup";
 
 const AddStudent = ({ setPagename, setProgress }) => {
   const { showPopup, hidePopup, renderPopup } = usePopup();

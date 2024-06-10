@@ -4,7 +4,7 @@ import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api endpoint
 import { useEffect, useState } from "react"; // hooks
 import { useNavigate } from "react-router-dom"; // for navigation
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md"; // react-icons
-import usePopup from "../../CustomHooks/UsePopup"; // custom hook
+import usePopup from "../../CustomHooks/usePopup"; // custom hook
 
 const EditStudent = ({ setPagename, setProgress }) => {
   const navigate = useNavigate(); // for navigation
