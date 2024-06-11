@@ -20,10 +20,17 @@
   top: 0;
   transition: all 0.2s ease-in-out;
 }
+.menu {
+  cursor: pointer;
+}
 .topnav-right {
   display: flex;
   align-items: center;
   column-gap: 12px;
+}
+.topnav-right .bell,
+.topnav-right .share {
+  cursor: pointer;
 }
 .topnav-expand {
   width: calc(100% - 70px);

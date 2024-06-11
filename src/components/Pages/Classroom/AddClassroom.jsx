@@ -1,10 +1,9 @@
 import PropTypes from "prop-types"; // prop type
 import { useEffect, useState } from "react"; // react hooks
-import MainImg from "../../../assets/Classroom/AddClassroomForm.svg"; // form image
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
-import "./AddClassroom.css";
+import "../../CSS/AddClassroom.css";
 
 const AddClassroom = ({
   setProgress,

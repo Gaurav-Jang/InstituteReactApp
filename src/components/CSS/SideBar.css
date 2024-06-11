@@ -16,7 +16,7 @@
 .sidenav-collapse {
   background-color: #343a40;
   min-height: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   width: 70px;
@@ -42,6 +42,9 @@ ul {
   list-style: none;
   padding: 0 !important;
   margin: 0 !important;
+}
+.sidenav img {
+  width: 60px;
 }
 .nav-menu ul li {
   font-size: 17px;

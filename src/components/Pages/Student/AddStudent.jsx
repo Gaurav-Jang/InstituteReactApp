@@ -443,7 +443,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
               <div className="flex justify-between">
                 <div>
                   {/* Transport */}
-                  <div className="form-check form-switch">
+                  <div className="form-check">
                     <label className="form-check-label">
                       Availing Transport
                     </label>
@@ -458,7 +458,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
                   </div>
 
                   {/* School */}
-                  <div className="form-check form-switch">
+                  <div className="form-check">
                     <label className="form-check-label">Availing School</label>
                     <input
                       className="form-check-input cursor-pointer"
@@ -473,7 +473,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
 
                 <div>
                   {/* Hostel */}
-                  <div className="form-check form-switch">
+                  <div className="form-check">
                     <label className="form-check-label">Availing Hostel</label>
                     <input
                       className="form-check-input cursor-pointer"
@@ -486,7 +486,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
                   </div>
 
                   {/* Migrated */}
-                  <div className="form-check form-switch">
+                  <div className="form-check">
                     <label className="form-check-label">Migrated</label>
                     <input
                       className="form-check-input cursor-pointer"

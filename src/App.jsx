@@ -1,12 +1,13 @@
 import LoadingBar from "react-top-loading-bar"; // top loading bar
 import { Routes, Route, useLocation } from "react-router-dom"; // router dom
-import { useState } from "react"; // hooks
+import { useState, useEffect } from "react"; // hooks
 // bootstrap imports
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 // components
-import NavBar from "./components/NavBar/NavBar"; // navbar
 import SideBar from "./components/SideBar/SideBar"; // sidebar
+import NavBar from "./components/NavBar/NavBar"; // navbar
+import Footer from "./components/Footer/Footer"; // footer
 // pages
 import Home from "./components/Pages/Home/Home"; // home page
 import AddClassroom from "./components/Pages/Classroom/AddClassroom"; // add classroom page
@@ -21,46 +22,58 @@ const App = () => {
   // top loading bar function
   const [progress, setProgress] = useState(0);
   const [sidebarToggle, setSidebarToggle] = useState(true);
-
-  // navbar pagename
-  const [pagename, setPagename] = useState((setPagename) => {
-    setPagename = { setPagename };
-  });
+  const [pagename, setPagename] = useState(""); // Initialize pagename properly
 
   // Get current location
   const location = useLocation();
 
-  // Define routes
+  // Defining known paths and their names
   const knownPaths = [
-    "/",
-    "/AddClassRoom",
-    "/EditClassRoom",
-    "/AddStudent",
-    "/EditStudent",
-    "/Payment",
-    "/Support",
+    { path: "/", name: "Dashboard" },
+    { path: "/AddClassRoom", name: "Add Classroom" },
+    { path: "/EditClassRoom", name: "Edit Classroom" },
+    { path: "/AddStudent", name: "Add Student" },
+    { path: "/EditStudent", name: "Edit Student" },
+    { path: "/Payment", name: "Payment" },
+    { path: "/Support", name: "Support" },
   ];
 
-  // Check if the current path is not in the known paths
-  const isNotFoundPage = !knownPaths.includes(location.pathname);
+  // Update pagename based on current location
+  useEffect(() => {
+    const currentPath = knownPaths.find(
+      (item) => item.path === location.pathname
+    );
+    if (currentPath) {
+      setPagename(currentPath.name);
+    } else {
+      setPagename("");
+    }
+  }, [location.pathname]);
+
+  // Check if the current path is known
+  const isKnownPath = knownPaths.some(
+    (item) => item.path === location.pathname
+  );
 
   return (
     <div>
+      {/* container */}
       <div className="h-100">
+        {/* navbar */}
         <nav>
-          {!isNotFoundPage && (
+          {isKnownPath && (
             <NavBar
               sidebarToggle={sidebarToggle}
               setSidebarToggle={setSidebarToggle}
+              pagename={pagename}
             />
           )}
         </nav>
+
         {/* main div */}
         <div className="h-100">
           {/* sidebar */}
-          <div>
-            {!isNotFoundPage && <SideBar sidebarToggle={sidebarToggle} />}
-          </div>
+          <div>{isKnownPath && <SideBar sidebarToggle={sidebarToggle} />}</div>
 
           {/* content box */}
           <div>
@@ -166,6 +179,9 @@ const App = () => {
             </Routes>
           </div>
         </div>
+
+        {/* footer */}
+        <footer>{isKnownPath && <Footer />}</footer>
       </div>
     </div>
   );
