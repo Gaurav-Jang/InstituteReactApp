@@ -1,12 +1,11 @@
 import { useEffect } from "react"; // hook
-import { NavLink } from "react-router-dom"; // nav-link
+import { NavLink } from "react-router-dom"; // navigation
 import PropTypes from "prop-types"; // prop-types
 import MainImg from "/broken-robot.png"; // image
 
 // top loading bar & navbar name
-const NotFound = ({ setPagename, setProgress }) => {
+const NotFound = ({ setProgress }) => {
   useEffect(() => {
-    setPagename("404 Not Found");
     setProgress(40);
     setTimeout(() => {
       setProgress(100);
@@ -16,24 +15,21 @@ const NotFound = ({ setPagename, setProgress }) => {
   return (
     <div className="flex w-full justify-center items-center h-screen dark:text-white">
       <div className="w-full flex flex-col items-center">
-        <img src={MainImg} alt="" className="w-96" />
-        {/* <p className="text3xl mb-2">
-          Error code <span className="text-5xl font-bold">404</span>
-        </p> */}
+        {/* 404 error image */}
+        <img src={MainImg} alt="404 Error" className="w-96" />
+
+        {/* text */}
         <h1 className="text-7xl font-bold">
           We can't find the page <br /> you are looking for...
         </h1>
         <p className="text-2xl mt-4">
-          You can return to our{" "}
+          You can return to our {""}
+          {/* link to home page */}
           <NavLink to="/" className="text-primary">
             Home
           </NavLink>{" "}
           page.
         </p>
-        {/* <button
-          className="btn btn-primary mt-10 text-xl"
-          type="button"
-        ></button> */}
       </div>
     </div>
   );
@@ -41,7 +37,6 @@ const NotFound = ({ setPagename, setProgress }) => {
 
 NotFound.propTypes = {
   setProgress: PropTypes.func.isRequired,
-  setPagename: PropTypes.func.isRequired,
 };
 
 export default NotFound;

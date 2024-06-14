@@ -15,7 +15,11 @@ const InstituteSoft = {
     DeleteClassRoom: "/api/ClassRoom/DeleteClassRoom?ClassRoomId={0}",
 
     // edit ClassRoom
-    EditClassRoom: "/api/ClassRoom/EditClassRoom?ClassRoomId={0}",
+    GetClassRoomByClassRoomId:
+      "/api/ClassRoom/GetClassRoomByClassRoomId?ClassRoomId={0}",
+
+    // update ClassRoom
+    UpdateClassRoom: "/api/ClassRoom/UpdateClassRoom",
   },
 
   // student api
@@ -28,8 +32,11 @@ const InstituteSoft = {
     //Delete Student
     DeleteStudent: "/api/Student/DeleteStudent?StudentId={0}",
 
-    // edit Student
-    EditStudent: "/api/Student/EditStudent?StudentId={0}",
+    // edit student
+    GetStudentByStudentId: "/api/ClassRoom/GetStudentByStudentId?StudentId={0}",
+
+    // update student
+    UpdateClassRoom: "/api/Student/UpdateStudent",
   },
 };
 

@@ -1,8 +1,11 @@
+/* universal selector */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
+/* sidenav */
 .sidenav {
   background-color: #343a40;
   min-height: 100%;
@@ -10,9 +13,11 @@
   top: 0;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   width: 250px;
-  color: white;
+  color: #ffffff;
   transition: all 0.2s ease-in-out;
 }
+
+/* sidenav collapse */
 .sidenav-collapse {
   background-color: #343a40;
   min-height: 100%;
@@ -20,44 +25,42 @@
   top: 0;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   width: 70px;
-  color: white;
+  color: #ffffff;
   transition: all 0.2s ease-in-out;
 }
-.brand-name img {
-  width: 43px;
-  border-radius: 55%;
-}
-.brand-bg {
-  border-bottom: 1px solid #ffffff6b;
-}
+
+/* company & user details */
 .brand-name,
-.user-login h5 {
+.user-login {
   border-bottom: 1px solid #ffffff6b;
   margin: 0;
   display: flex;
   align-items: center;
   column-gap: 12px;
 }
+
+/* company image */
+.brand-name img {
+  width: 50px;
+}
+
+/* navigation links container */
 ul {
   list-style: none;
   padding: 0 !important;
   margin: 0 !important;
 }
-.sidenav img {
-  width: 60px;
-}
-.nav-menu ul li {
+
+/* navigation link */
+ul li {
   font-size: 17px;
   width: 100%;
   margin-bottom: 0.5rem;
   transition: all 0.2s ease;
   cursor: pointer;
 }
-.nav-dropdown {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
+/* navigation link container */
 .nav-item {
   display: flex;
   align-items: center;
@@ -66,6 +69,15 @@ ul {
   transition: width 0.3s ease-in-out;
   white-space: nowrap;
 }
+
+/* navigation dropdown */
+.nav-dropdown {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* sub menus */
 .sub-item {
   display: flex;
   align-items: center;
@@ -73,16 +85,15 @@ ul {
   font-size: 17px;
   padding: 0.5rem 0.8rem;
 }
-.nav-dropdown {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.menu-item-collapse {
-  display: none;
-  transition: margin-left 0.3s linear, opacity 0.3s ease, visibility 0.3s ease;
-}
+
+/* default navigation links */
 .menu-item {
   display: block;
+  transition: margin-left 0.3s linear, opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* navigation links on collapse */
+.menu-item-collapse {
+  display: none;
   transition: margin-left 0.3s linear, opacity 0.3s ease, visibility 0.3s ease;
 }

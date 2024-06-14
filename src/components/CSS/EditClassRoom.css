@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.edit-container {
+  /* margin-left: 250px; */
+  margin: 50px 250px 0;
+  padding: 20px;
+  width: 80% !important;
+}
+
+.table {
+  /* max-height: 572px; */
+  overflow-y: auto;
+  text-align: center;
+  margin-bottom: 50px;
+  /* table-layout: fixed; */
+}
+
+.fixed-header thead th {
+  position: relative;
+  top: 0;
+  background-color: #3c83f6;
+  color: white;
+  /* z-index: 2; */
+}
+
+.fixed-header th {
+  padding: 8px;
+}

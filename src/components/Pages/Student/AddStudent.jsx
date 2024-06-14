@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { FiUpload } from "react-icons/fi";
-import InstituteSoft from "../../ApiEndPoints/InstituteSoft";
-import axios from "axios";
-import usePopup from "../../CustomHooks/usePopup";
+import React, { useEffect, useState } from "react"; // hooks
+import PropTypes from "prop-types"; // prop-types
+import { FiUpload } from "react-icons/fi"; // react icons
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
+import axios from "axios"; // axios (get : post)
+import usePopup from "../../CustomHooks/usePopup"; // custom hook
 
 const AddStudent = ({ setPagename, setProgress }) => {
   const { showPopup, hidePopup, renderPopup } = usePopup();
 
   useEffect(() => {
+    // pagename
     setPagename("Add Student");
+
+    // top loading bar
     setProgress(40);
     setTimeout(() => {
       setProgress(100);
     }, 300);
   }, [setPagename, setProgress]);
 
+  // initial data in form's input field
   const [data, setData] = useState({
     StudentId: "",
     StudentFirstName: "",
@@ -42,6 +46,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
 
   const [photoPreview, setPhotoPreview] = useState(null);
 
+  // student api
   const setStudentData = () => {
     const dataSet = {
       StudentId: data.StudentId,
@@ -79,6 +84,7 @@ const AddStudent = ({ setPagename, setProgress }) => {
       });
   };
 
+  // insert photo
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     setData({
@@ -97,17 +103,20 @@ const AddStudent = ({ setPagename, setProgress }) => {
     }
   };
 
+  // input handler (onChange)
   const handleInputChange = (e) => {
     const { name, type, checked, value } = e.target;
     setData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
-    hidePopup();
+    hidePopup(); // hide popups
   };
 
+  // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    // validation
     if (
       data.StudentFirstName !== "" &&
       data.StudentLastName !== "" &&
@@ -120,10 +129,11 @@ const AddStudent = ({ setPagename, setProgress }) => {
     ) {
       setStudentData();
     } else {
-      showPopup("error");
+      showPopup("error"); // error popup
     }
   };
 
+  // number field validation
   const numVal = ["e", "E", "+", "-", "."];
 
   return (

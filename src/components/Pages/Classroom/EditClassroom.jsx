@@ -1,134 +1,162 @@
-import PropTypes from "prop-types"; // prop-types
-import axios from "axios"; // axios
-import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api endpoint
-import { useEffect, useState } from "react"; // hooks
-import { useNavigate } from "react-router-dom"; // for navigation
-import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md"; // react-icons
-import usePopup from "../../CustomHooks/usePopup"; // custom hook
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
+import {
+  PencilSquare,
+  Trash,
+  ArrowUp,
+  ArrowDown,
+  Search,
+} from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
+import usePopup from "../../CustomHooks/usePopup";
+import "../../css/EditClassRoom.css"; // Ensure your custom CSS is correctly imported
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft";
 
 const EditClassroom = ({ setPagename, setProgress }) => {
-  const navigate = useNavigate(); // edit class navigation
-  const [activeClassRoom, setActiveClassRoom] = useState([]); // data display
-  const [classRoomIdToDelete, setClassRoomIdToDelete] = useState(null); // deletion using ClassRoomId
+  const navigate = useNavigate();
+  const [activeClassRoom, setActiveClassRoom] = useState([]);
+  const { renderPopup, showPopup, hidePopup } = usePopup();
+  const [searchItem, setSearchItem] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: "", direction: "" });
 
-  const { renderPopup, showPopup, hidePopup } = usePopup(); // custom hook for popups
-
-  // hook for displaying data
   useEffect(() => {
-    getActiveClassRoom();
-  }, []);
-
-  // data displaying from database
-  const getActiveClassRoom = () => {
-    const apiGetData =
-      InstituteSoft.BaseURL + InstituteSoft.ClassRoom.GetActiveClassRoom; // api's endpoint
-    axios
-      .get(apiGetData)
-      .then((response) => {
-        setActiveClassRoom(response.data); // database data
-      })
-      .catch((error) => {
-        showPopup("error", { message: "Failed to fetch data." });
-      });
-  };
-
-  // top loading bar + navbar
-  useEffect(() => {
-    setPagename("Edit ClassRoom"); // navbar page name
-
-    // top loading bar
+    setPagename("Edit ClassRoom");
     setProgress(40);
     setTimeout(() => {
       setProgress(100);
     }, 300);
   }, [setPagename, setProgress]);
 
-  // edit
-  const handleEdit = (classRoomId) => {
-    const apiEditData =
-      InstituteSoft.BaseURL +
-      InstituteSoft.ClassRoom.EditClassRoom.replace("{0}", classRoomId); // api's endpoint
-    axios
-      .get(apiEditData)
-      .then((response) => {
-        console.log("Classroom Data:", response.data); // console error
-        navigate("/AddClassRoom", {
-          state: { classRoomData: response.data },
-        }); // navigation to AddClassRoom using ClassRoomId
-      })
-      .catch((error) => {
-        console.log(error); // console error
-        showPopup("error", { message: "Failed to edit classroom." });
-      });
+  useEffect(() => {
+    getActiveClassRoom();
+  }, []);
+
+  const getActiveClassRoom = async () => {
+    try {
+      const apiGetData =
+        InstituteSoft.BaseURL + InstituteSoft.ClassRoom.GetActiveClassRoom;
+      const response = await axios.get(apiGetData);
+      setActiveClassRoom(response.data);
+    } catch (error) {
+      showPopup("error");
+    }
   };
 
-  // delete
+  const handleEdit = (classRoomId) => {
+    navigate(`/AddClassRoom?ClassRoomId=${classRoomId}`);
+  };
+
   const handleDelete = (classRoomId) => {
     showPopup("delete", {
-      onConfirm: () => confirmDelete(classRoomId), // Capture the ID directly in the closure
+      onConfirm: () => confirmDelete(classRoomId),
       onCancel: hidePopup,
     });
   };
 
-  // Delete confirmation sweet alert modal
-  const confirmDelete = (classRoomId) => {
-    const apiDeleteData =
-      InstituteSoft.BaseURL +
-      InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId); // Use captured ID directly
-    axios
-      .get(apiDeleteData)
-      .then((response) => {
-        getActiveClassRoom(); // Refresh the table data after deletion
-        hidePopup();
-        showPopup("deleteConfirm", { message: "Data Deleted Successfully!" });
-      })
-      .catch((error) => {
-        hidePopup();
-        showPopup("error", { message: "Failed to delete student." });
-      });
+  const confirmDelete = async (classRoomId) => {
+    try {
+      const apiDeleteData =
+        InstituteSoft.BaseURL +
+        InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId);
+      await axios.delete(apiDeleteData);
+      getActiveClassRoom();
+      hidePopup();
+      showPopup("deleteConfirm");
+    } catch (error) {
+      hidePopup();
+      showPopup("error");
+    }
+  };
+
+  const requestSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedClassRooms = [...activeClassRoom].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? 1 : -1;
+    }
+    return 0;
+  });
+
+  const filteredClassRooms = sortedClassRooms.filter((classRoom) =>
+    classRoom.classRoomName.toLowerCase().includes(searchItem.toLowerCase())
+  );
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === "ascending" ? <ArrowUp /> : <ArrowDown />;
+    }
+    return null;
+  };
+
+  const handleInputChange = (e) => {
+    setSearchItem(e.target.value);
+    hidePopup();
   };
 
   return (
-    <div
-      style={{ marginLeft: "250px", marginTop: "50px" }}
-      className="min-h-screen flex flex-col items-center p-4 gap-10 bg-slate-200 dark:bg-[#262450]"
-    >
-      <div className="w-full">
-        {/* table */}
-        <table className="table table-striped table-bordered theme-light">
-          {/* table thread */}
-          <thead>
-            <tr>
+    <div className="edit-container">
+      <div className="flex gap-4 align-items-center mb-3">
+        <Search className="text-2xl" />
+        <input
+          type="text"
+          className="form-control w-25"
+          placeholder="Search by ClassRoom Name"
+          value={searchItem}
+          onChange={handleInputChange}
+        />
+      </div>
+
+      <div>
+        <table className="table table-striped table-bordered fixed-header">
+          <thead className="thread-light">
+            <tr className="">
               <th scope="col">S.No</th>
-              <th scope="col">ClassRoom Name</th>
-              <th scope="col">Class</th>
-              <th scope="col">ClassRoom Type</th>
-              <th scope="col">Price</th>
+              <th scope="col" onClick={() => requestSort("classRoomName")}>
+                ClassRoom Name {getSortIcon("classRoomName")}
+              </th>
+              <th scope="col" onClick={() => requestSort("class")}>
+                Class {getSortIcon("class")}
+              </th>
+              <th scope="col" onClick={() => requestSort("classRoomType")}>
+                ClassRoom Type {getSortIcon("classRoomType")}
+              </th>
+              <th scope="col" onClick={() => requestSort("price")}>
+                Price {getSortIcon("price")}
+              </th>
               <th scope="col">Action</th>
             </tr>
           </thead>
 
-          {/* table body */}
           <tbody>
-            {activeClassRoom.map((classRoom, index) => (
+            {filteredClassRooms.map((classRoom, index) => (
               <tr key={classRoom.classRoomId}>
                 <td>{index + 1}</td>
                 <td>{classRoom.classRoomName}</td>
                 <td>{classRoom.class}</td>
                 <td>{classRoom.classRoomType}</td>
                 <td>{classRoom.price}</td>
-                <td className="space-x-4">
+                <td>
                   <button
+                    className="btn"
                     onClick={() => handleEdit(classRoom.classRoomId)}
-                    className="text-xl"
                   >
-                    <MdOutlineEdit />
+                    <PencilSquare />
                   </button>
                   <button
+                    className="btn"
                     onClick={() => handleDelete(classRoom.classRoomId)}
-                    className="text-xl"
                   >
-                    <MdDeleteOutline />
+                    <Trash />
                   </button>
                 </td>
               </tr>
@@ -137,7 +165,6 @@ const EditClassroom = ({ setPagename, setProgress }) => {
         </table>
       </div>
 
-      {/* popups */}
       {renderPopup()}
     </div>
   );

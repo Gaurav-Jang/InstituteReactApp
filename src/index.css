@@ -4,19 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer utilities {
-  .active {
-    @apply text-black;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .active {
-      @apply bg-blue-600 text-white w-full rounded-xl;
-    }
-   
-  }
-} */
-
 * {
   font-family: "Ubuntu", sans-serif;
 }

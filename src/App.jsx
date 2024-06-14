@@ -29,12 +29,17 @@ const App = () => {
 
   // Defining known paths and their names
   const knownPaths = [
+    // home page
     { path: "/", name: "Dashboard" },
+    // classroom pages
     { path: "/AddClassRoom", name: "Add Classroom" },
     { path: "/EditClassRoom", name: "Edit Classroom" },
+    // student pages
     { path: "/AddStudent", name: "Add Student" },
     { path: "/EditStudent", name: "Edit Student" },
+    // payment page
     { path: "/Payment", name: "Payment" },
+    // support page
     { path: "/Support", name: "Support" },
   ];
 
