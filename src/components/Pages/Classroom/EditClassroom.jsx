@@ -1,25 +1,23 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import axios from "axios";
-import {
-  PencilSquare,
-  Trash,
-  ArrowUp,
-  ArrowDown,
-  Search,
-} from "react-bootstrap-icons";
-import { useNavigate } from "react-router-dom";
-import usePopup from "../../CustomHooks/usePopup";
-import "../../css/EditClassRoom.css"; // Ensure your custom CSS is correctly imported
-import InstituteSoft from "../../ApiEndPoints/InstituteSoft";
+import { useEffect, useState } from "react"; // hooks
+import PropTypes from "prop-types"; // prop-types
+import axios from "axios"; // axios
+import { PencilSquare, Trash, Search } from "react-bootstrap-icons"; // bootstrap icons
+import { useNavigate } from "react-router-dom"; // navigation
+import usePopup from "../../CustomHooks/usePopup"; // custom hook
+import "../../css/EditClassRoom.css"; // css file
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint file
 
 const EditClassroom = ({ setPagename, setProgress }) => {
-  const navigate = useNavigate();
-  const [activeClassRoom, setActiveClassRoom] = useState([]);
-  const { renderPopup, showPopup, hidePopup } = usePopup();
-  const [searchItem, setSearchItem] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: "", direction: "" });
+  const navigate = useNavigate(); // navigation
+  const [activeClassRoom, setActiveClassRoom] = useState([]); // fetch classroom data from db
+  const { renderPopup, showPopup, hidePopup } = usePopup(); // custom hook
+  const [searchItem, setSearchItem] = useState(""); // search box
 
+  useEffect(() => {
+    getActiveClassRoom();
+  }, []);
+
+  // top nav loading + page name
   useEffect(() => {
     setPagename("Edit ClassRoom");
     setProgress(40);
@@ -28,85 +26,62 @@ const EditClassroom = ({ setPagename, setProgress }) => {
     }, 300);
   }, [setPagename, setProgress]);
 
-  useEffect(() => {
-    getActiveClassRoom();
-  }, []);
-
+  // classroom api
   const getActiveClassRoom = async () => {
     try {
       const apiGetData =
-        InstituteSoft.BaseURL + InstituteSoft.ClassRoom.GetActiveClassRoom;
+        InstituteSoft.BaseURL + InstituteSoft.ClassRoom.GetActiveClassRoom; // api's endpoint
       const response = await axios.get(apiGetData);
-      setActiveClassRoom(response.data);
+      setActiveClassRoom(response.data); // data
     } catch (error) {
-      showPopup("error");
+      showPopup("error"); // shows error popup
     }
   };
 
+  // edit
   const handleEdit = (classRoomId) => {
-    navigate(`/AddClassRoom?ClassRoomId=${classRoomId}`);
+    navigate(`/AddClassRoom?ClassRoomId=${classRoomId}`); // redirects to the AddClassRoom page with the specific ClassRoomId
   };
 
+  // delete
   const handleDelete = (classRoomId) => {
     showPopup("delete", {
       onConfirm: () => confirmDelete(classRoomId),
-      onCancel: hidePopup,
+      onCancel: hidePopup, // hide all popups
     });
   };
 
-  const confirmDelete = async (classRoomId) => {
-    try {
-      const apiDeleteData =
-        InstituteSoft.BaseURL +
-        InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId);
-      await axios.delete(apiDeleteData);
-      getActiveClassRoom();
-      hidePopup();
-      showPopup("deleteConfirm");
-    } catch (error) {
-      hidePopup();
-      showPopup("error");
-    }
+  // delete api
+  const confirmDelete = (classRoomId) => {
+    const apiDeleteData =
+      InstituteSoft.BaseURL +
+      InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId);
+    axios
+      .get(apiDeleteData)
+      .then((response) => {
+        getActiveClassRoom(); // gets the data
+        hidePopup(); // hide all popups
+        showPopup("deleteConfirm"); // show delete confirmation popup
+      })
+      .catch((error) => {
+        hidePopup(); // hide all popups
+        showPopup("error"); // show error popup
+      });
   };
 
-  const requestSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const sortedClassRooms = [...activeClassRoom].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === "ascending" ? 1 : -1;
-    }
-    return 0;
-  });
-
-  const filteredClassRooms = sortedClassRooms.filter((classRoom) =>
-    classRoom.classRoomName.toLowerCase().includes(searchItem.toLowerCase())
-  );
-
-  const getSortIcon = (key) => {
-    if (sortConfig.key === key) {
-      return sortConfig.direction === "ascending" ? <ArrowUp /> : <ArrowDown />;
-    }
-    return null;
-  };
-
+  // input handler (onChange)
   const handleInputChange = (e) => {
     setSearchItem(e.target.value);
-    hidePopup();
+    hidePopup(); // hide all popups
   };
 
   return (
     <div className="edit-container">
+      {/* search */}
       <div className="flex gap-4 align-items-center mb-3">
+        {/* search icon */}
         <Search className="text-2xl" />
+        {/* search input */}
         <input
           type="text"
           className="form-control w-25"
@@ -116,55 +91,72 @@ const EditClassroom = ({ setPagename, setProgress }) => {
         />
       </div>
 
+      {/* table */}
       <div>
         <table className="table table-striped table-bordered fixed-header">
+          {/* table head */}
           <thead className="thread-light">
             <tr className="">
+              {/* s.no */}
               <th scope="col">S.No</th>
-              <th scope="col" onClick={() => requestSort("classRoomName")}>
-                ClassRoom Name {getSortIcon("classRoomName")}
-              </th>
-              <th scope="col" onClick={() => requestSort("class")}>
-                Class {getSortIcon("class")}
-              </th>
-              <th scope="col" onClick={() => requestSort("classRoomType")}>
-                ClassRoom Type {getSortIcon("classRoomType")}
-              </th>
-              <th scope="col" onClick={() => requestSort("price")}>
-                Price {getSortIcon("price")}
-              </th>
+              {/* classroom name */}
+              <th scope="col">ClassRoom Name</th>
+              {/* class */}
+              <th scope="col">Class</th>
+              {/* classroom type */}
+              <th scope="col">ClassRoom Type</th>
+              {/* price */}
+              <th scope="col">Price</th>
+              {/* buttons */}
               <th scope="col">Action</th>
             </tr>
           </thead>
 
+          {/* table body */}
           <tbody>
-            {filteredClassRooms.map((classRoom, index) => (
-              <tr key={classRoom.classRoomId}>
-                <td>{index + 1}</td>
-                <td>{classRoom.classRoomName}</td>
-                <td>{classRoom.class}</td>
-                <td>{classRoom.classRoomType}</td>
-                <td>{classRoom.price}</td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleEdit(classRoom.classRoomId)}
-                  >
-                    <PencilSquare />
-                  </button>
-                  <button
-                    className="btn"
-                    onClick={() => handleDelete(classRoom.classRoomId)}
-                  >
-                    <Trash />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {activeClassRoom
+              .filter((classRoom) =>
+                classRoom.classRoomName
+                  .toLowerCase()
+                  .includes(searchItem.toLowerCase())
+              )
+              .map((classRoom, index) => (
+                <tr key={classRoom.classRoomId}>
+                  {/* s.no */}
+                  <td>{index + 1}</td>
+                  {/* classroom name */}
+                  <td>{classRoom.classRoomName}</td>
+                  {/* class */}
+                  <td>{classRoom.class}</td>
+                  {/* classroom type */}
+                  <td>{classRoom.classRoomType}</td>
+                  {/* price */}
+                  <td>{classRoom.price}</td>
+                  {/* buttons */}
+                  <td>
+                    {/* edit */}
+                    <button
+                      className="btn"
+                      onClick={() => handleEdit(classRoom.classRoomId)}
+                    >
+                      <PencilSquare />
+                    </button>
+
+                    {/* delete */}
+                    <button
+                      className="btn"
+                      onClick={() => handleDelete(classRoom.classRoomId)}
+                    >
+                      <Trash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
 
+      {/* popup */}
       {renderPopup()}
     </div>
   );

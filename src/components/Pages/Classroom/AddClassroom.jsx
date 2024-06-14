@@ -13,6 +13,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     setTimeout(() => {
       setProgress(100);
     }, 300);
+    hidePopup();
   }, [setProgress]);
 
   // api's hook
@@ -33,6 +34,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     ClassRoomType: "Online",
     Price: "",
   });
+
+  // validation errors state
+  const [errors, setErrors] = useState({});
 
   // custom hook for popups
   const { renderPopup, showPopup, hidePopup } = usePopup();
@@ -65,6 +69,18 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       });
   };
 
+  // function to reset form data
+  const resetForm = () => {
+    setData({
+      ClassRoomId: "",
+      ClassRoomName: "",
+      Class: "8th",
+      ClassRoomType: "Online",
+      Price: "",
+    });
+    setErrors({});
+  };
+
   // classroom api
   const setClassRoomData = () => {
     const dataSet = {
@@ -87,6 +103,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
           title: "Classroom Added Successfully",
           link: "/EditClassRoom",
         });
+        resetForm();
       })
       .catch((error) => {
         console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
@@ -101,26 +118,38 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       ...prevData,
       [name]: value,
     }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
     hidePopup(); // hide popups
   };
 
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      data.ClassRoomName !== "" &&
-      data.Class !== "" &&
-      data.ClassRoomType !== "" &&
-      data.Price > 0 &&
-      data.Price !== ""
-    ) {
-      if (paramData === "Submit") {
-        setClassRoomData(); // reload AddClassRoom page
-      } else {
-        updateClassRoom();
-      }
+    let newErrors = {}; // new var for displaying empty input boxes
+    // classroom name
+    if (!data.ClassRoomName)
+      newErrors.ClassRoomName = "ClassRoom Name is required";
+    // class
+    if (!data.Class) newErrors.Class = "Class is required";
+    // classroom type
+    if (!data.ClassRoomType)
+      newErrors.ClassRoomType = "ClassRoom Type is required";
+    // price
+    if (!data.Price || data.Price <= 0)
+      newErrors.Price = "Valid Price is required";
+    // check if there is any error
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      showPopup("error"); // shows error popup
     } else {
-      showPopup("error"); // error popup
+      if (paramData === "Submit") {
+        setClassRoomData(); // submit the data
+      } else {
+        updateClassRoom(); // update the data
+      }
     }
   };
 
@@ -133,7 +162,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
   useEffect(() => {
     console.log(searchParam.get("ClassRoomId"));
     if (searchParam.get("ClassRoomId") != null) getClassRoomByClassRoomId();
-  }, [searchParam.get("ClassRoomId")]);
+  }, [searchParam]);
 
   // edit data
   const getClassRoomByClassRoomId = () => {
@@ -185,6 +214,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
           title: "Classroom Updated Successfully",
           link: "/EditClassRoom",
         });
+        resetForm();
       })
       .catch((error) => {
         console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
@@ -229,7 +259,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${
+                    errors.ClassRoomName ? "is-invalid" : ""
+                  }`}
                   name="ClassRoomName"
                   minLength={3}
                   maxLength={50}
@@ -240,6 +272,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                 <span className="text-slate-500 dark:text-slate-400 text-sm">
                   ClassRoom Name should be between 3-50
                 </span>
+                {errors.ClassRoomName && (
+                  <div className="invalid-feedback">{errors.ClassRoomName}</div>
+                )}
               </div>
 
               {/* class */}
@@ -249,7 +284,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                 {/* select class */}
                 <select
                   name="Class"
-                  className="form-select cursor-pointer"
+                  className={`form-select cursor-pointer ${
+                    errors.Class ? "is-invalid" : ""
+                  }`}
                   value={data.Class}
                   onChange={handleInputChange}
                 >
@@ -260,6 +297,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     </option>
                   ))}
                 </select>
+                {errors.Class && (
+                  <div className="invalid-feedback">{errors.Class}</div>
+                )}
               </div>
 
               {/* classroom type */}
@@ -270,7 +310,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
 
                 {/* select class type */}
                 <select
-                  className="form-select cursor-pointer"
+                  className={`form-select cursor-pointer ${
+                    errors.ClassRoomType ? "is-invalid" : ""
+                  }`}
                   name="ClassRoomType"
                   value={data.ClassRoomType}
                   onChange={handleInputChange}
@@ -285,6 +327,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     </option>
                   ))}
                 </select>
+                {errors.ClassRoomType && (
+                  <div className="invalid-feedback">{errors.ClassRoomType}</div>
+                )}
               </div>
 
               {/* price */}
@@ -292,7 +337,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                 <label className="form-label dark:text-white">Price</label>
                 <input
                   type="number"
-                  className="form-control"
+                  className={`form-control ${errors.Price ? "is-invalid" : ""}`}
                   name="Price"
                   value={data.Price}
                   onChange={handleInputChange}
@@ -302,6 +347,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                   }
                   placeholder="0"
                 />
+                {errors.Price && (
+                  <div className="invalid-feedback">{errors.Price}</div>
+                )}
               </div>
 
               {/* submit & update button */}
