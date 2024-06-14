@@ -2,7 +2,7 @@
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 
-const SuccessPopup = () => {
+const DeleteConfirmPopup = () => {
   Swal.fire({
     title: "Data has been deleted successfully.",
     text: "You can close this box now.",
@@ -13,4 +13,4 @@ const SuccessPopup = () => {
   return <></>;
 };
 
-export default SuccessPopup;
+export default DeleteConfirmPopup;

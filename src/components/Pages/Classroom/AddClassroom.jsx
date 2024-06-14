@@ -115,9 +115,8 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       data.Price !== ""
     ) {
       if (paramData === "Submit") {
-        setClassRoomData(); // reload classroom page
+        setClassRoomData(); // reload AddClassRoom page
       } else {
-        console.log("update it");
         updateClassRoom();
       }
     } else {
