@@ -5,19 +5,16 @@ import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 
-const AddStudent = ({ setPagename, setProgress }) => {
+const AddStudent = ({ setProgress }) => {
   const { showPopup, hidePopup, renderPopup } = usePopup();
 
+  // top loading bar
   useEffect(() => {
-    // pagename
-    setPagename("Add Student");
-
-    // top loading bar
     setProgress(40);
     setTimeout(() => {
       setProgress(100);
     }, 300);
-  }, [setPagename, setProgress]);
+  }, [setProgress]);
 
   // initial data in form's input field
   const [data, setData] = useState({
@@ -531,7 +528,6 @@ const AddStudent = ({ setPagename, setProgress }) => {
 };
 
 AddStudent.propTypes = {
-  setPagename: PropTypes.func.isRequired,
   setProgress: PropTypes.func.isRequired,
 };
 

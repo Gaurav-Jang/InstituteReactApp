@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"; // for navigation
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md"; // react-icons
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 
-const EditStudent = ({ setPagename, setProgress }) => {
+const EditStudent = ({ setProgress }) => {
   const navigate = useNavigate(); // for navigation
   const [activeStudent, setActiveStudent] = useState([]); // state to hold student data
 
@@ -33,12 +33,11 @@ const EditStudent = ({ setPagename, setProgress }) => {
 
   // Set page name and progress bar on component mount
   useEffect(() => {
-    setPagename("Edit Student");
     setProgress(40);
     setTimeout(() => {
       setProgress(100);
     }, 300);
-  }, [setPagename, setProgress]);
+  }, [setProgress]);
 
   // Handle edit action
   const handleEdit = (studentId) => {
@@ -138,7 +137,6 @@ const EditStudent = ({ setPagename, setProgress }) => {
 
 EditStudent.propTypes = {
   setProgress: PropTypes.func.isRequired,
-  setPagename: PropTypes.func.isRequired,
 };
 
 export default EditStudent;

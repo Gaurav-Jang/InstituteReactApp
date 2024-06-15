@@ -2,7 +2,7 @@ import { FaBell, FaShareAlt } from "react-icons/fa"; // react-icons
 import { GiHamburgerMenu } from "react-icons/gi"; //hamburger
 import "../css/NavBar.css";
 
-const NavBar = ({ sidebarToggle, setSidebarToggle, pagename }) => {
+const NavBar = ({ sidebarToggle, setSidebarToggle }) => {
   return (
     <>
       <nav className={sidebarToggle ? "topnav" : "topnav-expand"}>
@@ -14,11 +14,6 @@ const NavBar = ({ sidebarToggle, setSidebarToggle, pagename }) => {
               onClick={() => setSidebarToggle(!sidebarToggle)}
             />
           </div>
-        </div>
-
-        {/* nav text */}
-        <div className="topNav-center">
-          <h1>{pagename}</h1>
         </div>
 
         {/* buttons */}

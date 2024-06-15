@@ -4,14 +4,13 @@ import ErrorPopup from "../../validation/ErrorPopup"; // errorPopup
 import SuccessPopup from "../../validation/SuccessPopup"; // successPopup
 import Help from "../../../assets/Support/help-and-support.svg"; // image
 
-const Support = ({ setPagename, setProgress }) => {
+const Support = ({ setProgress }) => {
   useEffect(() => {
-    setPagename("Support");
     setProgress(40);
     setTimeout(() => {
       setProgress(100);
     }, 300);
-  }, [setPagename, setProgress]);
+  }, [setProgress]);
 
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -217,7 +216,6 @@ const Support = ({ setPagename, setProgress }) => {
 
 Support.propTypes = {
   setProgress: PropTypes.func.isRequired,
-  setPagename: PropTypes.func.isRequired,
 };
 
 export default Support;

@@ -1,30 +1,30 @@
 import { useEffect, useState } from "react"; // hooks
-import PropTypes from "prop-types"; // prop-types
+import PropTypes from "prop-types"; // pro-types
 import axios from "axios"; // axios
-import { PencilSquare, Trash, Search } from "react-bootstrap-icons"; // bootstrap icons
+import { PencilSquare, Trash, Search } from "react-bootstrap-icons"; // react-bootstraps icon
 import { useNavigate } from "react-router-dom"; // navigation
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/EditClassRoom.css"; // css file
-import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint file
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 
-const EditClassroom = ({ setPagename, setProgress }) => {
+const EditClassroom = ({ setProgress }) => {
   const navigate = useNavigate(); // navigation
-  const [activeClassRoom, setActiveClassRoom] = useState([]); // fetch classroom data from db
-  const { renderPopup, showPopup, hidePopup } = usePopup(); // custom hook
-  const [searchItem, setSearchItem] = useState(""); // search box
+  const [activeClassRoom, setActiveClassRoom] = useState([]); // classroom
+  const { renderPopup, showPopup, hidePopup } = usePopup(); // popup
+  const [searchItem, setSearchItem] = useState(""); // search
 
+  // classroom api hook
   useEffect(() => {
     getActiveClassRoom();
   }, []);
 
-  // top nav loading + page name
+  // top loading bar
   useEffect(() => {
-    setPagename("Edit ClassRoom");
     setProgress(40);
     setTimeout(() => {
       setProgress(100);
     }, 300);
-  }, [setPagename, setProgress]);
+  }, [setProgress]);
 
   // classroom api
   const getActiveClassRoom = async () => {
@@ -40,51 +40,53 @@ const EditClassroom = ({ setPagename, setProgress }) => {
 
   // edit
   const handleEdit = (classRoomId) => {
-    navigate(`/AddClassRoom?ClassRoomId=${classRoomId}`); // redirects to the AddClassRoom page with the specific ClassRoomId
+    navigate(`/AddClassRoom?ClassRoomId=${classRoomId}`); // api's endpoint
   };
 
   // delete
   const handleDelete = (classRoomId) => {
     showPopup("delete", {
+      // shows delete popup
       onConfirm: () => confirmDelete(classRoomId),
-      onCancel: hidePopup, // hide all popups
+      onCancel: hidePopup, // hide all the popups on cancel button
     });
   };
 
-  // delete api
+  // confirm delete
   const confirmDelete = (classRoomId) => {
     const apiDeleteData =
       InstituteSoft.BaseURL +
-      InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId);
+      InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId); // api's endpoint
     axios
       .get(apiDeleteData)
       .then((response) => {
-        getActiveClassRoom(); // gets the data
-        hidePopup(); // hide all popups
-        showPopup("deleteConfirm"); // show delete confirmation popup
+        getActiveClassRoom(); // data
+        hidePopup(); // hide all the popups
+        showPopup("deleteConfirm"); // shows delete confirm popup
       })
       .catch((error) => {
-        hidePopup(); // hide all popups
-        showPopup("error"); // show error popup
+        hidePopup(); // hide all the popups
+        showPopup("error"); // shows error popup
       });
   };
 
   // input handler (onChange)
   const handleInputChange = (e) => {
     setSearchItem(e.target.value);
-    hidePopup(); // hide all popups
+    hidePopup(); // hide all the popups
   };
 
   return (
     <div className="edit-container">
       {/* search */}
-      <div className="flex gap-4 align-items-center mb-3">
+      <div className="search-container">
         {/* search icon */}
         <Search className="text-2xl" />
-        {/* search input */}
+
+        {/* search box */}
         <input
           type="text"
-          className="form-control w-25"
+          className="form-control search-input"
           placeholder="Search by ClassRoom Name"
           value={searchItem}
           onChange={handleInputChange}
@@ -92,11 +94,12 @@ const EditClassroom = ({ setPagename, setProgress }) => {
       </div>
 
       {/* table */}
-      <div>
+      <div className="table-container">
         <table className="table table-striped table-bordered fixed-header">
           {/* table head */}
-          <thead className="thread-light">
-            <tr className="">
+          <thead>
+            {/* table head row */}
+            <tr>
               {/* s.no */}
               <th scope="col">S.No</th>
               {/* classroom name */}
@@ -114,6 +117,7 @@ const EditClassroom = ({ setPagename, setProgress }) => {
 
           {/* table body */}
           <tbody>
+            {/* table body row */}
             {activeClassRoom
               .filter((classRoom) =>
                 classRoom.classRoomName
@@ -136,7 +140,7 @@ const EditClassroom = ({ setPagename, setProgress }) => {
                   <td>
                     {/* edit */}
                     <button
-                      className="btn"
+                      className="btn text-primary"
                       onClick={() => handleEdit(classRoom.classRoomId)}
                     >
                       <PencilSquare />
@@ -144,7 +148,7 @@ const EditClassroom = ({ setPagename, setProgress }) => {
 
                     {/* delete */}
                     <button
-                      className="btn"
+                      className="btn text-danger"
                       onClick={() => handleDelete(classRoom.classRoomId)}
                     >
                       <Trash />
@@ -164,7 +168,6 @@ const EditClassroom = ({ setPagename, setProgress }) => {
 
 EditClassroom.propTypes = {
   setProgress: PropTypes.func.isRequired,
-  setPagename: PropTypes.func.isRequired,
 };
 
 export default EditClassroom;
