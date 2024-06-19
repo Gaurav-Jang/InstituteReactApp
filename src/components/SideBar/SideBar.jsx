@@ -56,7 +56,7 @@ const SideBar = ({ sidebarToggle }) => {
         <ul className="px-2 my-3">
           {/* dashboard */}
           <li>
-            <NavLink to="/" className="nav-item" activeClassName="active">
+            <NavLink to="/" className="nav-item" activeclassname="active">
               <md.MdDashboard style={{ fontSize: "28px" }} />
               <span
                 className={sidebarToggle ? "menu-item" : "menu-item-collapse"}

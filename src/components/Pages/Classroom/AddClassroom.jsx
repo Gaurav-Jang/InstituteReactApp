@@ -78,7 +78,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       ClassRoomType: "Online",
       Price: "",
     });
-    setErrors({});
+    setErrors("error in resetting form data");
+
+    // window.location.reload();
   };
 
   // classroom api
@@ -98,16 +100,27 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
         dataSet
       ) // api's endpoint
       .then((response) => {
-        console.log(response.data);
-        showPopup("success", {
-          title: "Classroom Added Successfully",
-          link: "/EditClassRoom",
-        });
-        resetForm();
+        if (response.data === "Class room already exists.") {
+          // compares api's return message with your message
+          showPopup("error", {
+            title: "Duplicate Classroom",
+            text: "The classroom already exists. Please try a different name.",
+          }); // duplicate error popup
+        } else {
+          console.log(response.data); // print data on console
+          showPopup("success", {
+            title: "Classroom Added Successfully",
+            link: "/EditClassRoom",
+          }); // success popup
+          resetForm(); // reset form after submission
+        }
       })
       .catch((error) => {
         console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
-        showPopup("error");
+        showPopup("error", {
+          title: "Error!",
+          text: "Please add some data in the form.",
+        }); // show error popup
       });
   };
 
@@ -143,7 +156,10 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     // check if there is any error
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      showPopup("error"); // shows error popup
+      showPopup("error", {
+        title: "Error!",
+        text: "Please complete the form.",
+      }); // shows error popup
     } else {
       if (paramData === "Submit") {
         setClassRoomData(); // submit the data
@@ -188,8 +204,11 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
         }));
       })
       .catch((error) => {
-        hidePopup();
-        showPopup("error");
+        hidePopup(); // hide all popups
+        showPopup("error", {
+          title: "Error!",
+          text: "You didn't edit anything in the form.",
+        }); // show error popup
       });
   };
 
@@ -209,16 +228,28 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
         dataSet
       ) // api's endpoint
       .then((response) => {
-        console.log(response.data);
-        showPopup("success", {
-          title: "Classroom Updated Successfully",
-          link: "/EditClassRoom",
-        });
-        resetForm();
+        if (response.data === "Class room already exists, make some changes.") {
+          // compares api's return message with your message
+          showPopup("error", {
+            title: "Duplicate Classroom",
+            text: "The classroom already exists. Please try a different name.",
+          }); // duplicate error popup
+        } else {
+          console.log(response.data);
+          showPopup("success", {
+            title: "Classroom Updated Successfully",
+            link: "/EditClassRoom",
+          });
+          resetForm(); // resets form data
+          // window.location.reload();
+        }
       })
       .catch((error) => {
         console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
-        showPopup("error");
+        showPopup("error", {
+          title: "Error!",
+          text: "You didn't edit anything in the form.",
+        }); // show error popup
       });
   };
 
