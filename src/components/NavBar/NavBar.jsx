@@ -1,6 +1,7 @@
-import { FaBell, FaShareAlt } from "react-icons/fa"; // react-icons
-import { GiHamburgerMenu } from "react-icons/gi"; //hamburger
-import "../css/NavBar.css";
+// react-icons
+import { FaBell, FaShareAlt } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
+import "../css/NavBar.css"; // custom css file
 
 const NavBar = ({ sidebarToggle, setSidebarToggle }) => {
   return (

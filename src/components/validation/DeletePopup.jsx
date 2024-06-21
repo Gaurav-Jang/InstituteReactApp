@@ -1,7 +1,7 @@
-// DeletePopup.js
+import { useEffect } from "react"; // hook
+// sweet alert
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
-import { useEffect } from "react";
 
 const DeletePopup = ({ onConfirm }) => {
   useEffect(() => {
@@ -16,17 +16,17 @@ const DeletePopup = ({ onConfirm }) => {
         confirmButtonText: "Yes, delete it!",
       });
 
+      // promise
       if (result.isConfirmed) {
         onConfirm();
       }
     };
 
-    showDeleteConfirmation();
+    // onConfirm promise
+    showDeleteConfirmation(); // shows deleteConfirm popup
+  }, [onConfirm]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onConfirm]); // Only run the effect if onConfirm changes
-
-  return null; // renders nothing
+  return null; // doesn't render anything
 };
 
 export default DeletePopup;

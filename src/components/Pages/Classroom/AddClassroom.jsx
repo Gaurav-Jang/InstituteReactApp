@@ -1,10 +1,10 @@
 import PropTypes from "prop-types"; // prop type
-import { useEffect, useState } from "react"; // react hooks
+import { useEffect, useState } from "react"; // hooks
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
-import "../../css/AddClassroom.css";
-import { useSearchParams } from "react-router-dom";
+import "../../css/AddClassroom.css"; // custom css file
+import { useSearchParams } from "react-router-dom"; // search param
 
 const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
   // top loading bar
@@ -79,8 +79,6 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       Price: "",
     });
     setErrors("error in resetting form data");
-
-    // window.location.reload();
   };
 
   // classroom api
@@ -107,9 +105,9 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
             text: "The classroom already exists. Please try a different name.",
           }); // duplicate error popup
         } else {
-          console.log(response.data); // print data on console
           showPopup("success", {
             title: "Classroom Added Successfully",
+            confirmBtn: true,
             link: "/EditClassRoom",
           }); // success popup
           resetForm(); // reset form after submission
@@ -176,7 +174,6 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
 
   // edit hook
   useEffect(() => {
-    console.log(searchParam.get("ClassRoomId"));
     if (searchParam.get("ClassRoomId") != null) getClassRoomByClassRoomId();
   }, [searchParam]);
 
@@ -188,11 +185,10 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       InstituteSoft.ClassRoom.GetClassRoomByClassRoomId.replace(
         "{0}",
         classRoomId
-      ); // Use captured ID directly
+      ); // api's endpoint
     axios
       .get(apiEditData)
       .then((response) => {
-        console.log(response.data); // Refresh the table data after deletion
         // Ensure no field is undefined or null
         setData((prevData) => ({
           ...prevData,
@@ -228,20 +224,19 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
         dataSet
       ) // api's endpoint
       .then((response) => {
+        // compares api's return message with your message
         if (response.data === "Class room already exists, make some changes.") {
-          // compares api's return message with your message
           showPopup("error", {
             title: "Duplicate Classroom",
             text: "The classroom already exists. Please try a different name.",
           }); // duplicate error popup
         } else {
-          console.log(response.data);
           showPopup("success", {
             title: "Classroom Updated Successfully",
+            confirmBtn: true,
             link: "/EditClassRoom",
           });
           resetForm(); // resets form data
-          // window.location.reload();
         }
       })
       .catch((error) => {

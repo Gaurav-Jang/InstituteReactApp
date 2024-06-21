@@ -20,17 +20,23 @@ const usePopup = () => {
     setPopupProps({});
   };
 
-  // render  popup according to current "type"
+  // reset popup
+  const resetPopup = () => {
+    setPopupType(null);
+    setPopupProps({});
+  };
+
+  // render popup according to current "type"
   const renderPopup = () => {
     switch (popupType) {
       case "error":
-        return <ErrorPopup {...popupProps} />; // Render ErrorPopup
+        return <ErrorPopup {...popupProps} onPopupClosed={hidePopup} />; // Pass error onPopupClosed callback
       case "success":
-        return <SuccessPopup {...popupProps} />; // Render SuccessPopup
+        return <SuccessPopup {...popupProps} onPopupClosed={hidePopup} />; // Pass success onPopupClosed callback
       case "delete":
-        return <DeletePopup {...popupProps} />; // Render DeletePopup
+        return <DeletePopup {...popupProps} onPopupClosed={hidePopup} />; // Pass delete onPopupClosed callback
       case "deleteConfirm":
-        return <DeleteConfirmPopup {...popupProps} />; // Render DeleteConfirmPopup
+        return <DeleteConfirmPopup {...popupProps} onPopupClosed={hidePopup} />; // Pass deleteConfirm onPopupClosed callback
       default:
         return null; // Render nothing if no popup type is set
     }
@@ -41,6 +47,7 @@ const usePopup = () => {
     renderPopup,
     showPopup,
     hidePopup,
+    resetPopup,
   };
 };
 

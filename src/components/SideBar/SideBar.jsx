@@ -1,11 +1,12 @@
 import { useState } from "react"; // hook
+import usePopup from "../CustomHooks/usePopup"; // custom hook
 import { Link, NavLink } from "react-router-dom"; // navigation
 import IWS from "/iws.png"; // logo
 // react icons
 import * as md from "react-icons/md";
 import { PiStudentFill } from "react-icons/pi";
 import { FaUserCircle, FaRegCircle } from "react-icons/fa";
-import "../css/SideBar.css"; // css file
+import "../css/SideBar.css"; // custom css file
 
 const SideBar = ({ sidebarToggle }) => {
   // dropdown initially set to false(close)
@@ -27,6 +28,9 @@ const SideBar = ({ sidebarToggle }) => {
   const renderDropdownIcon = (isOpen) => {
     return isOpen ? <md.MdArrowDropUp /> : <md.MdArrowDropDown />;
   };
+
+  // popups
+  const { renderPopup, hidePopup } = usePopup();
 
   return (
     <nav className={sidebarToggle ? "sidenav" : "sidenav-collapse"}>
@@ -56,7 +60,12 @@ const SideBar = ({ sidebarToggle }) => {
         <ul className="px-2 my-3">
           {/* dashboard */}
           <li>
-            <NavLink to="/" className="nav-item" activeclassname="active">
+            <NavLink
+              to="/"
+              className="nav-item"
+              activeclassname="active"
+              onClick={hidePopup}
+            >
               <md.MdDashboard style={{ fontSize: "28px" }} />
               <span
                 className={sidebarToggle ? "menu-item" : "menu-item-collapse"}
@@ -71,7 +80,7 @@ const SideBar = ({ sidebarToggle }) => {
             onClick={() => toggleDropdown("classroom")}
             className="nav-dropdown"
           >
-            <div className="nav-item">
+            <div className="nav-item" onClick={hidePopup}>
               <md.MdClass style={{ fontSize: "28px" }} />
               <span
                 className={sidebarToggle ? "menu-item" : "menu-item-collapse"}
@@ -86,7 +95,11 @@ const SideBar = ({ sidebarToggle }) => {
             <ul className="sub-menu">
               {/* add classroom */}
               <li>
-                <NavLink to="/AddClassRoom" className="sub-item">
+                <NavLink
+                  to="/AddClassRoom"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={
@@ -100,7 +113,11 @@ const SideBar = ({ sidebarToggle }) => {
 
               {/* edit classroom */}
               <li>
-                <NavLink to="/EditClassRoom" className="sub-item">
+                <NavLink
+                  to="/EditClassRoom"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={
@@ -119,7 +136,7 @@ const SideBar = ({ sidebarToggle }) => {
             onClick={() => toggleDropdown("student")}
             className="nav-dropdown"
           >
-            <div className="nav-item">
+            <div className="nav-item" onClick={hidePopup}>
               <PiStudentFill style={{ fontSize: "28px" }} />
               <span
                 className={sidebarToggle ? "menu-item" : "menu-item-collapse"}
@@ -134,7 +151,11 @@ const SideBar = ({ sidebarToggle }) => {
             <ul className="sub-menu">
               {/* add student */}
               <li>
-                <NavLink to="/AddStudent" className="sub-item">
+                <NavLink
+                  to="/AddStudent"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={
@@ -148,7 +169,11 @@ const SideBar = ({ sidebarToggle }) => {
 
               {/* edit student */}
               <li>
-                <NavLink to="/EditStudent" className="sub-item">
+                <NavLink
+                  to="/EditStudent"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={
@@ -167,7 +192,7 @@ const SideBar = ({ sidebarToggle }) => {
             onClick={() => toggleDropdown("payment")}
             className="nav-dropdown"
           >
-            <div className="nav-item">
+            <div className="nav-item" onClick={hidePopup}>
               <md.MdOutlinePayment style={{ fontSize: "28px" }} />
               <span
                 className={sidebarToggle ? "menu-item" : "menu-item-collapse"}
@@ -182,7 +207,7 @@ const SideBar = ({ sidebarToggle }) => {
             <ul className="sub-menu">
               {/* fees */}
               <li>
-                <NavLink to="/Fees" className="sub-item">
+                <NavLink to="/Fees" className="sub-item" onClick={hidePopup}>
                   <FaRegCircle />
                   <span
                     className={
@@ -196,7 +221,7 @@ const SideBar = ({ sidebarToggle }) => {
 
               {/* hostel */}
               <li>
-                <NavLink to="/Hostel" className="sub-item">
+                <NavLink to="/Hostel" className="sub-item" onClick={hidePopup}>
                   <FaRegCircle />
                   <span
                     className={
@@ -212,7 +237,7 @@ const SideBar = ({ sidebarToggle }) => {
 
           {/* support */}
           <li>
-            <NavLink to="/Support" className="nav-item">
+            <NavLink to="/Support" className="nav-item" onClick={hidePopup}>
               <md.MdSupport style={{ fontSize: "28px" }} />
               <span
                 className={sidebarToggle ? "menu-item" : "menu-item-collapse"}
@@ -222,6 +247,9 @@ const SideBar = ({ sidebarToggle }) => {
             </NavLink>
           </li>
         </ul>
+
+        {/* popups */}
+        {renderPopup()}
       </div>
     </nav>
   );

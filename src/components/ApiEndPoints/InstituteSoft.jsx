@@ -26,10 +26,10 @@ const InstituteSoft = {
   Student: {
     GetActiveStudent: "/api/Student/GetActiveStudent",
 
-    //Post method
+    // post method
     SetStudent: "/api/Student/SetStudent",
 
-    //Delete Student
+    // delete student
     DeleteStudent: "/api/Student/DeleteStudent?StudentId={0}",
 
     // edit student
@@ -37,6 +37,12 @@ const InstituteSoft = {
 
     // update student
     UpdateClassRoom: "/api/Student/UpdateStudent",
+  },
+
+  // support api
+  Support: {
+    // post method
+    SetSupport: "/api/Support/SetSupport",
   },
 };
 

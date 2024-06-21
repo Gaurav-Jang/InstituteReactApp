@@ -4,7 +4,7 @@ import axios from "axios"; // axios
 import { PencilSquare, Trash, Search } from "react-bootstrap-icons"; // react-bootstraps icon
 import { useNavigate } from "react-router-dom"; // navigation
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
-import "../../css/EditClassRoom.css"; // css file
+import "../../css/EditClassRoom.css"; // custom css file
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 
 const EditClassroom = ({ setProgress }) => {

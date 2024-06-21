@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react"; // hooks
 import PropTypes from "prop-types"; // prop-types
-import ErrorPopup from "../../validation/ErrorPopup"; // errorPopup
-import SuccessPopup from "../../validation/SuccessPopup"; // successPopup
-import Help from "../../../assets/Support/help-and-support.svg"; // image
+import { useEffect, useState } from "react"; // hooks
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
+import axios from "axios"; // axios (get : post)
+import usePopup from "../../CustomHooks/usePopup"; // custom hook
+import "../../css/Support.css"; // custom css file
+import validator from "validator"; // email validator
 
-const Support = ({ setProgress }) => {
+const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
+  // top loading bar
   useEffect(() => {
     setProgress(40);
     setTimeout(() => {
@@ -12,203 +15,226 @@ const Support = ({ setProgress }) => {
     }, 300);
   }, [setProgress]);
 
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
-  // collecting input form data
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    subject: "",
-    message: "",
+  // initial data in form's input field
+  const [data, setData] = useState({
+    SupportId: "",
+    FullName: "",
+    Email: "",
+    Subject: "",
+    Message: "",
   });
 
-  // form submit
+  // validation errors state
+  const [errors, setErrors] = useState({});
+
+  // custom hook for popups
+  const { renderPopup, showPopup, hidePopup } = usePopup();
+
+  // function to reset form data
+  const resetForm = () => {
+    setData({
+      SupportId: "",
+      FullName: "",
+      Email: "",
+      Subject: "",
+      Message: "",
+    });
+    setErrors("error in resetting form data");
+  };
+
+  // support api
+  const setSupportData = () => {
+    const dataSet = {
+      SupportId: data.SupportId,
+      FullName: data.FullName,
+      Email: data.Email,
+      Subject: data.Subject,
+      Message: data.Message,
+    };
+
+    // sending data to APIs endpoint using POST method
+    axios
+      .post(InstituteSoft.BaseURL + InstituteSoft.Support.SetSupport, dataSet) // api's endpoint
+      .then((response) => {
+        console.log(response.data);
+        showPopup("success", {
+          title: "Form Submitted Successfully",
+          confirmBtn: false,
+          link: "/",
+        }); // success popup
+        resetForm(); // reset form after submission
+      })
+      .catch((error) => {
+        console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
+        showPopup("error", {
+          title: "Error!",
+          text: "Please add some data in the form.",
+        }); // show error popup
+      });
+  };
+
+  // input handler (onChange)
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+    hidePopup(); // hide popups
+  };
+
+  // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validateFormData(formData)) {
-      setShowSuccessPopup(true); // show success popup
-    } else {
-      setShowErrorPopup(true); // show error popup
+    let newErrors = {}; // new var for displaying empty input boxes
+    // full name
+    if (!data.FullName) newErrors.FullName = "Full Name is required";
+    // email
+    if (!data.Email) {
+      newErrors.Email = "Email is required";
+    } else if (!validator.isEmail(data.Email)) {
+      newErrors.Email = "Invalid email address";
     }
-  };
-
-  // validation
-  const validateFormData = (formData) => {
-    const { fullName, email, subject, message } = formData;
-    // validating
-    if (!fullName || !email || !subject || !message) {
-      return false; // show error popup
+    // subject
+    if (!data.Subject) newErrors.Subject = "Subject is required";
+    // message
+    if (!data.Message) newErrors.Message = "Message is required";
+    // check if there is any error
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      showPopup("error", {
+        title: "Error!",
+        text: "Please complete the form.",
+      }); // shows error popup
     } else {
-      console.log(formData);
-      return true; // show success popup
+      setSupportData(); // submit the data
     }
-  };
-
-  // closing error popup
-  const handleCloseErrorPopup = () => {
-    setShowErrorPopup(false);
-  };
-
-  // closing success popup
-  const handleCloseSuccessPopup = () => {
-    setShowSuccessPopup(false);
   };
 
   return (
     <>
-      <div className="w-full min-h-screen flex flex-col justify-between items-center p-4 gap-10 bg-slate-200 dark:bg-[#262450] rounded-3xl">
-        {/* main */}
-        <div className="flex items-center xl:gap-10 xs:gap-0">
-          <div className="space-y-10">
-            {/* head text */}
-            <div className="space-y-4 md:ml-10 xs:ml-0">
-              <p className="text-slate-500 text-lg">Hello There!</p>
-              <h1 className="dark:text-white text-6xl font-bold">
-                Let's Solve Your <span className="text-sky-500">Problem</span>.
-              </h1>
-              <p className="dark:text-white text-lg font-medium">
-                I'd love to meet up with you to discuss your venture, and
-                potential collaborations.
-              </p>
-            </div>
+      <div
+        style={{
+          marginLeft: "250px",
+          paddingTop: "50px",
+          backgroundColor: "#FBFBFE",
+          height: "100%",
+        }}
+      >
+        {/* main content */}
+        <section className="add-container container p-4">
+          {/* page head */}
+          <div className="space-y-2 xs:ml-0">
+            <p className="text-slate-500 text-lg">Say hello</p>
+            <h1 className="dark:text-white text-3xl font-bold">
+              Let's Work <span className="text-sky-500">Together</span>.
+            </h1>
+            <p className="dark:text-white text-lg font-medium">
+              I'd love to meet up with you to discuss your venture, and
+              potential collaborations.
+            </p>
+          </div>
 
-            {/* form */}
-            <div className="md:mx-10 xs:mx-0">
-              <form
-                className="needs-validation w-full space-y-5"
-                noValidate
-                onSubmit={handleSubmit}
+          {/* form */}
+          <div className="mt-4 md:mx-10 xs:mx-0">
+            <form className="needs-validation w-full space-y-5">
+              {/* full name */}
+              <div>
+                <label className="form-label dark:text-white">Full Name</label>
+                <input
+                  type="text"
+                  className={`form-control ${
+                    errors.FullName ? "is-invalid" : ""
+                  }`}
+                  name="FullName"
+                  minLength={3}
+                  maxLength={50}
+                  value={data.FullName}
+                  onChange={handleInputChange}
+                  placeholder="Joe Doe"
+                />
+                {errors.FullName && (
+                  <div className="invalid-feedback">{errors.FullName}</div>
+                )}
+              </div>
+
+              {/* email */}
+              <div>
+                <label className="form-label dark:text-white">Email</label>
+                <input
+                  type="email"
+                  className={`form-control ${errors.Email ? "is-invalid" : ""}`}
+                  name="Email"
+                  value={data.Email}
+                  onChange={handleInputChange}
+                  placeholder="example@gmail.com"
+                />
+                {errors.Email && (
+                  <div className="invalid-feedback">{errors.Email}</div>
+                )}
+              </div>
+
+              {/* subject */}
+              <div>
+                <label className="form-label dark:text-white">Subject</label>
+                <input
+                  type="text"
+                  className={`form-control ${
+                    errors.Subject ? "is-invalid" : ""
+                  }`}
+                  name="Subject"
+                  minLength={1}
+                  maxLength={100}
+                  value={data.Subject}
+                  onChange={handleInputChange}
+                  placeholder="Enter your subject..."
+                />
+                {errors.Subject && (
+                  <div className="invalid-feedback">{errors.Subject}</div>
+                )}
+              </div>
+
+              {/* message */}
+              <div>
+                <label className="form-label dark:text-white">Message</label>
+                <textarea
+                  type="textarea"
+                  className={`h-24 form-control resize-none ${
+                    errors.Message ? "is-invalid" : ""
+                  }`}
+                  name="Message"
+                  minLength={1}
+                  maxLength={250}
+                  value={data.Message}
+                  onChange={handleInputChange}
+                  placeholder="Enter your message..."
+                />
+                <span className="text-slate-500 dark:text-slate-400 text-sm">
+                  max length 250
+                </span>
+                {errors.Message && (
+                  <div className="invalid-feedback">{errors.Message}</div>
+                )}
+              </div>
+
+              {/* submit button */}
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={handleSubmit}
               >
-                {/* full name */}
-                <div className="">
-                  <label
-                    htmlFor="validationCustom03"
-                    className="form-label dark:text-white"
-                  >
-                    Full Name
-                  </label>
-
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="validationCustom03"
-                    value={formData.fullName}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        fullName: e.target.value,
-                      })
-                    }
-                    placeholder="Full Name"
-                    required
-                  />
-                  <div className="valid-feedback">Looks good!</div>
-                </div>
-
-                {/* email */}
-                <div className="">
-                  <label
-                    htmlFor="validationCustom03"
-                    className="form-label dark:text-white"
-                  >
-                    Email
-                  </label>
-
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="validationCustom03"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        email: e.target.value,
-                      })
-                    }
-                    placeholder="Email"
-                    required
-                  />
-                  <div className="valid-feedback">Looks good!</div>
-                </div>
-
-                {/* subject */}
-                <div className="">
-                  <label
-                    htmlFor="validationCustom03"
-                    className="form-label dark:text-white"
-                  >
-                    Subject
-                  </label>
-
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="validationCustom03"
-                    value={formData.subject}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        subject: e.target.value,
-                      })
-                    }
-                    placeholder="Subject"
-                    required
-                  />
-                  <div className="valid-feedback">Looks good!</div>
-                </div>
-
-                {/* message */}
-                <div className="">
-                  <label
-                    htmlFor="validationCustom03"
-                    className="form-label dark:text-white"
-                  >
-                    Message
-                  </label>
-
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="validationCustom03"
-                    value={formData.message}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        message: e.target.value,
-                      })
-                    }
-                    placeholder="Message"
-                    required
-                  />
-                  <div className="valid-feedback">Looks good!</div>
-                </div>
-
-                {/* submit button */}
-                <div className="">
-                  <button className="btn btn-primary" type="submit">
-                    Submit form
-                  </button>
-                </div>
-              </form>
-            </div>
+                Submit
+              </button>
+            </form>
           </div>
+        </section>
 
-          {/* form page image */}
-          <div>
-            <img
-              src={Help}
-              alt=""
-              className="xl:block w-[600px] xxl:w-[1000px] xs:hidden"
-            />
-          </div>
-        </div>
-
-        {/* Error Popup */}
-        {showErrorPopup && <ErrorPopup onClose={handleCloseErrorPopup} />}
-
-        {/* Success Popup */}
-        {showSuccessPopup && <SuccessPopup onClose={handleCloseSuccessPopup} />}
+        {/* popups */}
+        {renderPopup()}
       </div>
     </>
   );
