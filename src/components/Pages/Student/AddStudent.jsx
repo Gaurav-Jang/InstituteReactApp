@@ -4,10 +4,12 @@ import { FiUpload } from "react-icons/fi"; // react icons
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
+import { useSearchParams } from "react-router-dom";
 
 const AddStudent = ({ setProgress }) => {
   const { showPopup, hidePopup, renderPopup } = usePopup();
-
+  // validation errors state
+  const [errors, setErrors] = useState({});
   // top loading bar
   useEffect(() => {
     setProgress(40);
@@ -113,22 +115,40 @@ const AddStudent = ({ setProgress }) => {
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    let newErrors = {}; // for display empty field
     // validation
-    if (
-      data.StudentFirstName !== "" &&
-      data.StudentLastName !== "" &&
-      data.Dob !== "" &&
-      data.FatherFirstName !== "" &&
-      data.FatherLastName !== "" &&
-      data.FatherMobileNumber !== "" &&
-      data.StudentClassRoomName !== "" &&
-      data.Address !== ""
-    ) {
-      setStudentData();
+    if (data.StudentFirstName === "")
+      newErrors.StudentFirstName = "Student firstname requried";
+    if (data.StudentLastName !== "")
+      newErrors.StudentLastName = "Student lastname requried";
+    if (data.Dob !== "") newErrors.Dob = "Enter your Dob";
+    if (data.FatherFirstName !== "")
+      newErrors.FatherFirstName = "Enter father name";
+    if (data.FatherLastName !== "")
+      newErrors.FatherFirstName = "Enter complete father name";
+    if (data.FatherMobileNumber !== "")
+      newErrors.FatherMobileNumber = "Enter father Mobile No.";
+    if (data.StudentClassRoomName !== "")
+      newErrors.StudentClassRoomName = "StudentClassRoomName requried";
+    if (data.Address !== "") newErrors.Address = "Address requried";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      showPopup("error", {
+        title: "Error!",
+        text: "Please complete the form.",
+      }); // shows error popup
     } else {
-      showPopup("error"); // error popup
+      if (paramData === "Submit") {
+        setStudentData();
+      } else {
+        console.log("update");
+      }
     }
   };
+
+  const [searchParam] = useSearchParams();
+  const paramData = searchParam.get("StudentId") != null ? "Update" : "Submit";
 
   // number field validation
   const numVal = ["e", "E", "+", "-", "."];
@@ -163,27 +183,44 @@ const AddStudent = ({ setProgress }) => {
                 <label className="form-label">
                   Student Name <span className="text-red-500 text-base">*</span>
                 </label>
-                <div className="flex items-center gap-4 justify-between">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="StudentFirstName"
-                    minLength={3}
-                    maxLength={50}
-                    value={data.StudentFirstName}
-                    onChange={handleInputChange}
-                    placeholder="First name"
-                  />
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="StudentLastName"
-                    minLength={3}
-                    maxLength={50}
-                    value={data.StudentLastName}
-                    onChange={handleInputChange}
-                    placeholder="Last name"
-                  />
+                <div className="flex items-center gap-3 justify-center align-items-flex-start">
+                  <div className="w-100">
+                    {" "}
+                    <input
+                      type="text"
+                      name="StudentFirstName"
+                      className={`form-control 
+                    ${errors.StudentFirstName ? "is-invalid" : ""}`}
+                      minLength={3}
+                      maxLength={50}
+                      value={data.StudentFirstName}
+                      onChange={handleInputChange}
+                      placeholder="First name"
+                    />
+                    {errors.StudentFirstName && (
+                      <div className="invalid-feedback">
+                        {errors.StudentFirstName}
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-100">
+                    <input
+                      type="text"
+                      className={`form-control 
+                    ${errors.StudentLastName ? "is-invalid" : ""}`}
+                      name="StudentLastName"
+                      minLength={3}
+                      maxLength={50}
+                      value={data.StudentLastName}
+                      onChange={handleInputChange}
+                      placeholder="Last name"
+                    />
+                    {errors.StudentLastName && (
+                      <div className="invalid-feedback">
+                        {errors.StudentLastName}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -230,10 +267,14 @@ const AddStudent = ({ setProgress }) => {
                 <input
                   type="date"
                   name="Dob"
-                  className="form-control"
+                  className={`form-control 
+                    ${errors.Dob ? "is-invalid" : ""}`}
                   value={data.Dob}
                   onChange={handleInputChange}
                 />
+                {errors.Dob && (
+                  <div className="invalid-feedback">{errors.Dob}</div>
+                )}
               </div>
 
               {/* Father Name */}
@@ -241,27 +282,43 @@ const AddStudent = ({ setProgress }) => {
                 <label className="form-label">
                   Father Name <span className="text-base text-red-500">*</span>
                 </label>
-                <div className="flex items-center gap-4 justify-between">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="FatherFirstName"
-                    minLength={3}
-                    maxLength={50}
-                    value={data.FatherFirstName}
-                    onChange={handleInputChange}
-                    placeholder="First name"
-                  />
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="FatherLastName"
-                    minLength={3}
-                    maxLength={50}
-                    value={data.FatherLastName}
-                    onChange={handleInputChange}
-                    placeholder="Last name"
-                  />
+                <div className="flex items-center gap-3 justify-center align-items-flex-start">
+                  <div className="w-100">
+                    <input
+                      type="text"
+                      className={`form-control 
+                    ${errors.FatherFirstName ? "is-invalid" : ""}`}
+                      name="FatherFirstName"
+                      minLength={3}
+                      maxLength={50}
+                      value={data.FatherFirstName}
+                      onChange={handleInputChange}
+                      placeholder="First name"
+                    />
+                    {errors.FatherFirstName && (
+                      <div className="invalid-feedback">
+                        {errors.FatherFirstName}
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-100">
+                    <input
+                      type="text"
+                      className={`form-control 
+                    ${errors.FatherLastName ? "is-invalid" : ""}`}
+                      name="FatherLastName"
+                      minLength={3}
+                      maxLength={50}
+                      value={data.FatherLastName}
+                      onChange={handleInputChange}
+                      placeholder="Last name"
+                    />
+                    {errors.FatherLastName && (
+                      <div className="invalid-feedback">
+                        {errors.FatherLastName}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -273,7 +330,8 @@ const AddStudent = ({ setProgress }) => {
                 </label>
                 <input
                   type="number"
-                  className="form-control"
+                  className={`form-control 
+                    ${errors.FatherMobileNumber ? "is-invalid" : ""}`}
                   name="FatherMobileNumber"
                   value={data.FatherMobileNumber}
                   onChange={handleInputChange}
@@ -285,6 +343,11 @@ const AddStudent = ({ setProgress }) => {
                   }
                   placeholder="Mobile number"
                 />
+                {errors.FatherMobileNumber && (
+                  <div className="invalid-feedback">
+                    {errors.FatherMobileNumber}
+                  </div>
+                )}
               </div>
 
               {/* Additional Details */}
@@ -346,7 +409,8 @@ const AddStudent = ({ setProgress }) => {
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control 
+                    ${errors.StudentClassRoomName ? "is-invalid" : ""}`}
                   name="StudentClassRoomName"
                   minLength={3}
                   maxLength={50}
@@ -357,6 +421,11 @@ const AddStudent = ({ setProgress }) => {
                 <span className="text-slate-500 dark:text-slate-400 text-sm">
                   ClassRoom Name should be between 3-50
                 </span>
+                {errors.StudentClassRoomName && (
+                  <div className="invalid-feedback">
+                    {errors.StudentClassRoomName}
+                  </div>
+                )}
               </div>
 
               {/* Address */}
@@ -366,7 +435,8 @@ const AddStudent = ({ setProgress }) => {
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control 
+                    ${errors.Address ? "is-invalid" : ""}`}
                   name="Address"
                   minLength={3}
                   maxLength={50}
@@ -374,6 +444,9 @@ const AddStudent = ({ setProgress }) => {
                   onChange={handleInputChange}
                   placeholder="Address"
                 />
+                {errors.Address && (
+                  <div className="invalid-feedback">{errors.Address}</div>
+                )}
               </div>
 
               {/* Category */}

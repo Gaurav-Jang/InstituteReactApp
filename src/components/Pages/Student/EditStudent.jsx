@@ -40,22 +40,24 @@ const EditStudent = ({ setProgress }) => {
   }, [setProgress]);
 
   // Handle edit action
+  // const handleEdit = (studentId) => {
+  //   const apiEditData =
+  //     InstituteSoft.BaseURL +
+  //     InstituteSoft.ClassRoom.EditClassRoom.replace("{0}", studentId);
+  //   axios
+  //     .get(apiEditData)
+  //     .then((response) => {
+  //       navigate("/AddStudent", {
+  //         state: { StudentData: response.data },
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       showPopup("error", { message: "Failed to edit student." });
+  //     });
+  // };
   const handleEdit = (studentId) => {
-    const apiEditData =
-      InstituteSoft.BaseURL +
-      InstituteSoft.ClassRoom.EditClassRoom.replace("{0}", studentId);
-    axios
-      .get(apiEditData)
-      .then((response) => {
-        navigate("/AddStudent", {
-          state: { StudentData: response.data },
-        });
-      })
-      .catch((error) => {
-        showPopup("error", { message: "Failed to edit student." });
-      });
+    navigate(`/AddStudent?StudentId=${studentId}`);
   };
-
   // delete
   const handleDelete = (studentId) => {
     showPopup("delete", {

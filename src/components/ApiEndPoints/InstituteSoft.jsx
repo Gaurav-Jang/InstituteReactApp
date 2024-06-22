@@ -1,5 +1,5 @@
 const InstituteSoft = {
-  BaseURL: "https://localhost:7193",
+  BaseURL: "http://localhost:5002",
 
   // class room api
   ClassRoom: {

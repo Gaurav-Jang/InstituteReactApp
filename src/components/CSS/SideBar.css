@@ -7,14 +7,14 @@
 
 /* sidenav */
 .sidenav {
-  /* background-color: #343a40; */
+  background-color: #343a40;
   /* background-color: #010630; */
-  background-color: #110a49;
+  /* background-color: #110a49; */
   z-index: 1;
   min-height: 100%;
   position: fixed;
   top: 0;
-  /* box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); */
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   width: 250px;
   color: #ffffff;
   transition: all 0.2s ease-in-out;

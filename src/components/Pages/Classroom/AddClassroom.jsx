@@ -141,6 +141,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     e.preventDefault();
     let newErrors = {}; // new var for displaying empty input boxes
     // classroom name
+    debugger;
     if (!data.ClassRoomName)
       newErrors.ClassRoomName = "ClassRoom Name is required";
     // class
