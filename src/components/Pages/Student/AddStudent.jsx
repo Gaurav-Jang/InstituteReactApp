@@ -75,7 +75,11 @@ const AddStudent = ({ setProgress }) => {
       .post(InstituteSoft.BaseURL + InstituteSoft.Student.SetStudent, dataSet)
       .then((response) => {
         console.log(response.data);
-        showPopup("success");
+        showPopup("success", {
+          title: "Student Added Successfully",
+          confirmBtn: true,
+          link: "/EditStudent",
+        }); // success popup
       })
       .catch((error) => {
         console.error(error.response ? error.response.data : error.message);
@@ -119,18 +123,18 @@ const AddStudent = ({ setProgress }) => {
     // validation
     if (data.StudentFirstName === "")
       newErrors.StudentFirstName = "Student firstname requried";
-    if (data.StudentLastName !== "")
+    if (data.StudentLastName === "")
       newErrors.StudentLastName = "Student lastname requried";
-    if (data.Dob !== "") newErrors.Dob = "Enter your Dob";
-    if (data.FatherFirstName !== "")
-      newErrors.FatherFirstName = "Enter father name";
-    if (data.FatherLastName !== "")
-      newErrors.FatherFirstName = "Enter complete father name";
-    if (data.FatherMobileNumber !== "")
-      newErrors.FatherMobileNumber = "Enter father Mobile No.";
-    if (data.StudentClassRoomName !== "")
+    if (data.Dob === "") newErrors.Dob = "Dob requried";
+    if (data.FatherFirstName === "")
+      newErrors.FatherFirstName = "FatherFirstName requried";
+    if (data.FatherLastName === "")
+      newErrors.FatherLastName = "FatherLastName requried";
+    if (data.FatherMobileNumber === "")
+      newErrors.FatherMobileNumber = "Father mobile no. requried";
+    if (data.StudentClassRoomName === "")
       newErrors.StudentClassRoomName = "StudentClassRoomName requried";
-    if (data.Address !== "") newErrors.Address = "Address requried";
+    if (data.Address === "") newErrors.Address = "Address requried";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -183,7 +187,7 @@ const AddStudent = ({ setProgress }) => {
                 <label className="form-label">
                   Student Name <span className="text-red-500 text-base">*</span>
                 </label>
-                <div className="flex items-center gap-3 justify-center align-items-flex-start">
+                <div className="flex  gap-3 justify-center align-items-flex-start">
                   <div className="w-100">
                     {" "}
                     <input
@@ -282,7 +286,7 @@ const AddStudent = ({ setProgress }) => {
                 <label className="form-label">
                   Father Name <span className="text-base text-red-500">*</span>
                 </label>
-                <div className="flex items-center gap-3 justify-center align-items-flex-start">
+                <div className="flex  gap-3 justify-center align-items-flex-start">
                   <div className="w-100">
                     <input
                       type="text"
