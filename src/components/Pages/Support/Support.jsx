@@ -5,6 +5,7 @@ import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/Support.css"; // custom css file
 import validator from "validator"; // email validator
+import backGround from "/background.webp";
 
 const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
   // top loading bar
@@ -117,31 +118,21 @@ const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
 
   return (
     <>
-      <div
-        style={{
-          marginLeft: "250px",
-          paddingTop: "50px",
-          backgroundColor: "#FBFBFE",
-          height: "100%",
-        }}
-      >
+      <div className="main-container">
         {/* main content */}
-        <section className="add-container container p-4">
-          {/* page head */}
-          <div className="space-y-2 xs:ml-0">
-            <p className="text-slate-500 text-lg">Say hello</p>
-            <h1 className="dark:text-white text-3xl font-bold">
-              Let's Work <span className="text-sky-500">Together</span>.
-            </h1>
-            <p className="dark:text-white text-lg font-medium">
-              I'd love to meet up with you to discuss your venture, and
-              potential collaborations.
+        <section className="add-container p-4">
+          {/* head text */}
+          <div>
+            <h1 className="mb-2 text-4xl font-bold text-blue-600">Support</h1>
+            <p className="text-lg">
+              We are here to help you. Please fill out the form below and we
+              will get back to you as soon as possible.
             </p>
           </div>
 
           {/* form */}
           <div className="mt-4 md:mx-10 xs:mx-0">
-            <form className="needs-validation w-full space-y-5">
+            <form className="needs-validation w-full space-y-4">
               {/* full name */}
               <div>
                 <label className="form-label dark:text-white">Full Name</label>
@@ -213,9 +204,9 @@ const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                   onChange={handleInputChange}
                   placeholder="Enter your message..."
                 />
-                <span className="text-slate-500 dark:text-slate-400 text-sm">
+                {/* <span className="text-slate-400 text-sm supportSpan">
                   max length 250
-                </span>
+                </span> */}
                 {errors.Message && (
                   <div className="invalid-feedback">{errors.Message}</div>
                 )}

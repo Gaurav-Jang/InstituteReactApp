@@ -12,7 +12,7 @@ const SuccessPopup = ({ title, confirmBtn, link, onPopupClosed }) => {
       icon: "success",
       // cancel button
       showCancelButton: true,
-      cancelButtonColor: "#d33",
+      cancelButtonColor: "#a5a0b7",
       cancelButtonText: "Close",
       // confirm button
       showConfirmButton: confirmBtn,

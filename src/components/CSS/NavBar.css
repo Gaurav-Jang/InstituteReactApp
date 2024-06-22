@@ -6,27 +6,30 @@
 .topnav {
   width: calc(100% - 250px);
   margin-left: 250px;
+  z-index: 1;
 }
 .topnav-expand,
 .topnav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
+  background-color: #110a49;
   padding: 0.9rem 1rem;
   font-size: 20px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
   position: fixed;
   top: 0;
   transition: all 0.2s ease-in-out;
 }
 .menu {
   cursor: pointer;
+  color: #ffffff;
 }
 .topnav-right {
   display: flex;
   align-items: center;
   column-gap: 12px;
+  color: #ffffff;
 }
 .topnav-right .bell,
 .topnav-right .share {
