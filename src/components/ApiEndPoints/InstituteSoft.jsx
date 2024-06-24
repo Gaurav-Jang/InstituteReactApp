@@ -33,7 +33,7 @@ const InstituteSoft = {
     DeleteStudent: "/api/Student/DeleteStudent?StudentId={0}",
 
     // edit student
-    GetStudentByStudentId: "/api/ClassRoom/GetStudentByStudentId?StudentId={0}",
+    GetStudentByStudentId: "/api/Student/GetStudentByStudentId?StudentId={0}",
 
     // update student
     UpdateClassRoom: "/api/Student/UpdateStudent",

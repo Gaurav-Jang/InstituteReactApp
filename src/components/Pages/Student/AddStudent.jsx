@@ -154,6 +154,56 @@ const AddStudent = ({ setProgress }) => {
   const [searchParam] = useSearchParams();
   const paramData = searchParam.get("StudentId") != null ? "Update" : "Submit";
 
+  // edit hook
+  useEffect(() => {
+    if (searchParam.get("StudentId") != null) getStudentByStudentId();
+  }, [searchParam]);
+
+  // edit data
+  const getStudentByStudentId = () => {
+    const studentId = searchParam.get("StudentId");
+    const apiEditData =
+      InstituteSoft.BaseURL +
+      InstituteSoft.Student.GetStudentByStudentId.replace("{0}", studentId); // api's endpoint
+    axios
+      .get(apiEditData)
+      .then((response) => {
+        // Ensure no field is undefined or null
+        debugger;
+        setData((prevData) => ({
+          ...prevData,
+          StudentId: response.data.StudentId || "",
+          StudentFirstName: response.data.StudentFirstName || "",
+          StudentLastName: response.data.StudentLastName || "",
+          MobileNumber: response.data.MobileNumber || "",
+          Gender: response.data.Gender || "",
+          Dob: response.data.Dob || "",
+          FatherFirstName: response.data.FatherFirstName || "",
+          FatherLastName: response.data.FatherLastName || "",
+          FatherMobileNumber: response.data.FatherMobileNumber || "",
+          MotherFirstName: response.data.MotherFirstName || "",
+          MotherLastName: response.data.MotherLastName || "",
+          MotherMobileNumber: response.data.MotherMobileNumber || "",
+          StudentClassRoomName: response.data.StudentClassRoomName || "",
+          Address: response.data.Address || "",
+          Category: response.data.Category || "",
+          Remarks: response.data.Remarks || "",
+          Photo: response.data.Photo || "",
+          AvailingTransport: response.data.AvailingTransport || "",
+          AvailingSchool: response.data.AvailingSchool || "",
+          AvailingHostel: response.data.AvailingHostel || "",
+          Migrated: response.data.Migrated || "",
+        }));
+      })
+      .catch((error) => {
+        hidePopup(); // hide all popups
+        showPopup("error", {
+          title: "Error!",
+          text: "You didn't edit anything in the form.",
+        }); // show error popup
+      });
+  };
+
   // number field validation
   const numVal = ["e", "E", "+", "-", "."];
 
