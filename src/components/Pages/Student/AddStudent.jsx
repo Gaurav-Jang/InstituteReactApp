@@ -172,27 +172,27 @@ const AddStudent = ({ setProgress }) => {
         debugger;
         setData((prevData) => ({
           ...prevData,
-          StudentId: response.data.StudentId || "",
-          StudentFirstName: response.data.StudentFirstName || "",
-          StudentLastName: response.data.StudentLastName || "",
-          MobileNumber: response.data.MobileNumber || "",
-          Gender: response.data.Gender || "",
-          Dob: response.data.Dob || "",
-          FatherFirstName: response.data.FatherFirstName || "",
-          FatherLastName: response.data.FatherLastName || "",
-          FatherMobileNumber: response.data.FatherMobileNumber || "",
-          MotherFirstName: response.data.MotherFirstName || "",
-          MotherLastName: response.data.MotherLastName || "",
-          MotherMobileNumber: response.data.MotherMobileNumber || "",
-          StudentClassRoomName: response.data.StudentClassRoomName || "",
-          Address: response.data.Address || "",
-          Category: response.data.Category || "",
-          Remarks: response.data.Remarks || "",
-          Photo: response.data.Photo || "",
-          AvailingTransport: response.data.AvailingTransport || "",
-          AvailingSchool: response.data.AvailingSchool || "",
-          AvailingHostel: response.data.AvailingHostel || "",
-          Migrated: response.data.Migrated || "",
+          StudentId: response.data.studentId || "",
+          StudentFirstName: response.data.studentFirstName || "",
+          StudentLastName: response.data.studentLastName || "",
+          MobileNumber: response.data.mobileNumber || "",
+          Gender: response.data.gender || "",
+          Dob: response.data.dob || "",
+          FatherFirstName: response.data.fatherFirstName || "",
+          FatherLastName: response.data.fatherLastName || "",
+          FatherMobileNumber: response.data.fatherMobileNumber || "",
+          MotherFirstName: response.data.motherFirstName || "",
+          MotherLastName: response.data.motherLastName || "",
+          MotherMobileNumber: response.data.motherMobileNumber || "",
+          StudentClassRoomName: response.data.studentClassRoomName || "",
+          Address: response.data.address || "",
+          Category: response.data.category || "",
+          Remarks: response.data.remarks || "",
+          Photo: response.data.photo || "",
+          AvailingTransport: response.data.availingTransport || false,
+          AvailingSchool: response.data.availingSchool || false,
+          AvailingHostel: response.data.availingHostel || false,
+          Migrated: response.data.migrated || false,
         }));
       })
       .catch((error) => {
@@ -641,7 +641,7 @@ const AddStudent = ({ setProgress }) => {
                   type="button"
                   onClick={handleSubmit}
                 >
-                  Submit
+                  {paramData}
                 </button>
               </div>
             </form>
