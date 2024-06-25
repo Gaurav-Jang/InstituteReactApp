@@ -36,7 +36,7 @@ const InstituteSoft = {
     GetStudentByStudentId: "/api/Student/GetStudentByStudentId?StudentId={0}",
 
     // update student
-    UpdateClassRoom: "/api/Student/UpdateStudent",
+    UpdateStudent: "/api/Student/UpdateStudent",
   },
 
   // support api

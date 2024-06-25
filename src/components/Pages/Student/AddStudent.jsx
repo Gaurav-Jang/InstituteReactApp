@@ -146,7 +146,7 @@ const AddStudent = ({ setProgress }) => {
       if (paramData === "Submit") {
         setStudentData();
       } else {
-        console.log("update");
+        updateStudent();
       }
     }
   };
@@ -169,7 +169,6 @@ const AddStudent = ({ setProgress }) => {
       .get(apiEditData)
       .then((response) => {
         // Ensure no field is undefined or null
-        debugger;
         setData((prevData) => ({
           ...prevData,
           StudentId: response.data.studentId || "",
@@ -196,7 +195,64 @@ const AddStudent = ({ setProgress }) => {
         }));
       })
       .catch((error) => {
+        debugger;
         hidePopup(); // hide all popups
+        showPopup("error", {
+          title: "Error!",
+          text: "You didn't edit anything in the form.",
+        }); // show error popup
+      });
+  };
+
+  // update data
+  const updateStudent = () => {
+    const dataSet = {
+      StudentId: data.StudentId,
+      StudentFirstName: data.StudentFirstName,
+      StudentLastName: data.StudentLastName,
+      MobileNumber: data.MobileNumber,
+      Gender: data.Gender,
+      Dob: data.Dob,
+      FatherFirstName: data.FatherFirstName,
+      FatherLastName: data.FatherLastName,
+      FatherMobileNumber: data.FatherMobileNumber,
+      MotherFirstName: data.MotherFirstName,
+      MotherLastName: data.MotherLastName,
+      MotherMobileNumber: data.MotherMobileNumber,
+      StudentClassRoomName: data.StudentClassRoomName,
+      Address: data.Address,
+      Category: data.Category,
+      Remarks: data.Remarks,
+      Photo: data.Photo,
+      AvailingTransport: data.AvailingTransport,
+      AvailingSchool: data.AvailingSchool,
+      AvailingHostel: data.AvailingHostel,
+      Migrated: data.Migrated,
+    };
+
+    axios
+      .post(
+        InstituteSoft.BaseURL + InstituteSoft.Student.UpdateStudent,
+        dataSet
+      ) // api's endpoint
+      .then((response) => {
+        debugger;
+        // compares api's return message with your message
+        if (response.data === "Student already exists, make some changes.") {
+          showPopup("error", {
+            title: "Duplicate Student",
+            text: "The student already exists. Please try a different name.",
+          }); // duplicate error popup
+        } else {
+          showPopup("success", {
+            title: "Student Updated Successfully",
+            confirmBtn: true,
+            link: "/EditStudent",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
         showPopup("error", {
           title: "Error!",
           text: "You didn't edit anything in the form.",
