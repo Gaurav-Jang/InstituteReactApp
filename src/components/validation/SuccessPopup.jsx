@@ -4,7 +4,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import "sweetalert2/src/sweetalert2.scss";
 import PropTypes from "prop-types"; // prop type
 
-const SuccessPopup = ({ title, confirmBtn, link, onPopupClosed }) => {
+const SuccessPopup = ({ title, confirmBtn, link, linkText, onPopupClosed }) => {
   useEffect(() => {
     const swalInstance = Swal.fire({
       title: title, // prop
@@ -17,7 +17,7 @@ const SuccessPopup = ({ title, confirmBtn, link, onPopupClosed }) => {
       // confirm button
       showConfirmButton: confirmBtn,
       confirmButtonColor: "#3085d6",
-      confirmButtonText: `<a href="${link}" style="color:white;text-decoration:none;">Edit ClassRoom</a>`, // prop
+      confirmButtonText: `<a href="${link}" style="color:white;text-decoration:none;">${linkText}</a>`, // prop
     });
 
     // confirmation handle
@@ -42,6 +42,7 @@ SuccessPopup.propTypes = {
   title: PropTypes.string.isRequired,
   confirmBtn: PropTypes.bool.isRequired,
   link: PropTypes.string.isRequired,
+  linkText: PropTypes.string.isRequired,
   onPopupClosed: PropTypes.func.isRequired,
 };
 

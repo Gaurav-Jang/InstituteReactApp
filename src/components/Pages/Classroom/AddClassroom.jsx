@@ -109,6 +109,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
             title: "Classroom Added Successfully",
             confirmBtn: true,
             link: "/EditClassRoom",
+            linkText: "Edit ClassRoom",
           }); // success popup
           resetForm(); // reset form after submission
         }
@@ -140,8 +141,8 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     let newErrors = {}; // new var for displaying empty input boxes
+
     // classroom name
-    debugger;
     if (!data.ClassRoomName)
       newErrors.ClassRoomName = "ClassRoom Name is required";
     // class
@@ -236,6 +237,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
             title: "Classroom Updated Successfully",
             confirmBtn: true,
             link: "/EditClassRoom",
+            linkText: "Edit ClassRoom",
           });
           resetForm(); // resets form data
         }

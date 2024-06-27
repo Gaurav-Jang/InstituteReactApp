@@ -77,92 +77,94 @@ const EditClassroom = ({ setProgress }) => {
   };
 
   return (
-    <div className="edit-container">
-      {/* search */}
-      <div className="search-container">
-        {/* search icon */}
-        <Search className="text-2xl" />
+    <>
+      <div className="edit-container">
+        {/* search */}
+        <div className="search-container">
+          {/* search icon */}
+          <Search className="text-2xl" />
 
-        {/* search box */}
-        <input
-          type="text"
-          className="form-control search-input"
-          placeholder="Search by ClassRoom Name"
-          value={searchItem}
-          onChange={handleInputChange}
-        />
+          {/* search box */}
+          <input
+            type="text"
+            className="form-control search-input"
+            placeholder="Search by ClassRoom Name"
+            value={searchItem}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        {/* table */}
+        <div className="table-container">
+          <table className="table table-striped table-bordered fixed-header">
+            {/* table head */}
+            <thead>
+              {/* table head row */}
+              <tr>
+                {/* s.no */}
+                <th scope="col">S.No</th>
+                {/* classroom name */}
+                <th scope="col">ClassRoom Name</th>
+                {/* class */}
+                <th scope="col">Class</th>
+                {/* classroom type */}
+                <th scope="col">ClassRoom Type</th>
+                {/* price */}
+                <th scope="col">Price</th>
+                {/* buttons */}
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+
+            {/* table body */}
+            <tbody>
+              {/* table body row */}
+              {activeClassRoom
+                .filter((classRoom) =>
+                  classRoom.classRoomName
+                    .toLowerCase()
+                    .includes(searchItem.toLowerCase())
+                )
+                .map((classRoom, index) => (
+                  <tr key={classRoom.classRoomId}>
+                    {/* s.no */}
+                    <td>{index + 1}</td>
+                    {/* classroom name */}
+                    <td>{classRoom.classRoomName}</td>
+                    {/* class */}
+                    <td>{classRoom.class}</td>
+                    {/* classroom type */}
+                    <td>{classRoom.classRoomType}</td>
+                    {/* price */}
+                    <td>{classRoom.price}</td>
+                    {/* buttons */}
+                    <td>
+                      {/* edit */}
+                      <button
+                        className="btn text-primary"
+                        onClick={() => handleEdit(classRoom.classRoomId)}
+                      >
+                        <PencilSquare />
+                      </button>
+
+                      {/* delete */}
+                      <button
+                        className="btn text-danger"
+                        onClick={() => handleDelete(classRoom.classRoomId)}
+                      >
+                        <Trash />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* popup */}
+        {renderPopup()}
       </div>
-
-      {/* table */}
-      <div className="table-container">
-        <table className="table table-striped table-bordered fixed-header">
-          {/* table head */}
-          <thead>
-            {/* table head row */}
-            <tr>
-              {/* s.no */}
-              <th scope="col">S.No</th>
-              {/* classroom name */}
-              <th scope="col">ClassRoom Name</th>
-              {/* class */}
-              <th scope="col">Class</th>
-              {/* classroom type */}
-              <th scope="col">ClassRoom Type</th>
-              {/* price */}
-              <th scope="col">Price</th>
-              {/* buttons */}
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-
-          {/* table body */}
-          <tbody>
-            {/* table body row */}
-            {activeClassRoom
-              .filter((classRoom) =>
-                classRoom.classRoomName
-                  .toLowerCase()
-                  .includes(searchItem.toLowerCase())
-              )
-              .map((classRoom, index) => (
-                <tr key={classRoom.classRoomId}>
-                  {/* s.no */}
-                  <td>{index + 1}</td>
-                  {/* classroom name */}
-                  <td>{classRoom.classRoomName}</td>
-                  {/* class */}
-                  <td>{classRoom.class}</td>
-                  {/* classroom type */}
-                  <td>{classRoom.classRoomType}</td>
-                  {/* price */}
-                  <td>{classRoom.price}</td>
-                  {/* buttons */}
-                  <td>
-                    {/* edit */}
-                    <button
-                      className="btn text-primary"
-                      onClick={() => handleEdit(classRoom.classRoomId)}
-                    >
-                      <PencilSquare />
-                    </button>
-
-                    {/* delete */}
-                    <button
-                      className="btn text-danger"
-                      onClick={() => handleDelete(classRoom.classRoomId)}
-                    >
-                      <Trash />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* popup */}
-      {renderPopup()}
-    </div>
+    </>
   );
 };
 

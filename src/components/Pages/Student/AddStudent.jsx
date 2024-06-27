@@ -7,7 +7,8 @@ import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import { useSearchParams } from "react-router-dom";
 
 const AddStudent = ({ setProgress }) => {
-  const { showPopup, hidePopup, renderPopup } = usePopup();
+  const { showPopup, hidePopup, renderPopup } = usePopup(); // popup's custom hook
+
   // validation errors state
   const [errors, setErrors] = useState({});
   // top loading bar
@@ -20,18 +21,25 @@ const AddStudent = ({ setProgress }) => {
 
   // initial data in form's input field
   const [data, setData] = useState({
+    // student
     StudentId: "",
     StudentFirstName: "",
     StudentLastName: "",
     MobileNumber: "",
     Gender: "",
     Dob: "",
+
+    // father
     FatherFirstName: "",
     FatherLastName: "",
     FatherMobileNumber: "",
+
+    // mother
     MotherFirstName: "",
     MotherLastName: "",
     MotherMobileNumber: "",
+
+    // extras
     StudentClassRoomName: "",
     Address: "",
     Category: "",
@@ -45,8 +53,44 @@ const AddStudent = ({ setProgress }) => {
 
   const [photoPreview, setPhotoPreview] = useState(null);
 
+  // function to reset form data
+  const resetForm = () => {
+    setData({
+      // student
+      StudentId: "",
+      StudentFirstName: "",
+      StudentLastName: "",
+      MobileNumber: "",
+      Gender: "",
+      Dob: "",
+
+      // father
+      FatherFirstName: "",
+      FatherLastName: "",
+      FatherMobileNumber: "",
+
+      // mother
+      MotherFirstName: "",
+      MotherLastName: "",
+      MotherMobileNumber: "",
+
+      // extras
+      StudentClassRoomName: "",
+      Address: "",
+      Category: "",
+      Remarks: "",
+      Photo: "",
+      AvailingTransport: false,
+      AvailingSchool: false,
+      AvailingHostel: false,
+      Migrated: false,
+    });
+    setErrors("error in resetting form data");
+  };
+
   // student api
   const setStudentData = () => {
+    // form data
     const dataSet = {
       StudentId: data.StudentId,
       StudentFirstName: data.StudentFirstName,
@@ -72,18 +116,30 @@ const AddStudent = ({ setProgress }) => {
     };
 
     axios
-      .post(InstituteSoft.BaseURL + InstituteSoft.Student.SetStudent, dataSet)
+      .post(InstituteSoft.BaseURL + InstituteSoft.Student.SetStudent, dataSet) // api's endpoint
       .then((response) => {
-        console.log(response.data);
-        showPopup("success", {
-          title: "Student Added Successfully",
-          confirmBtn: true,
-          link: "/EditStudent",
-        }); // success popup
+        if (response.data === "Class room already exists.") {
+          // compares api's return message with your message
+          showPopup("error", {
+            title: "Duplicate Student",
+            text: "The Student already exists. Please try again.",
+          }); // duplicate error popup
+        } else {
+          showPopup("success", {
+            title: "Student Added Successfully",
+            confirmBtn: true,
+            link: "/EditStudent",
+            linkText: "Edit Student",
+          }); // success popup
+          resetForm(); // reset form after submission
+        }
       })
       .catch((error) => {
-        console.error(error.response ? error.response.data : error.message);
-        showPopup("error");
+        console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
+        showPopup("error", {
+          title: "Error!",
+          text: "Please add some data in the form.",
+        }); // show error popup
       });
   };
 
@@ -119,23 +175,31 @@ const AddStudent = ({ setProgress }) => {
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    let newErrors = {}; // for display empty field
-    // validation
-    if (data.StudentFirstName === "")
-      newErrors.StudentFirstName = "Student firstname requried";
-    if (data.StudentLastName === "")
-      newErrors.StudentLastName = "Student lastname requried";
-    if (data.Dob === "") newErrors.Dob = "Dob requried";
-    if (data.FatherFirstName === "")
-      newErrors.FatherFirstName = "FatherFirstName requried";
-    if (data.FatherLastName === "")
-      newErrors.FatherLastName = "FatherLastName requried";
-    if (data.FatherMobileNumber === "")
-      newErrors.FatherMobileNumber = "Father mobile no. requried";
-    if (data.StudentClassRoomName === "")
-      newErrors.StudentClassRoomName = "StudentClassRoomName requried";
-    if (data.Address === "") newErrors.Address = "Address requried";
+    let newErrors = {}; // new var for displaying empty input boxes
 
+    // student first name
+    if (data.StudentFirstName === "")
+      newErrors.StudentFirstName = "Student FirstName is Required";
+    // student last name
+    if (data.StudentLastName === "")
+      newErrors.StudentLastName = "Student LastName is Required";
+    // dob
+    if (data.Dob === "") newErrors.Dob = "Dob is Required";
+    // father first name
+    if (data.FatherFirstName === "")
+      newErrors.FatherFirstName = "Father's FirstName is Required";
+    // father last name
+    if (data.FatherLastName === "")
+      newErrors.FatherLastName = "Father's LastName is Required";
+    // father mobile number
+    if (data.FatherMobileNumber === "")
+      newErrors.FatherMobileNumber = "Father's Mobile Number is Required";
+    // student class room
+    if (data.StudentClassRoomName === "")
+      newErrors.StudentClassRoomName = "Student's ClassRoom Name is Required";
+    // address
+    if (data.Address === "") newErrors.Address = "Address is required";
+    // check if there is any error
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       showPopup("error", {
@@ -144,13 +208,14 @@ const AddStudent = ({ setProgress }) => {
       }); // shows error popup
     } else {
       if (paramData === "Submit") {
-        setStudentData();
+        setStudentData(); // submit the data
       } else {
-        updateStudent();
+        updateStudent(); // update the data
       }
     }
   };
 
+  // search param
   const [searchParam] = useSearchParams();
   const paramData = searchParam.get("StudentId") != null ? "Update" : "Submit";
 
@@ -195,7 +260,6 @@ const AddStudent = ({ setProgress }) => {
         }));
       })
       .catch((error) => {
-        debugger;
         hidePopup(); // hide all popups
         showPopup("error", {
           title: "Error!",
@@ -236,7 +300,6 @@ const AddStudent = ({ setProgress }) => {
         dataSet
       ) // api's endpoint
       .then((response) => {
-        debugger;
         // compares api's return message with your message
         if (response.data === "Student already exists, make some changes.") {
           showPopup("error", {
@@ -248,7 +311,9 @@ const AddStudent = ({ setProgress }) => {
             title: "Student Updated Successfully",
             confirmBtn: true,
             link: "/EditStudent",
+            linkText: "Edit Student",
           });
+          resetForm(); // resets form data
         }
       })
       .catch((error) => {
@@ -294,6 +359,7 @@ const AddStudent = ({ setProgress }) => {
                   Student Name <span className="text-red-500 text-base">*</span>
                 </label>
                 <div className="flex  gap-3 justify-center align-items-flex-start">
+                  {/* first name */}
                   <div className="w-100">
                     {" "}
                     <input
@@ -313,6 +379,8 @@ const AddStudent = ({ setProgress }) => {
                       </div>
                     )}
                   </div>
+
+                  {/* last name */}
                   <div className="w-100">
                     <input
                       type="text"
@@ -393,6 +461,7 @@ const AddStudent = ({ setProgress }) => {
                   Father Name <span className="text-base text-red-500">*</span>
                 </label>
                 <div className="flex  gap-3 justify-center align-items-flex-start">
+                  {/* first name */}
                   <div className="w-100">
                     <input
                       type="text"
@@ -411,6 +480,8 @@ const AddStudent = ({ setProgress }) => {
                       </div>
                     )}
                   </div>
+
+                  {/* last name */}
                   <div className="w-100">
                     <input
                       type="text"
@@ -468,27 +539,34 @@ const AddStudent = ({ setProgress }) => {
               {/* Mother Name */}
               <div>
                 <label className="form-label">Mother Name</label>
-                <div className="flex items-center gap-4 justify-between">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="MotherFirstName"
-                    minLength={3}
-                    maxLength={50}
-                    value={data.MotherFirstName}
-                    onChange={handleInputChange}
-                    placeholder="First Name"
-                  />
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="MotherLastName"
-                    minLength={3}
-                    maxLength={50}
-                    value={data.MotherLastName}
-                    onChange={handleInputChange}
-                    placeholder="Last Name"
-                  />
+                <div className="flex  gap-3 justify-center align-items-flex-start">
+                  {/* first name */}
+                  <div className="w-100">
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="MotherFirstName"
+                      minLength={3}
+                      maxLength={50}
+                      value={data.MotherFirstName}
+                      onChange={handleInputChange}
+                      placeholder="First Name"
+                    />
+                  </div>
+
+                  {/* last name */}
+                  <div className="w-100">
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="MotherLastName"
+                      minLength={3}
+                      maxLength={50}
+                      value={data.MotherLastName}
+                      onChange={handleInputChange}
+                      placeholder="Last Name"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -630,6 +708,8 @@ const AddStudent = ({ setProgress }) => {
               <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
                 Additional Facility Details:
               </h1>
+
+              {/* check boxes */}
               <div className="flex justify-between">
                 <div>
                   {/* Transport */}

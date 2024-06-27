@@ -1,37 +1,24 @@
+import { useEffect, useState } from "react"; // hooks
 import PropTypes from "prop-types"; // prop-types
 import axios from "axios"; // axios
-import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api endpoint
-import { useEffect, useState } from "react"; // hooks
-import { useNavigate } from "react-router-dom"; // for navigation
-import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md"; // react-icons
+import { PencilSquare, Trash, Search } from "react-bootstrap-icons"; // react-bootstraps icon
+import { useNavigate } from "react-router-dom"; // navigation
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
+import "../../css/EditClassRoom.css"; // custom css file
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api endpoint
 
 const EditStudent = ({ setProgress }) => {
-  const navigate = useNavigate(); // for navigation
-  const [activeStudent, setActiveStudent] = useState([]); // state to hold student data
+  const navigate = useNavigate(); // navigation
+  const [activeStudent, setActiveStudent] = useState([]); // student
+  const { renderPopup, showPopup, hidePopup } = usePopup(); // popup
+  const [searchItem, setSearchItem] = useState(""); // search
 
-  // custom hook for managing popups
-  const { renderPopup, showPopup, hidePopup } = usePopup();
-
-  // Fetch active students from the API on component mount
+  // student api hook
   useEffect(() => {
     getActiveStudent();
   }, []);
 
-  const getActiveStudent = () => {
-    const apiGetData =
-      InstituteSoft.BaseURL + InstituteSoft.Student.GetActiveStudent;
-    axios
-      .get(apiGetData)
-      .then((response) => {
-        setActiveStudent(response.data);
-      })
-      .catch((error) => {
-        showPopup("error", { message: "Failed to fetch data." });
-      });
-  };
-
-  // Set page name and progress bar on component mount
+  // top loading bar
   useEffect(() => {
     setProgress(40);
     setTimeout(() => {
@@ -39,101 +26,149 @@ const EditStudent = ({ setProgress }) => {
     }, 300);
   }, [setProgress]);
 
-  // Handle edit action
-  // const handleEdit = (studentId) => {
-  //   const apiEditData =
-  //     InstituteSoft.BaseURL +
-  //     InstituteSoft.ClassRoom.EditClassRoom.replace("{0}", studentId);
-  //   axios
-  //     .get(apiEditData)
-  //     .then((response) => {
-  //       navigate("/AddStudent", {
-  //         state: { StudentData: response.data },
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       showPopup("error", { message: "Failed to edit student." });
-  //     });
-  // };
-  const handleEdit = (studentId) => {
-    navigate(`/AddStudent?StudentId=${studentId}`);
+  // student api
+  const getActiveStudent = async () => {
+    try {
+      const apiGetData =
+        InstituteSoft.BaseURL + InstituteSoft.Student.GetActiveStudent; // api's endpoint
+      const response = await axios.get(apiGetData);
+      setActiveStudent(response.data); // data
+    } catch (error) {
+      showPopup("error"); // shows error popup
+    }
   };
+
+  // edit
+  const handleEdit = (studentId) => {
+    navigate(`/AddStudent?StudentId=${studentId}`); // api's endpoint
+  };
+
   // delete
-  const handleDelete = (studentId) => {
+  const handleDelete = (classRoomId) => {
     showPopup("delete", {
-      onConfirm: () => confirmDelete(studentId), // Capture the ID directly in the closure
-      onCancel: hidePopup,
+      // shows delete popup
+      onConfirm: () => confirmDelete(classRoomId),
+      onCancel: hidePopup, // hide all the popups on cancel button
     });
   };
 
-  // Delete confirmation sweet alert modal
+  // confirm delete
   const confirmDelete = (studentId) => {
     const apiDeleteData =
       InstituteSoft.BaseURL +
-      InstituteSoft.Student.DeleteStudent.replace("{0}", studentId); // Use captured ID directly
+      InstituteSoft.Student.DeleteStudent.replace("{0}", studentId); // api's endpoint
     axios
       .get(apiDeleteData)
       .then((response) => {
-        getActiveStudent(); // Refresh the table data after deletion
-        hidePopup();
-        showPopup("deleteConfirm", { message: "Data Deleted Successfully!" });
+        getActiveStudent(); // data
+        hidePopup(); // hide all the popups
+        showPopup("deleteConfirm"); // shows delete confirm popup
       })
       .catch((error) => {
-        hidePopup();
-        showPopup("error", { message: "Failed to delete student." });
+        hidePopup(); // hide all the popups
+        showPopup("error"); // shows error popup
       });
   };
 
+  // input handler (onChange)
+  const handleInputChange = (e) => {
+    setSearchItem(e.target.value);
+    hidePopup(); // hide all the popups
+  };
+
   return (
-    <div
-      style={{ marginLeft: "250px", marginTop: "50px" }}
-      className="min-h-screen flex flex-col items-center p-4 gap-10 bg-slate-200 dark:bg-[#262450]"
-    >
-      <div className="w-full">
+    <>
+      <div className="edit-container">
+        {/* search */}
+        <div className="search-container">
+          {/* search icon */}
+          <Search className="text-2xl" />
+
+          {/* search box */}
+          <input
+            type="text"
+            className="form-control search-input"
+            placeholder="Search by ClassRoom Name"
+            value={searchItem}
+            onChange={handleInputChange}
+          />
+        </div>
+
         {/* table */}
-        <table className="table table-striped table-bordered theme-light">
-          <thead>
-            <tr>
-              <th scope="col">S.No</th>
-              <th scope="col">Student Name</th>
-              <th scope="col">Father Name</th>
-              <th scope="col">Father Mobile Number</th>
-              <th scope="col">ClassRoom</th>
-              <th scope="col">Address</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activeStudent.map((Student, index) => (
-              <tr key={Student.studentId}>
-                <td>{index + 1}</td>
-                <td>{Student.studentFirstName}</td>
-                <td>{Student.fatherFirstName}</td>
-                <td>{Student.fatherMobileNumber}</td>
-                <td>{Student.studentClassRoomName}</td>
-                <td>{Student.address}</td>
-                <td className="space-x-4">
-                  <button
-                    onClick={() => handleEdit(Student.studentId)}
-                    className="text-xl"
-                  >
-                    <MdOutlineEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(Student.studentId)}
-                    className="text-xl"
-                  >
-                    <MdDeleteOutline />
-                  </button>
-                </td>
+        <div className="table-container">
+          <table className="table table-striped table-bordered fixed-header">
+            {/* table head */}
+            <thead>
+              {/* table head row */}
+              <tr>
+                {/* s.no */}
+                <th scope="col">S.No</th>
+                {/* student name */}
+                <th scope="col">Student Name</th>
+                {/* father name */}
+                <th scope="col">Father Name</th>
+                {/* father mobile number */}
+                <th scope="col">Father Mobile Number</th>
+                {/* classroom name */}
+                <th scope="col">ClassRoom</th>
+                {/* address */}
+                <th scope="col">Address</th>
+                {/* buttons */}
+                <th scope="col">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            {/* table body */}
+            <tbody>
+              {/* table body row */}
+              {activeStudent
+                .filter((student) =>
+                  student.studentFirstName
+                    .toLowerCase()
+                    .includes(searchItem.toLowerCase())
+                )
+                .map((student, index) => (
+                  <tr key={student.studentId}>
+                    {/* s.no */}
+                    <td>{index + 1}</td>
+                    {/* student name */}
+                    <td>{student.studentFirstName}</td>
+                    {/* father name */}
+                    <td>{student.fatherFirstName}</td>
+                    {/* father mobile number */}
+                    <td>{student.fatherMobileNumber}</td>
+                    {/* classroom name */}
+                    <td>{student.studentClassRoomName}</td>
+                    {/* address */}
+                    <td>{student.address}</td>
+                    {/* buttons */}
+                    <td>
+                      {/* edit */}
+                      <button
+                        className="btn text-primary"
+                        onClick={() => handleEdit(student.studentId)}
+                      >
+                        <PencilSquare />
+                      </button>
+
+                      {/* delete */}
+                      <button
+                        className="btn text-danger"
+                        onClick={() => handleDelete(student.studentId)}
+                      >
+                        <Trash />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* popup */}
+        {renderPopup()}
       </div>
-      {/* popups */}
-      {renderPopup()}
-    </div>
+    </>
   );
 };
 
