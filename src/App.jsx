@@ -17,6 +17,7 @@ import EditStudent from "./components/Pages/Student/EditStudent"; // edit studen
 import Payment from "./components/Pages/Payment/Payment"; // payment
 import Support from "./components/Pages/Support/Support"; // support
 import NotFound from "./components/Pages/NotFound/NotFound"; // 404
+import FeesPayment from "./components/Pages/FeesPayment/FeesPayment";
 
 const App = () => {
   const [progress, setProgress] = useState(0); // top loading bar
@@ -30,7 +31,7 @@ const App = () => {
     "/EditClassRoom",
     "/AddStudent",
     "/EditStudent",
-    "/Payment",
+    "/FeesPayment",
     "/Support",
   ];
 
@@ -101,10 +102,10 @@ const App = () => {
               element={<EditStudent setProgress={setProgress} />}
             />
 
-            {/* payment */}
+            {/* feespayment */}
             <Route
-              path="/Payment"
-              element={<Payment setProgress={setProgress} />}
+              path="/FeesPayment"
+              element={<FeesPayment setProgress={setProgress} />}
             />
 
             {/* support */}
