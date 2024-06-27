@@ -207,7 +207,11 @@ const SideBar = ({ sidebarToggle }) => {
             <ul className="sub-menu">
               {/* fees */}
               <li>
-                <NavLink to="/Fees" className="sub-item" onClick={hidePopup}>
+                <NavLink
+                  to="/FeesPayment"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={
