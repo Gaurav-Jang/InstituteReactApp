@@ -5,7 +5,7 @@ import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/Support.css"; // custom css file
 import validator from "validator"; // email validator
-import backGround from "/background.webp";
+// import backGround from "/background.webp";
 
 const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
   // top loading bar

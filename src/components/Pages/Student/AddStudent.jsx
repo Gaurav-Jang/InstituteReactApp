@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react"; // hooks
+// react lib's & hooks
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types"; // prop-types
 import { FiUpload } from "react-icons/fi"; // react icons
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
-import { useSearchParams } from "react-router-dom";
 
 const AddStudent = ({ setProgress }) => {
   const { showPopup, hidePopup, renderPopup } = usePopup(); // popup's custom hook
@@ -268,7 +269,7 @@ const AddStudent = ({ setProgress }) => {
       });
   };
 
-  // update data
+  // update student
   const updateStudent = () => {
     const dataSet = {
       StudentId: data.StudentId,
@@ -536,7 +537,7 @@ const AddStudent = ({ setProgress }) => {
                 Additional Details:
               </h1>
 
-              {/* Mother Name */}
+              {/* mother's name */}
               <div>
                 <label className="form-label">Mother Name</label>
                 <div className="flex  gap-3 justify-center align-items-flex-start">
@@ -655,9 +656,7 @@ const AddStudent = ({ setProgress }) => {
 
               {/* Photo */}
               <div className="space-y-1">
-                <label className="form-label">
-                  Photo <span className="text-base text-red-500">*</span>
-                </label>
+                <label className="form-label">Photo</label>
                 <div className="relative flex flex-col gap-2 items-center justify-center">
                   {photoPreview && (
                     <img
