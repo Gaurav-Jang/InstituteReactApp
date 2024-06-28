@@ -1,7 +1,7 @@
 import { useEffect } from "react"; // hook
 import { NavLink } from "react-router-dom"; // navigation
 import PropTypes from "prop-types"; // prop-types
-import MainImg from "/broken-robot.png"; // image
+import MainImg from "/brokenRobot.webp"; // image
 
 // top loading bar & navbar name
 const NotFound = ({ setProgress }) => {

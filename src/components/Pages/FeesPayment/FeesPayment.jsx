@@ -11,7 +11,7 @@ const FeesPayment = () => {
           backgroundColor: "#FBFBFE",
           height: "100%",
           width: "calc(100% - 250px)",
-          backgroundImage: "url(/background-3.jpg)",
+          backgroundImage: "url(/backGround.webp)",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",

@@ -123,7 +123,7 @@ const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
           backgroundColor: "#FBFBFE",
           paddingTop: "50px",
           width: "calc(100% - 250px)",
-          backgroundImage: "url(/background-3.jpg)",
+          backgroundImage: "url(/backGround.webp)",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",

@@ -1,7 +1,7 @@
 import { useState } from "react"; // hook
 import usePopup from "../CustomHooks/usePopup"; // custom hook
 import { Link, NavLink } from "react-router-dom"; // navigation
-import IWS from "/iws.png"; // logo
+import IWS from "/iws.webp"; // logo
 // react icons
 import * as md from "react-icons/md";
 import { PiStudentFill } from "react-icons/pi";

@@ -84,7 +84,7 @@ const EditStudent = ({ setProgress }) => {
           backgroundColor: "#FBFBFE",
           width: "calc(100% - 250px)",
           height: "calc(100% - 50px)",
-          backgroundImage: "url(/background-3.jpg)",
+          backgroundImage: "url(/backGround.webp)",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",

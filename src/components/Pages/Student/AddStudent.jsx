@@ -337,7 +337,7 @@ const AddStudent = ({ setProgress }) => {
           marginLeft: "250px",
           backgroundColor: "#FBFBFE",
           width: "calc(100% - 250px)",
-          backgroundImage: "url(/background-3.jpg)",
+          backgroundImage: "url(/backGround.webp)",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
