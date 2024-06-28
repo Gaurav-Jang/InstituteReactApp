@@ -1,13 +1,14 @@
+/* universal */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.main-container {
+/* main container box */
+/* .main-container {
   position: relative;
   height: 100%;
-  /* background-color: #ffffff; */
   background-image: url(/background-3.jpg);
   background-position: center;
   background-repeat: no-repeat;
@@ -26,13 +27,13 @@
   left: 1280px;
   width: 250px;
   height: 250px;
-  /* background-image: url(/public/iws-backGround.png); */
   background-repeat: no-repeat;
   background-size: contain;
   transform: rotate(-45deg);
   z-index: -1;
-}
+} */
 
+/* inside main container box */
 .add-container {
   margin-left: 250px;
   min-height: 80%;
@@ -44,6 +45,7 @@
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
+/* invalid */
 .is-invalid {
   border-color: red;
 }

@@ -8,8 +8,6 @@
 /* sidenav */
 .sidenav {
   background-color: #343a40;
-  /* background-color: #010630; */
-  /* background-color: #110a49; */
   z-index: 1;
   min-height: 100%;
   position: fixed;

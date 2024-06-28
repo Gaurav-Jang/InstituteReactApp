@@ -258,10 +258,14 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     <>
       <div
         style={{
-          marginLeft: "250px",
-          paddingTop: "50px",
+          marginLeft: "auto",
           backgroundColor: "#FBFBFE",
-          height: "100%",
+          paddingTop: "50px",
+          width: "calc(100% - 250px)",
+          backgroundImage: "url(/background-3.jpg)",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
         }}
       >
         {/* main content */}

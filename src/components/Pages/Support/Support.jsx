@@ -118,7 +118,18 @@ const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
 
   return (
     <>
-      <div className="main-container">
+      <div
+        style={{
+          backgroundColor: "#FBFBFE",
+          paddingTop: "50px",
+          width: "calc(100% - 250px)",
+          backgroundImage: "url(/background-3.jpg)",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+        className="main-container"
+      >
         {/* main content */}
         <section className="add-container p-4">
           {/* head text */}

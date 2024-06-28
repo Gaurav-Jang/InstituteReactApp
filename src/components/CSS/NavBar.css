@@ -1,13 +1,18 @@
+/* universal */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
+/* top navigation */
 .topnav {
   width: calc(100% - 250px);
   margin-left: 250px;
   z-index: 1;
 }
+
+/* hamburger action */
 .topnav-expand,
 .topnav {
   display: flex;
@@ -19,21 +24,28 @@
   position: fixed;
   top: 0;
   transition: all 0.2s ease-in-out;
-  background-color: white;
+  background-color: #ffffff;
 }
+
+.topnav-expand {
+  width: calc(100% - 70px);
+  margin-left: 70px;
+}
+
+/* hamburger icon */
 .menu {
   cursor: pointer;
 }
+
+/* right side */
 .topnav-right {
   display: flex;
   align-items: center;
   column-gap: 12px;
 }
+
+/* action icons */
 .topnav-right .bell,
 .topnav-right .share {
   cursor: pointer;
-}
-.topnav-expand {
-  width: calc(100% - 70px);
-  margin-left: 70px;
 }

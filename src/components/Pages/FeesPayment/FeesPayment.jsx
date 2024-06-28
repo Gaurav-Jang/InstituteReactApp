@@ -5,7 +5,19 @@ import "../../css/FeesPayment.css"; // custom css file
 const FeesPayment = () => {
   return (
     <>
-      <div className="main-container">
+      <div
+        style={{
+          marginLeft: "250px",
+          backgroundColor: "#FBFBFE",
+          height: "100%",
+          width: "calc(100% - 250px)",
+          backgroundImage: "url(/background-3.jpg)",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+        className="main-container"
+      >
         <div className="container">
           {/* search box */}
           <div className="text-center">Search</div>

@@ -303,6 +303,7 @@ const AddStudent = ({ setProgress }) => {
       .then((response) => {
         // compares api's return message with your message
         if (response.data === "Student already exists, make some changes.") {
+          console.log("duplicate data");
           showPopup("error", {
             title: "Duplicate Student",
             text: "The student already exists. Please try a different name.",
@@ -331,9 +332,20 @@ const AddStudent = ({ setProgress }) => {
 
   return (
     <>
-      <div className="w-full min-h-screen flex flex-col justify-between items-center p-4 gap-10 bg-slate-200 dark:bg-[#262450]">
+      <div
+        style={{
+          marginLeft: "250px",
+          backgroundColor: "#FBFBFE",
+          width: "calc(100% - 250px)",
+          backgroundImage: "url(/background-3.jpg)",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+        className="w-full min-h-screen flex flex-col justify-between items-center p-4 gap-10 bg-black dark:bg-[#262450]"
+      >
         {/* Main Container */}
-        <div className="space-y-10 xl:gap-10 xs:gap-0">
+        <div className="space-y-10 pb-14 bg-white xl:gap-10 xs:gap-0">
           {/* Header Text */}
           <div className="space-y-4 md:ml-10 xs:ml-0">
             <p className="text-slate-500 text-lg">Say hello</p>

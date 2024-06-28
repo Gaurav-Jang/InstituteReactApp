@@ -18,10 +18,14 @@ const SideBar = ({ sidebarToggle }) => {
 
   // dropdown open/close
   const toggleDropdown = (dropdown) => {
-    setDropdownOpen((prev) => ({
-      ...prev,
-      [dropdown]: !prev[dropdown],
-    }));
+    setDropdownOpen((prev) => {
+      // Close all other dropdowns
+      const newState = Object.keys(prev).reduce((acc, key) => {
+        acc[key] = key === dropdown ? !prev[key] : false;
+        return acc;
+      }, {});
+      return newState;
+    });
   };
 
   // dropdown icon open/close
