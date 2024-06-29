@@ -15,7 +15,7 @@
 
 .container {
   border-radius: 4px;
-  width: 53% !important;
+  width: 80% !important;
   padding: 20px;
   border-radius: 12px;
   background-color: #ffffff;
@@ -29,4 +29,31 @@
 .invalid-feedback {
   color: #ff0000;
   display: block;
+}
+.input-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.left-strip {
+  display: flex;
+  align-items: center;
+}
+.left-section {
+  width: 40%;
+}
+.right-section {
+  width: 50%;
+}
+.set-label {
+  width: 55%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.data {
+  margin-left: 45px;
+}
+.input-strip input {
+  width: 190px;
 }
