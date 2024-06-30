@@ -187,7 +187,7 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
           {/* search */}
           <div className="search-container">
             {/* search icon */}
-            <Search className="text-2xl" />
+            <Search className="text-1xl" />
 
             {/* search box */}
             <input
@@ -200,10 +200,14 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
           </div>
 
           {/* student data */}
-          <div className="flex justify-between gap-10">
+          <div className="gap-10">
             {/* left section */}
-            <div className="w-full">
-              <div key={""} className="space-y-4">
+            <div className="w-full mb-3 left-section">
+              <div className="section-header ">
+                Student Details
+                <hr />
+              </div>
+              <div key={""} className="student-details mt-3">
                 <div>
                   {/* Student Name */}
                   <label className="form-label">Student Name</label>
@@ -244,6 +248,18 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     disabled
                   />
                 </div>
+                {/* father mobile no */}
+                <div>
+                  <label className="form-label">Father Mobile no.</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="AvailingHostel"
+                    value={data.AvailingHostel}
+                    placeholder="Father mobile no."
+                    disabled
+                  />
+                </div>
 
                 {/* classroom name */}
                 <div>
@@ -254,19 +270,6 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     name="StudentClassRoomName"
                     value={data.StudentClassRoomName}
                     placeholder="ClassRoom Name"
-                    disabled
-                  />
-                </div>
-
-                {/* availing hostel */}
-                <div>
-                  <label className="form-label">Availing Hostel</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="AvailingHostel"
-                    value={data.AvailingHostel}
-                    placeholder="Availing Hostel"
                     disabled
                   />
                 </div>
@@ -300,19 +303,20 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
             </div>
 
             {/* right section */}
-            <div className="w-full flex flex-col justify-between">
+            <div className="w-full flex flex-col justify-between right-section">
               {/* fees */}
-              <div className="space-y-4">
-                {/* course fees */}
+              <div className="section-header">Fees Details</div>
+              <div className="fees-details">
+                {/* Registration fees */}
                 <div>
-                  <label className="form-label">Course Fees</label>
+                  <label className="form-label">Registration Fees</label>
                   <input
                     type="number"
                     className={`form-control ${
-                      errors.CourseFee ? "is-invalid" : ""
+                      errors.RegistrationFee ? "is-invalid" : ""
                     }`}
-                    name="CourseFee"
-                    value={data.CourseFee}
+                    name="RegistrationFee"
+                    value={data.RegistrationFee}
                     onChange={handleInputChange}
                     onInput={(e) =>
                       (e.target.value = e.target.value.slice(0, 7))
@@ -320,19 +324,19 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     onKeyDown={(e) =>
                       feeVal.includes(e.key) && e.preventDefault()
                     }
-                    placeholder="Course Fees"
+                    placeholder="Registration Fees"
                   />
                 </div>
 
-                {/* transport fees */}
+                {/* Admission fees */}
                 <div>
-                  <label className="form-label">Transport Fees</label>
+                  <label className="form-label">Admission Fees</label>
                   <input
                     type="number"
                     className={`form-control ${
-                      errors.TransportFee ? "is-invalid" : ""
+                      errors.AdmissionFee ? "is-invalid" : ""
                     }`}
-                    name="TransportFee"
+                    name="AdmissionFee"
                     value={data.TransportFee}
                     onChange={handleInputChange}
                     onInput={(e) =>
@@ -341,20 +345,79 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     onKeyDown={(e) =>
                       feeVal.includes(e.key) && e.preventDefault()
                     }
-                    placeholder="Transport Fees"
+                    placeholder="Admission Fees"
                   />
                 </div>
 
-                {/* school fees */}
+                {/* Tution fees */}
+                <div>
+                  <label className="form-label">TutionFees</label>
+                  <input
+                    type="number"
+                    className={`form-control ${
+                      errors.TutionFee ? "is-invalid" : ""
+                    }`}
+                    name="TutionFee"
+                    value={data.TutionFee}
+                    onChange={handleInputChange}
+                    onInput={(e) =>
+                      (e.target.value = e.target.value.slice(0, 7))
+                    }
+                    onKeyDown={(e) =>
+                      feeVal.includes(e.key) && e.preventDefault()
+                    }
+                    placeholder="Tution Fees"
+                  />
+                </div>
+
+                {/* Welcome Kit */}
+                <div>
+                  <label className="form-label">Welcome Kit</label>
+                  <input
+                    type="number"
+                    className={`form-control ${
+                      errors.WelcomeKit ? "is-invalid" : ""
+                    }`}
+                    name="HostelFee"
+                    value={data.WelcomeKit}
+                    onChange={handleInputChange}
+                    onInput={(e) =>
+                      (e.target.value = e.target.value.slice(0, 7))
+                    }
+                    onKeyDown={(e) =>
+                      feeVal.includes(e.key) && e.preventDefault()
+                    }
+                    placeholder="Welcome Kit"
+                  />
+                </div>
+                {/* Exam Fee  */}
+                <div>
+                  <label className="form-label">Exam Fees</label>
+                  <input
+                    type="number"
+                    className={`form-control ${
+                      errors.ExamFees ? "is-invalid" : ""
+                    }`}
+                    name="ExamFees"
+                    onChange={handleInputChange}
+                    onInput={(e) =>
+                      (e.target.value = e.target.value.slice(0, 7))
+                    }
+                    onKeyDown={(e) =>
+                      feeVal.includes(e.key) && e.preventDefault()
+                    }
+                    placeholder="Exam Fees"
+                  />
+                </div>
+                {/* School Fee  */}
                 <div>
                   <label className="form-label">School Fees</label>
                   <input
                     type="number"
                     className={`form-control ${
-                      errors.SchoolFee ? "is-invalid" : ""
+                      errors.SchoolFees ? "is-invalid" : ""
                     }`}
-                    name="SchoolFee"
-                    value={data.SchoolFee}
+                    name="SchoolFees"
                     onChange={handleInputChange}
                     onInput={(e) =>
                       (e.target.value = e.target.value.slice(0, 7))
@@ -365,17 +428,15 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     placeholder="School Fees"
                   />
                 </div>
-
-                {/* hostel fees */}
+                {/* Migration Charge  */}
                 <div>
-                  <label className="form-label">Hostel Fees</label>
+                  <label className="form-label">Migration Charge</label>
                   <input
                     type="number"
                     className={`form-control ${
-                      errors.HostelFee ? "is-invalid" : ""
+                      errors.MigrationCharge ? "is-invalid" : ""
                     }`}
-                    name="HostelFee"
-                    value={data.HostelFee}
+                    name="MigrationCharge"
                     onChange={handleInputChange}
                     onInput={(e) =>
                       (e.target.value = e.target.value.slice(0, 7))
@@ -383,13 +444,66 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
                     onKeyDown={(e) =>
                       feeVal.includes(e.key) && e.preventDefault()
                     }
-                    placeholder="Hostel Fees"
+                    placeholder="Migration Charge"
                   />
                 </div>
               </div>
-
+            </div>
+            {/* grand total  */}
+            <div className="right-section my-3">
+              {/* sub Total  */}
+              <div className="pay-amount">
+                <label className="form-label">Sub Total</label>
+                <input
+                  type="number"
+                  className={`form-control ${
+                    errors.SubTotal ? "is-invalid" : ""
+                  }`}
+                  name="SubTotal"
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    feeVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="Sub Total"
+                />
+              </div>
+              {/* discount  */}
+              <div className="pay-amount my-3">
+                <label className="form-label">Grand Total</label>
+                <input
+                  type="number"
+                  className={`form-control ${
+                    errors.Discount ? "is-invalid" : ""
+                  }`}
+                  name="Discount"
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    feeVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="Discount"
+                />
+              </div>
+              {/* Total  */}
+              <div className="pay-amount">
+                <label className="form-label">Total Amount</label>
+                <input
+                  type="number"
+                  className={`form-control  ${
+                    errors.TotalAmount ? "is-invalid" : ""
+                  }`}
+                  name="TotalAmount"
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    feeVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="TotalAmount"
+                />
+              </div>
               {/* buttons */}
-              <div className="flex justify-end gap-4">
+              <div className="flex justify-end gap-4 mt-3">
                 {/* submit */}
                 <div>
                   <button
