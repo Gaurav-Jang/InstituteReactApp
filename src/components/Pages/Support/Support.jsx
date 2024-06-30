@@ -120,6 +120,7 @@ const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     <>
       <div
         style={{
+          marginLeft: "auto",
           backgroundColor: "#FBFBFE",
           paddingTop: "50px",
           width: "calc(100% - 250px)",
@@ -128,10 +129,9 @@ const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
-        className="main-container"
       >
         {/* main content */}
-        <section className="add-container p-4">
+        <section className="support-container p-4">
           {/* head text */}
           <div>
             <h1 className="mb-2 text-4xl font-bold text-blue-600">Support</h1>

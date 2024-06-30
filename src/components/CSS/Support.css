@@ -5,42 +5,15 @@
   box-sizing: border-box;
 }
 
-/* main container box */
-/* .main-container {
-  position: relative;
-  height: 100%;
-  background-image: url(/background-3.jpg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  z-index: 0;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.main-container::before {
-  content: "";
-  position: absolute;
-  top: 550px;
-  left: 1280px;
-  width: 250px;
-  height: 250px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  transform: rotate(-45deg);
-  z-index: -1;
-} */
-
 /* inside main container box */
-.add-container {
-  margin-left: 250px;
+.support-container {
+  margin: 0 auto;
+  margin-top: 30px;
   min-height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 45% !important;
+  width: 50% !important;
   background-color: #ffffff6e;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }

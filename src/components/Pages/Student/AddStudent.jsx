@@ -334,20 +334,21 @@ const AddStudent = ({ setProgress }) => {
     <>
       <div
         style={{
-          marginLeft: "250px",
+          marginLeft: "auto",
           backgroundColor: "#FBFBFE",
+          paddingTop: "80px",
+          paddingBottom: "80px",
           width: "calc(100% - 250px)",
           backgroundImage: "url(/backGround.webp)",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
-        className="w-full min-h-screen flex flex-col justify-between items-center p-4 gap-10 bg-black dark:bg-[#262450]"
       >
         {/* Main Container */}
-        <div className="space-y-10 pb-14 bg-white xl:gap-10 xs:gap-0">
+        <div className="add-container p-4">
           {/* Header Text */}
-          <div className="space-y-4 md:ml-10 xs:ml-0">
+          <div className="space-y-2 xs:ml-0">
             <p className="text-slate-500 text-lg">Say hello</p>
             <h1 className="dark:text-white text-6xl font-bold">
               Let's Work <span className="text-sky-500">Together</span>.
@@ -359,7 +360,7 @@ const AddStudent = ({ setProgress }) => {
           </div>
 
           {/* Form */}
-          <div className="md:mx-10 xs:mx-0">
+          <div className="mt-4 md:mx-10 xs:mx-0">
             <form className="needs-validation w-full space-y-5">
               {/* Personal Details */}
               <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
@@ -794,9 +795,10 @@ const AddStudent = ({ setProgress }) => {
             </form>
           </div>
         </div>
-      </div>
 
-      {renderPopup()}
+        {/* popups */}
+        {renderPopup()}
+      </div>
     </>
   );
 };

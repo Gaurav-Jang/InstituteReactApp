@@ -1,59 +1,25 @@
+/* universal */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* outer container */
 .main-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
 }
 
+/* inner container */
 .container {
-  border-radius: 4px;
   width: 80% !important;
-  padding: 20px;
-  border-radius: 12px;
+  height: 100%;
   background-color: #ffffff;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-.is-invalid {
-  border-color: #ff0000;
-}
-
-.invalid-feedback {
-  color: #ff0000;
-  display: block;
-}
-.input-strip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.left-strip {
-  display: flex;
-  align-items: center;
-}
-.left-section {
-  width: 40%;
-}
-.right-section {
-  width: 50%;
-}
-.set-label {
-  width: 55%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.data {
-  margin-left: 45px;
-}
-.input-strip input {
-  width: 190px;
+  margin: 50px 0;
+  padding: 16px;
 }

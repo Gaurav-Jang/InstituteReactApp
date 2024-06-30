@@ -260,7 +260,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
         style={{
           marginLeft: "auto",
           backgroundColor: "#FBFBFE",
-          paddingTop: "50px",
+          paddingTop: "80px",
           width: "calc(100% - 250px)",
           backgroundImage: "url(/backGround.webp)",
           backgroundPosition: "center",
@@ -269,7 +269,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
         }}
       >
         {/* main content */}
-        <section className="add-container container p-4">
+        <section className="add-container p-4">
           {/* page head */}
           <div className="space-y-2 xs:ml-0">
             <p className="text-slate-500 text-lg">Say hello</p>
@@ -283,7 +283,7 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
           </div>
 
           {/* form */}
-          <div className="md:mx-10 xs:mx-0">
+          <div className="mt-4 md:mx-10 xs:mx-0">
             <form className="needs-validation w-full space-y-5">
               {/* classroom name */}
               <div>
