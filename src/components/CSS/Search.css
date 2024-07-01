@@ -1,0 +1,29 @@
+.search-container {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  padding: 0.5rem 0.75rem;
+}
+
+.search-container input {
+  border: none;
+  border-radius: none;
+  padding: 0;
+}
+
+.search-container input:focus {
+  background-color: none !important;
+  border-color: none !important;
+  box-shadow: none !important;
+}
+
+.search-suggestions {
+  width: 100%;
+  background-color: #ffffff;
+  margin-top: 10px;
+}
+
+.search-suggestions div {
+  width: 100%;
+  padding: 10px 25px;
+  background-color: #ffffff;
+}

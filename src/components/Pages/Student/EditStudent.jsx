@@ -34,7 +34,10 @@ const EditStudent = ({ setProgress }) => {
       const response = await axios.get(apiGetData);
       setActiveStudent(response.data); // data
     } catch (error) {
-      showPopup("error"); // shows error popup
+      showPopup("error", {
+        title: "Error!",
+        text: "Server is down. Please try again later.",
+      }); // show error popup
     }
   };
 
@@ -66,7 +69,10 @@ const EditStudent = ({ setProgress }) => {
       })
       .catch((error) => {
         hidePopup(); // hide all the popups
-        showPopup("error"); // shows error popup
+        showPopup("error", {
+          title: "Error!",
+          text: "Server is down. Please try again later.",
+        }); // show error popup
       });
   };
 

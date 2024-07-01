@@ -1,31 +1,19 @@
 // react lib's & hooks
-import PropTypes from "prop-types"; // prop type
-import { useEffect, useState } from "react"; // hooks
-import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types"; // prop-type
 import axios from "axios"; // axios (get : post)
-import usePopup from "../../CustomHooks/usePopup"; // custom hook
-import { Search } from "react-bootstrap-icons"; // react-bootstraps icon
+import { Search } from "react-bootstrap-icons"; // bootstrap icon
 import "../../css/FeesPayment.css"; // custom css file
-// import { useSearchParams } from "react-router-dom"; // search param
+import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api
+import usePopup from "../../CustomHooks/usePopup"; // custom popup hook
 
-const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
-  // top loading bar
-  useEffect(() => {
-    setProgress(40);
-    setTimeout(() => {
-      setProgress(100);
-    }, 300);
-    hidePopup();
-  }, [setProgress]);
+const FeesPayment = ({ setProgress }) => {
+  const [activeStudents, setActiveStudents] = useState([]); // student's data state
+  const [searchQuery, setSearchQuery] = useState(""); // search
+  const [filteredStudents, setFilteredStudents] = useState([]); // search filter
+  const [selectedStudent, setSelectedStudent] = useState(null); // filtered search
 
-  // api's hook
-  useEffect(() => {
-    getActiveStudent();
-  }, []);
-
-  const [activeStudent, setActiveStudent] = useState([]); // student data
-
-  // initial data in form's input field
+  // student data fields
   const [data, setData] = useState({
     StudentId: "",
     StudentFirstName: "",
@@ -44,73 +32,69 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
   // validation errors state
   const [errors, setErrors] = useState({});
 
-  const [searchTerm, setSearchTerm] = useState(""); // State for search input
-
   // custom hook for popups
   const { renderPopup, showPopup, hidePopup } = usePopup();
 
-  // student api (AddStudent form data)
-  const getActiveStudent = () => {
+  // top loading bar
+  useEffect(() => {
+    setProgress(40);
+    setTimeout(() => {
+      setProgress(100);
+    }, 300);
+    hidePopup();
+  }, [setProgress]);
+
+  // api's hook
+  useEffect(() => {
+    getActiveStudents();
+  }, []);
+
+  // search
+  useEffect(() => {
+    const results = activeStudents.filter(
+      (student) =>
+        student.studentFirstName &&
+        student.studentFirstName
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+    );
+    setFilteredStudents(results);
+  }, [searchQuery, activeStudents]);
+
+  // fetching student data
+  const getActiveStudents = () => {
     axios
-      .get(
-        InstituteSoft.BaseURL + InstituteSoft.Student.GetActiveStudent // api's endpoint
-      )
+      .get(InstituteSoft.BaseURL + InstituteSoft.Student.GetActiveStudent) // api's endpoint
       .then((response) => {
-        setActiveStudent(response.data); // displays student data
+        setActiveStudents(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error("API Error:", error);
       });
   };
 
-  // function to reset form data
-  const resetForm = () => {
+  // search selected student
+  const handleSelectStudent = (student) => {
+    setSearchQuery(student.studentFirstName); // update search query
+    setSelectedStudent(student); // set selected student
+
+    // student's data fields
     setData({
-      StudentId: "",
-      StudentFirstName: "",
-      Dob: "",
-      FatherFirstName: "",
-      StudentClassRoomName: "",
-      AvailingHostel: "",
-      AvailingTransport: "",
-      AvailingSchool: "",
+      StudentId: student.studentId,
+      StudentFirstName: student.studentFirstName,
+      Dob: student.dob,
+      FatherFirstName: student.fatherFirstName,
+      StudentClassRoomName: student.studentClassRoomName,
+      AvailingHostel: student.availingHostel,
+      AvailingTransport: student.availingTransport,
+      AvailingSchool: student.availingSchool,
       CourseFee: "",
       TransportFee: "",
       SchoolFee: "",
       HostelFee: "",
     });
-    setErrors("error in resetting form data");
-  };
 
-  // student api
-  const setStudentFeeData = () => {
-    const dataSet = {
-      StudentId: data.StudentId,
-      CourseFee: data.CourseFee,
-      TransportFee: data.TransportFee,
-      SchoolFee: data.SchoolFee,
-      HostelFee: data.HostelFee,
-    };
-
-    // sending data to APIs endpoint using POST method
-    axios
-      .post(InstituteSoft.BaseURL + InstituteSoft.Student.SetStudent, dataSet) // api's endpoint
-      .then((response) => {
-        showPopup("success", {
-          title: "Price submitted Successfully. Please make payment now.",
-          confirmBtn: true,
-          link: "/",
-          linkText: "This way",
-        }); // success popup
-        resetForm(); // reset form after submission
-      })
-      .catch((error) => {
-        console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
-        showPopup("error", {
-          title: "Error!",
-          text: "Please add some data in the form.",
-        }); // show error popup
-      });
+    setFilteredStudents([]); // Reset search field
   };
 
   // input handler (onChange)
@@ -124,7 +108,7 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       ...prevErrors,
       [name]: "",
     }));
-    hidePopup(); // hide popups
+    hidePopup(); // hide popup's
   };
 
   // handle submit
@@ -144,6 +128,15 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     // hostel fee
     if (!data.HostelFee || data.HostelFee <= 0)
       newErrors.HostelFee = "Please enter a valid amount";
+    // sub total
+    if (!data.SubTotal || data.SubTotal <= 0)
+      newErrors.SubTotal = "Please enter a valid amount";
+    // grand total
+    if (!data.GrandTotal || data.GrandTotal <= 0)
+      newErrors.GrandTotal = "Please enter a valid amount";
+    // total amount
+    if (!data.TotalAmount || data.TotalAmount <= 0)
+      newErrors.TotalAmount = "Please enter a valid amount";
     // check if there is any error
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -160,376 +153,324 @@ const FeesPayment = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
     }
   };
 
-  // Update search term state
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  // handle key press
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      if (filteredStudents.length > 0) {
+        setSearchQuery(filteredStudents[0].studentFirstName);
+        setSelectedStudent(filteredStudents[0]);
+        setFilteredStudents([]);
+      }
+    } else {
+      setSearchQuery(e.target.value);
+    }
   };
 
-  // fees field validation
-  const feeVal = ["e", "E", "+", "-", "."];
-
   return (
-    <>
-      <div
-        style={{
-          marginLeft: "250px",
-          backgroundColor: "#FBFBFE",
-          width: "calc(100% - 250px)",
-          backgroundImage: "url(/backGround.webp)",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-        className="main-container"
-      >
-        {/* main container */}
-        <div className="container">
-          {/* search */}
-          <div className="search-container">
-            {/* search icon */}
-            <Search className="text-1xl" />
+    <div
+      style={{
+        marginLeft: "auto",
+        backgroundColor: "#FBFBFE",
+        width: "calc(100% - 250px)",
+        backgroundImage: "url(/backGround.webp)",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+      className="main-container"
+    >
+      <div className="container">
+        {/* search box */}
+        <div className="search-container">
+          {/* search icon */}
+          <Search className="text-xl" />
 
-            {/* search box */}
-            <input
-              type="text"
-              className="form-control search-input"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Search by Student Name"
-            />
+          {/* search box input field */}
+          <input
+            type="text"
+            className="form-control search-input"
+            placeholder="Search by Student Name"
+            value={searchQuery}
+            onKeyUp={handleKeyPress}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          {/* search filter */}
+          {searchQuery && filteredStudents.length > 0 && (
+            <ul className="autocomplete-results">
+              {filteredStudents.map((student) => (
+                <li
+                  key={student.studentId}
+                  onClick={() => handleSelectStudent(student)}
+                >
+                  {student.studentFirstName}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* data */}
+        <div className="gap-10">
+          {/* top */}
+          <div className="w-full mb-3 left-section">
+            {/* heading */}
+            <div className="section-header">
+              Student Details
+              <hr />
+            </div>
+
+            {/* student details */}
+            <div className="student-details mt-3">
+              {/* student name */}
+              <div>
+                <label className="form-label">Student Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={data.StudentFirstName}
+                  disabled
+                />
+              </div>
+
+              {/* dob */}
+              <div>
+                <label className="form-label">Date of Birth</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={data.Dob}
+                  disabled
+                />
+              </div>
+
+              {/* father name */}
+              <div>
+                <label className="form-label">Father Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={data.FatherFirstName}
+                  disabled
+                />
+              </div>
+
+              {/* classroom name */}
+              <div>
+                <label className="form-label">ClassRoom Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={data.StudentClassRoomName}
+                  disabled
+                />
+              </div>
+
+              {/* availing hostel */}
+              <div>
+                <label className="form-label">Availing Hostel</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={data.AvailingHostel}
+                  disabled
+                />
+              </div>
+
+              {/* availing transport */}
+              <div>
+                <label className="form-label">Availing Transport</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={data.AvailingTransport}
+                  disabled
+                />
+              </div>
+
+              {/* availing school */}
+              <div>
+                <label className="form-label">Availing School</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={data.AvailingSchool}
+                  disabled
+                />
+              </div>
+            </div>
           </div>
 
-          {/* student data */}
-          <div className="gap-10">
-            {/* left section */}
-            <div className="w-full mb-3 left-section">
-              <div className="section-header ">
-                Student Details
-                <hr />
-              </div>
-              <div key={""} className="student-details mt-3">
-                <div>
-                  {/* Student Name */}
-                  <label className="form-label">Student Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    // name={`StudentFirstName-${""}`}
-                    // value={""}
-                    placeholder="Student Name"
-                    disabled
-                  />
-                </div>
-
-                {/* Dob, FatherFirstName, StudentClassRoomName, AvailingHostel, AvailingTransport, AvailingSchool */}
-
-                {/* dob */}
-                <div>
-                  <label className="form-label">Date of Birth</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="dob"
-                    value={data.Dob}
-                    placeholder="yyyy/mm/dd"
-                    disabled
-                  />
-                </div>
-
-                {/* father name */}
-                <div>
-                  <label className="form-label">Father Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="FatherFirstName"
-                    value={data.FatherFirstName}
-                    placeholder="Father Name"
-                    disabled
-                  />
-                </div>
-                {/* father mobile no */}
-                <div>
-                  <label className="form-label">Father Mobile no.</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="AvailingHostel"
-                    value={data.AvailingHostel}
-                    placeholder="Father mobile no."
-                    disabled
-                  />
-                </div>
-
-                {/* classroom name */}
-                <div>
-                  <label className="form-label">ClassRoom Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="StudentClassRoomName"
-                    value={data.StudentClassRoomName}
-                    placeholder="ClassRoom Name"
-                    disabled
-                  />
-                </div>
-
-                {/* availing transport */}
-                <div>
-                  <label className="form-label">Availing Transport</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="AvailingTransport"
-                    value={data.AvailingTransport}
-                    placeholder="Availing Transport"
-                    disabled
-                  />
-                </div>
-
-                {/* availing school */}
-                <div>
-                  <label className="form-label">Availing School</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="AvailingSchool"
-                    value={data.AvailingSchool}
-                    placeholder="Availing School"
-                    disabled
-                  />
-                </div>
-              </div>
+          {/* mid */}
+          <div className="w-full mb-3 flex flex-col justify-between right-section">
+            {/* heading */}
+            <div className="section-header">
+              Fees Details
+              <hr />
             </div>
 
-            {/* right section */}
-            <div className="w-full flex flex-col justify-between right-section">
-              {/* fees */}
-              <div className="section-header">Fees Details</div>
-              <div className="fees-details">
-                {/* Registration fees */}
-                <div>
-                  <label className="form-label">Registration Fees</label>
-                  <input
-                    type="number"
-                    className={`form-control ${
-                      errors.RegistrationFee ? "is-invalid" : ""
-                    }`}
-                    name="RegistrationFee"
-                    value={data.RegistrationFee}
-                    onChange={handleInputChange}
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
-                    onKeyDown={(e) =>
-                      feeVal.includes(e.key) && e.preventDefault()
-                    }
-                    placeholder="Registration Fees"
-                  />
-                </div>
-
-                {/* Admission fees */}
-                <div>
-                  <label className="form-label">Admission Fees</label>
-                  <input
-                    type="number"
-                    className={`form-control ${
-                      errors.AdmissionFee ? "is-invalid" : ""
-                    }`}
-                    name="AdmissionFee"
-                    value={data.TransportFee}
-                    onChange={handleInputChange}
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
-                    onKeyDown={(e) =>
-                      feeVal.includes(e.key) && e.preventDefault()
-                    }
-                    placeholder="Admission Fees"
-                  />
-                </div>
-
-                {/* Tution fees */}
-                <div>
-                  <label className="form-label">TutionFees</label>
-                  <input
-                    type="number"
-                    className={`form-control ${
-                      errors.TutionFee ? "is-invalid" : ""
-                    }`}
-                    name="TutionFee"
-                    value={data.TutionFee}
-                    onChange={handleInputChange}
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
-                    onKeyDown={(e) =>
-                      feeVal.includes(e.key) && e.preventDefault()
-                    }
-                    placeholder="Tution Fees"
-                  />
-                </div>
-
-                {/* Welcome Kit */}
-                <div>
-                  <label className="form-label">Welcome Kit</label>
-                  <input
-                    type="number"
-                    className={`form-control ${
-                      errors.WelcomeKit ? "is-invalid" : ""
-                    }`}
-                    name="HostelFee"
-                    value={data.WelcomeKit}
-                    onChange={handleInputChange}
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
-                    onKeyDown={(e) =>
-                      feeVal.includes(e.key) && e.preventDefault()
-                    }
-                    placeholder="Welcome Kit"
-                  />
-                </div>
-                {/* Exam Fee  */}
-                <div>
-                  <label className="form-label">Exam Fees</label>
-                  <input
-                    type="number"
-                    className={`form-control ${
-                      errors.ExamFees ? "is-invalid" : ""
-                    }`}
-                    name="ExamFees"
-                    onChange={handleInputChange}
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
-                    onKeyDown={(e) =>
-                      feeVal.includes(e.key) && e.preventDefault()
-                    }
-                    placeholder="Exam Fees"
-                  />
-                </div>
-                {/* School Fee  */}
-                <div>
-                  <label className="form-label">School Fees</label>
-                  <input
-                    type="number"
-                    className={`form-control ${
-                      errors.SchoolFees ? "is-invalid" : ""
-                    }`}
-                    name="SchoolFees"
-                    onChange={handleInputChange}
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
-                    onKeyDown={(e) =>
-                      feeVal.includes(e.key) && e.preventDefault()
-                    }
-                    placeholder="School Fees"
-                  />
-                </div>
-                {/* Migration Charge  */}
-                <div>
-                  <label className="form-label">Migration Charge</label>
-                  <input
-                    type="number"
-                    className={`form-control ${
-                      errors.MigrationCharge ? "is-invalid" : ""
-                    }`}
-                    name="MigrationCharge"
-                    onChange={handleInputChange}
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.slice(0, 7))
-                    }
-                    onKeyDown={(e) =>
-                      feeVal.includes(e.key) && e.preventDefault()
-                    }
-                    placeholder="Migration Charge"
-                  />
-                </div>
-              </div>
-            </div>
-            {/* grand total  */}
-            <div className="right-section my-3">
-              {/* sub Total  */}
-              <div className="pay-amount">
-                <label className="form-label">Sub Total</label>
+            {/* student fees */}
+            <div className="fees-details mt-3">
+              {/* course fee */}
+              <div>
+                <label className="form-label">Course Fee</label>
                 <input
                   type="number"
                   className={`form-control ${
-                    errors.SubTotal ? "is-invalid" : ""
+                    errors.CourseFee ? "is-invalid" : ""
                   }`}
-                  name="SubTotal"
+                  name="CourseFee"
+                  value={data.CourseFee}
                   onChange={handleInputChange}
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                   onKeyDown={(e) =>
-                    feeVal.includes(e.key) && e.preventDefault()
+                    priceVal.includes(e.key) && e.preventDefault()
                   }
-                  placeholder="Sub Total"
+                  placeholder="0"
                 />
               </div>
-              {/* discount  */}
-              <div className="pay-amount my-3">
-                <label className="form-label">Grand Total</label>
+
+              {/* transport fee */}
+              <div>
+                <label className="form-label">Transport Fee</label>
                 <input
                   type="number"
                   className={`form-control ${
-                    errors.Discount ? "is-invalid" : ""
+                    errors.TransportFee ? "is-invalid" : ""
                   }`}
-                  name="Discount"
+                  name="TransportFee"
+                  value={data.TransportFee}
                   onChange={handleInputChange}
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                   onKeyDown={(e) =>
-                    feeVal.includes(e.key) && e.preventDefault()
+                    priceVal.includes(e.key) && e.preventDefault()
                   }
-                  placeholder="Discount"
+                  placeholder="0"
                 />
               </div>
-              {/* Total  */}
-              <div className="pay-amount">
-                <label className="form-label">Total Amount</label>
+
+              {/* school fee */}
+              <div>
+                <label className="form-label">School Fee</label>
                 <input
                   type="number"
-                  className={`form-control  ${
-                    errors.TotalAmount ? "is-invalid" : ""
+                  className={`form-control ${
+                    errors.SchoolFee ? "is-invalid" : ""
                   }`}
-                  name="TotalAmount"
+                  name="SchoolFee"
+                  value={data.SchoolFee}
                   onChange={handleInputChange}
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                   onKeyDown={(e) =>
-                    feeVal.includes(e.key) && e.preventDefault()
+                    priceVal.includes(e.key) && e.preventDefault()
                   }
-                  placeholder="TotalAmount"
+                  placeholder="0"
                 />
               </div>
-              {/* buttons */}
-              <div className="flex justify-end gap-4 mt-3">
-                {/* submit */}
-                <div>
-                  <button
-                    className="btn btn-primary"
-                    type="button"
-                    onClick={handleSubmit}
-                  >
-                    Pay
-                  </button>
-                </div>
 
-                {/* download receipt */}
-                <div>
-                  <button className="btn btn-primary" disabled>
-                    Download Receipt
-                  </button>
-                </div>
+              {/* hostel fee */}
+              <div>
+                <label className="form-label">Hostel Fee</label>
+                <input
+                  type="number"
+                  className={`form-control ${
+                    errors.HostelFee ? "is-invalid" : ""
+                  }`}
+                  name="HostelFee"
+                  value={data.HostelFee}
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    priceVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="0"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* bottom */}
+          <div className="right-section my-3">
+            {/* sub total */}
+            <div className="pay-amount">
+              <label className="form-label">Sub Total</label>
+              <input
+                type="number"
+                className={`form-control ${
+                  errors.SubTotal ? "is-invalid" : ""
+                }`}
+                name="SubTotal"
+                value={data.SubTotal}
+                onChange={handleInputChange}
+                onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                onKeyDown={(e) =>
+                  priceVal.includes(e.key) && e.preventDefault()
+                }
+                placeholder="0"
+              />
+            </div>
+
+            {/* grand total */}
+            <div className="pay-amount my-3">
+              <label className="form-label">Grand Total</label>
+              <input
+                type="number"
+                className={`form-control ${
+                  errors.GrandTotal ? "is-invalid" : ""
+                }`}
+                name="GrandTotal"
+                value={data.GrandTotal}
+                onChange={handleInputChange}
+                onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                onKeyDown={(e) =>
+                  priceVal.includes(e.key) && e.preventDefault()
+                }
+                placeholder="0"
+              />
+            </div>
+
+            {/* total amount */}
+            <div className="pay-amount">
+              <label className="form-label">Total Amount</label>
+              <input
+                type="number"
+                className={`form-control ${
+                  errors.TotalAmount ? "is-invalid" : ""
+                }`}
+                name="TotalAmount"
+                value={data.TotalAmount}
+                onChange={handleInputChange}
+                onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                onKeyDown={(e) =>
+                  priceVal.includes(e.key) && e.preventDefault()
+                }
+                placeholder="0"
+              />
+            </div>
+
+            {/* buttons */}
+            <div className="flex justify-end gap-4 mt-3">
+              {/* payment button */}
+              <div>
+                <button className="btn btn-primary" onClick={handleSubmit}>
+                  Pay
+                </button>
+              </div>
+
+              {/* receipt button */}
+              <div>
+                <button className="btn btn-primary" disabled>
+                  Download Receipt
+                </button>
               </div>
             </div>
           </div>
         </div>
-
-        {/* popups */}
-        {renderPopup()}
       </div>
-    </>
+
+      {/* popups */}
+      {renderPopup()}
+    </div>
   );
 };
 

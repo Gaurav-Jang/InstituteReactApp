@@ -16,13 +16,14 @@
 
 /* inner container */
 .container {
-  /* width: 80% !important; */
   height: 100%;
   background-color: #ffffff;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   margin: 50px 0;
   padding: 25px;
 }
+
+/* student details */
 .student-details,
 .fees-details {
   display: flex;
@@ -31,45 +32,84 @@
   column-gap: 20px;
   row-gap: 20px;
 }
+
+/* fees details */
 .fees-details div,
 .student-details div {
   width: 32%;
 }
-/* .student-details input,
-.fees-details input {
-  width: 287px;
-} */
+
+/* heading */
 .section-header {
   font-size: 21px;
   margin-bottom: 11px;
   font-weight: 500;
 }
+
+/* sections */
 .left-section,
 .right-section {
   border: 1px solid #00000030;
   padding: 20px;
   border-radius: 5px;
 }
+
+/* input fields */
 .pay-amount {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .pay-amount input {
   width: 21%;
 }
-.search-container {
+
+/* search box container */
+/* .search-container {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
   padding: 0.5rem 0.75rem;
 }
+
 .search-container input {
   border: none;
   border-radius: none;
   padding: 0;
 }
+
 .search-container input:focus {
   background-color: none !important;
   border-color: none !important;
   box-shadow: none !important;
+} */
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border: 1px solid #ccc;
+  border-top: none;
+  background-color: #fff;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.autocomplete-results li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.autocomplete-results li:hover {
+  background-color: #f0f0f0;
 }

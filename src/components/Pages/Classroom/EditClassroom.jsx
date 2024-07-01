@@ -34,7 +34,10 @@ const EditClassroom = ({ setProgress }) => {
       const response = await axios.get(apiGetData);
       setActiveClassRoom(response.data); // data
     } catch (error) {
-      showPopup("error"); // shows error popup
+      showPopup("error", {
+        title: "Error!",
+        text: "Server is down. Please try again later.",
+      }); // show error popup
     }
   };
 
@@ -66,7 +69,10 @@ const EditClassroom = ({ setProgress }) => {
       })
       .catch((error) => {
         hidePopup(); // hide all the popups
-        showPopup("error"); // shows error popup
+        showPopup("error", {
+          title: "Error!",
+          text: "Server is down. Please try again later.",
+        });
       });
   };
 
@@ -80,7 +86,7 @@ const EditClassroom = ({ setProgress }) => {
     <>
       <div
         style={{
-          marginLeft: "250px",
+          marginLeft: "auto",
           backgroundColor: "#FBFBFE",
           width: "calc(100% - 250px)",
           height: "calc(100% - 50px)",
