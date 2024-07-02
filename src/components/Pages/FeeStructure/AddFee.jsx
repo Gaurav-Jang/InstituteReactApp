@@ -32,7 +32,7 @@ function AddFee() {
   );
   const [enableDisableType, setEnableDisableType] = useState("");
   const [databaseRecords, setDatabaseRecords] = useState({});
-  const [loader, showLoader, hideLoader] = useLoader();
+  // const [loader, showLoader, hideLoader] = useLoader();
 
   useEffect(() => {
     getCredentialMasterData();
@@ -162,7 +162,7 @@ function AddFee() {
     ) {
       seturlValidationClass("form-control border border-danger");
     } else {
-      showLoader();
+      // showLoader();
       axios
         .post(apiGetData, inputs)
         .then((response) => {
@@ -179,62 +179,67 @@ function AddFee() {
         })
         .catch(function (error) {
           console.log(error);
-          hideLoader();
+          // hideLoader();
         });
     }
   };
 
   const getCredentialDataById = (Id) => {
-    const apiGetData =
-      ApplicationHealthApi.BaseURL +
-      ApplicationHealthApi.HealthTracking.GetCredentialDataById.replace(
-        "{0}",
-        Id
-      );
-    showLoader();
-    axios
-      .get(apiGetData)
-      .then((response) => {
-        setInputs(response.data);
-        setDatabaseRecords(response.data);
-        if (response.data.Type == "Database") {
-          setRenderDatabaseDiv("row mt-2");
-          setRenderWebsiteDiv("row mt-2 d-none");
-        } else if (response.data.Type == "Websites") {
-          setRenderWebsiteDiv("row mt-2");
-          setRenderDatabaseDiv("row mt-2 d-none");
-        } else {
-          setRenderDatabaseDiv("row mt-2 d-none");
-          setRenderWebsiteDiv("row mt-2 d-none");
-        }
-        hideLoader();
-      })
-      .catch(function (error) {
-        console.log(error);
-        hideLoader();
-      });
+    // const apiGetData =
+    //   // ApplicationHealthApi.BaseURL + ApplicationHealthApi.HealthTracking.GetCredentialDataById.replace( "{0}", Id );
+    //   // showLoader();
+    //   axios
+    //     .get(apiGetData)
+    //     .then((response) => {
+    //       setInputs(response.data);
+    //       setDatabaseRecords(response.data);
+    //       if (response.data.Type == "Database") {
+    //         setRenderDatabaseDiv("row mt-2");
+    //         setRenderWebsiteDiv("row mt-2 d-none");
+    //       } else if (response.data.Type == "Websites") {
+    //         setRenderWebsiteDiv("row mt-2");
+    //         setRenderDatabaseDiv("row mt-2 d-none");
+    //       } else {
+    //         setRenderDatabaseDiv("row mt-2 d-none");
+    //         setRenderWebsiteDiv("row mt-2 d-none");
+    //       }
+    //       // hideLoader();
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //       // hideLoader();
+    //     });
   };
 
   const getCredentialMasterData = () => {
-    const apiGetData =
-      ApplicationHealthApi.BaseURL +
-      ApplicationHealthApi.HealthTracking.GetCredentialMasterData;
-    showLoader();
-    axios
-      .get(apiGetData)
-      .then((response) => {
-        setCredentialMasterData(response.data);
-        hideLoader();
-      })
-      .catch(function (error) {
-        console.log(error);
-        hideLoader();
-      });
+    // const apiGetData =
+    //   // ApplicationHealthApi.BaseURL +
+    //   // ApplicationHealthApi.HealthTracking.GetCredentialMasterData;
+    //   // showLoader();
+    //   axios
+    //     // .get(apiGetData)
+    //     .then((response) => {
+    //       setCredentialMasterData(response.data);
+    //       // hideLoader();
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //       // hideLoader();
+    //     });
   };
 
   return (
     <React.Fragment>
-      <form onSubmit={handleSubmit} method="post">
+      <form
+        onSubmit={handleSubmit}
+        method="post"
+        style={{
+          marginLeft: "auto",
+          width: "calc(100% - 280px)",
+          padding: "30px",
+          paddingTop: "100px",
+        }}
+      >
         <div>
           <div className="row mt-3">
             <div className="col-6">
@@ -489,7 +494,7 @@ function AddFee() {
           </button>
         </div>
       </form>
-      {loader}
+      {/* {loader} */}
     </React.Fragment>
   );
 }
