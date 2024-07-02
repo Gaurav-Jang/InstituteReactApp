@@ -6,7 +6,7 @@ import IWS from "/iws.webp"; // logo
 import * as md from "react-icons/md";
 import { PiStudentFill } from "react-icons/pi";
 import { FaUserCircle, FaRegCircle } from "react-icons/fa";
-import { CgNotes } from "react-icons/cg";
+// import { CgNotes } from "react-icons/cg";
 import "../css/SideBar.css"; // custom css file
 
 const SideBar = ({ sidebarToggle }) => {
@@ -15,6 +15,7 @@ const SideBar = ({ sidebarToggle }) => {
     classroom: false,
     student: false,
     payment: false,
+    fee: false,
   });
 
   // dropdown open/close
@@ -186,6 +187,51 @@ const SideBar = ({ sidebarToggle }) => {
                     }
                   >
                     Edit Student
+                  </span>
+                </NavLink>
+              </li>
+            </ul>
+          )}
+
+          {/* fee */}
+          <li onClick={() => toggleDropdown("fee")} className="nav-dropdown">
+            <div className="nav-item" onClick={hidePopup}>
+              <md.MdCurrencyRupee style={{ fontSize: "28px" }} />
+              <span
+                className={sidebarToggle ? "menu-item" : "menu-item-collapse"}
+              >
+                Fee Structure
+              </span>
+            </div>
+            {renderDropdownIcon(dropdownOpen.fee)}
+          </li>
+          {/* dropdown */}
+          {dropdownOpen.fee && (
+            <ul className="sub-menu">
+              {/* add fee */}
+              <li>
+                <NavLink to="/AddFee" className="sub-item" onClick={hidePopup}>
+                  <FaRegCircle />
+                  <span
+                    className={
+                      sidebarToggle ? "menu-item" : "menu-item-collapse"
+                    }
+                  >
+                    Add Fee
+                  </span>
+                </NavLink>
+              </li>
+
+              {/* edit fee */}
+              <li>
+                <NavLink to="/EditFee" className="sub-item" onClick={hidePopup}>
+                  <FaRegCircle />
+                  <span
+                    className={
+                      sidebarToggle ? "menu-item" : "menu-item-collapse"
+                    }
+                  >
+                    Edit Fee
                   </span>
                 </NavLink>
               </li>
