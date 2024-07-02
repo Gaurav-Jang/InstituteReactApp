@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.container {
+  margin: auto;
+  width: 95% !important;
+  border-radius: 5px;
+}
+.feesStructure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  margin-left: auto;
+  background-color: #fbfbfe;
+  width: calc(100% - 250px);
+}
+.fs-header {
+  font-size: 21px;
+  margin-bottom: 11px;
+  font-weight: 500;
+}
+.fs-form {
+  border: 1px solid #00000030;
+  padding: 20px;
+  border-radius: 5px;
+}
+.fs-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 40px;
+  row-gap: 18px;
+}
+.fs-input div {
+  width: 48%;
+}

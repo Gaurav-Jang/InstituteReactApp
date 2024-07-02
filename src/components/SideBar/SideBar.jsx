@@ -6,6 +6,7 @@ import IWS from "/iws.webp"; // logo
 import * as md from "react-icons/md";
 import { PiStudentFill } from "react-icons/pi";
 import { FaUserCircle, FaRegCircle } from "react-icons/fa";
+import { CgNotes } from "react-icons/cg";
 import "../css/SideBar.css"; // custom css file
 
 const SideBar = ({ sidebarToggle }) => {
@@ -14,6 +15,7 @@ const SideBar = ({ sidebarToggle }) => {
     classroom: false,
     student: false,
     payment: false,
+    feesStructure: false,
   });
 
   // dropdown open/close
@@ -185,6 +187,62 @@ const SideBar = ({ sidebarToggle }) => {
                     }
                   >
                     Edit Student
+                  </span>
+                </NavLink>
+              </li>
+            </ul>
+          )}
+
+          {/* Fees Structure  */}
+          <li
+            onClick={() => toggleDropdown("feesStructure")}
+            className="nav-dropdown"
+          >
+            <div className="nav-item" onClick={hidePopup}>
+              <CgNotes style={{ fontSize: "22px" }} />
+              <span
+                className={sidebarToggle ? "menu-item" : "menu-item-collapse"}
+              >
+                Fees Structure
+              </span>
+            </div>
+            {renderDropdownIcon(dropdownOpen.feesStructure)}
+          </li>
+          {/* dropdown */}
+          {dropdownOpen.feesStructure && (
+            <ul className="sub-menu">
+              {/* add feesStructure */}
+              <li>
+                <NavLink
+                  to="/AddFeesStructure"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
+                  <FaRegCircle />
+                  <span
+                    className={
+                      sidebarToggle ? "menu-item" : "menu-item-collapse"
+                    }
+                  >
+                    Add FeesStructure
+                  </span>
+                </NavLink>
+              </li>
+
+              {/* edit  feesstructure */}
+              <li>
+                <NavLink
+                  to="/EditStudent"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
+                  <FaRegCircle />
+                  <span
+                    className={
+                      sidebarToggle ? "menu-item" : "menu-item-collapse"
+                    }
+                  >
+                    Edit FeesStructure
                   </span>
                 </NavLink>
               </li>

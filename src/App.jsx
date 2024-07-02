@@ -17,6 +17,7 @@ import EditStudent from "./components/Pages/Student/EditStudent"; // edit studen
 import Support from "./components/Pages/Support/Support"; // support
 import NotFound from "./components/Pages/NotFound/NotFound"; // 404
 import FeesPayment from "./components/Pages/FeesPayment/FeesPayment";
+import AddFeesStructure from "./components/Pages/FeesStructure/AddFeesStructure";
 
 const App = () => {
   const [progress, setProgress] = useState(0); // top loading bar
@@ -32,6 +33,7 @@ const App = () => {
     "/EditStudent",
     "/FeesPayment",
     "/Support",
+    "/AddFeesStructure",
   ];
 
   const isKnownPath = knownPaths.includes(location.pathname); // location specific
@@ -101,6 +103,11 @@ const App = () => {
               element={<EditStudent setProgress={setProgress} />}
             />
 
+            {/* Add FeesStructure */}
+            <Route
+              path="/AddFeesStructure"
+              element={<AddFeesStructure setProgress={setProgress} />}
+            />
             {/* fees payment */}
             <Route
               path="/FeesPayment"
