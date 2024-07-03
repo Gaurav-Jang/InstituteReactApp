@@ -14,7 +14,7 @@ import AddClassroom from "./components/Pages/Classroom/AddClassroom"; // add cla
 import EditClassroom from "./components/Pages/Classroom/EditClassroom"; // edit classroom
 import AddStudent from "./components/Pages/Student/AddStudent"; // add student
 import EditStudent from "./components/Pages/Student/EditStudent"; // edit student
-import AddFee from "./components/Pages/FeeStructure/AddFee"; // add fee
+import AddFeeStructure from "./components/Pages/FeesStructure/AddFeeStructure"; // add fee
 import EditFee from "./components/Pages/FeeStructure/EditFee"; // edit fee
 import FeesPayment from "./components/Pages/FeesPayment/FeesPayment"; // fee payment
 import Support from "./components/Pages/Support/Support"; // support
@@ -33,7 +33,7 @@ const App = () => {
     "/AddStudent",
     "/EditStudent",
     "/FeesPayment",
-    "/AddFee",
+    "/AddFeeStructure",
     "/EditFee",
     "/Support",
   ];
@@ -107,8 +107,8 @@ const App = () => {
 
             {/* add fee */}
             <Route
-              path="/AddFee"
-              element={<AddFee setProgress={setProgress} />}
+              path="/AddFeeStructure"
+              element={<AddFeeStructure setProgress={setProgress} />}
             />
 
             {/* edit fee */}

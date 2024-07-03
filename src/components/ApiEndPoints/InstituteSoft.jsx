@@ -39,6 +39,10 @@ const InstituteSoft = {
     UpdateStudent: "/api/Student/UpdateStudent",
   },
 
+  // Fees structure api
+  FeeStructure: {
+    SetFeeStructure: "/api/FeeStructure/SetFeeStructure",
+  },
   // support api
   Support: {
     // post method
