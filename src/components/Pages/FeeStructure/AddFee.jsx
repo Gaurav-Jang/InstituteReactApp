@@ -45,47 +45,47 @@ function AddFee() {
   }, []);
 
   const handleChange = (event) => {
-    if (event.target.name == "UserName")
-      setUserNameValidationClass(inputFieldClass);
-    else if (event.target.name == "Password")
-      setPasswordValidationClass(inputFieldClass);
-    else if (event.target.name == "DBName")
-      setdbNameValidationClass(inputFieldClass);
-    else if (event.target.name == "URL") seturlValidationClass(inputFieldClass);
+    // if (event.target.name == "UserName")
+    //   setUserNameValidationClass(inputFieldClass);
+    // else if (event.target.name == "Password")
+    //   setPasswordValidationClass(inputFieldClass);
+    // else if (event.target.name == "DBName")
+    //   setdbNameValidationClass(inputFieldClass);
+    // else if (event.target.name == "URL") seturlValidationClass(inputFieldClass);
     const name = event.target.name;
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
-  const calculateExpiryDateByExpiryDays = (e) => {
-    const val = e.target.value;
-    if (val != null && val != "") {
-      var result = new Date(startDate);
-      result.setDate(result.getDate() + parseInt(val));
-      setInputs((val) => ({ ...val, ExpiryDate: formatDate(result) }));
-    } else {
-      setInputs((val) => ({ ...val, ExpiryDate: "" }));
-    }
-  };
-  const calculateExpiryDate = (date) => {
-    if (inputs.ExpiryDays != null && inputs.ExpiryDays != "") {
-      var result = new Date(date);
-      result.setDate(result.getDate() + parseInt(inputs.ExpiryDays));
-      setInputs((val) => ({ ...val, ExpiryDate: formatDate(result) }));
-    } else {
-      setInputs((val) => ({ ...val, ExpiryDate: "" }));
-    }
-  };
-  function formatDate(date) {
-    var d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
+  // const calculateExpiryDateByExpiryDays = (e) => {
+  //   const val = e.target.value;
+  //   if (val != null && val != "") {
+  //     var result = new Date(startDate);
+  //     result.setDate(result.getDate() + parseInt(val));
+  //     setInputs((val) => ({ ...val, ExpiryDate: formatDate(result) }));
+  //   } else {
+  //     setInputs((val) => ({ ...val, ExpiryDate: "" }));
+  //   }
+  // };
+  // const calculateExpiryDate = (date) => {
+  //   if (inputs.ExpiryDays != null && inputs.ExpiryDays != "") {
+  //     var result = new Date(date);
+  //     result.setDate(result.getDate() + parseInt(inputs.ExpiryDays));
+  //     setInputs((val) => ({ ...val, ExpiryDate: formatDate(result) }));
+  //   } else {
+  //     setInputs((val) => ({ ...val, ExpiryDate: "" }));
+  //   }
+  // };
+  // function formatDate(date) {
+  //   var d = new Date(date),
+  //     month = "" + (d.getMonth() + 1),
+  //     day = "" + d.getDate(),
+  //     year = d.getFullYear();
 
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
+  //   if (month.length < 2) month = "0" + month;
+  //   if (day.length < 2) day = "0" + day;
 
-    return [year, month, day].join("-");
-  }
+  //   return [year, month, day].join("-");
+  // }
 
   const handleFields = (event) => {
     setdbNameValidationClass(inputFieldClass);

@@ -210,14 +210,18 @@ const SideBar = ({ sidebarToggle }) => {
             <ul className="sub-menu">
               {/* add fee */}
               <li>
-                <NavLink to="/AddFee" className="sub-item" onClick={hidePopup}>
+                <NavLink
+                  to="/AddFeeStructure"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={
                       sidebarToggle ? "menu-item" : "menu-item-collapse"
                     }
                   >
-                    Add Fee
+                    Add FeeStructure
                   </span>
                 </NavLink>
               </li>
@@ -231,7 +235,7 @@ const SideBar = ({ sidebarToggle }) => {
                       sidebarToggle ? "menu-item" : "menu-item-collapse"
                     }
                   >
-                    Edit Fee
+                    Edit FeeStructure
                   </span>
                 </NavLink>
               </li>
