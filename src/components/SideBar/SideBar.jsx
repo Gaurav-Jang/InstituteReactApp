@@ -217,7 +217,7 @@ const SideBar = ({ sidebarToggle }) => {
                       sidebarToggle ? "menu-item" : "menu-item-collapse"
                     }
                   >
-                    Add Fee
+                    Add FeeStructure
                   </span>
                 </NavLink>
               </li>
@@ -231,7 +231,7 @@ const SideBar = ({ sidebarToggle }) => {
                       sidebarToggle ? "menu-item" : "menu-item-collapse"
                     }
                   >
-                    Edit Fee
+                    Edit FeeStructure
                   </span>
                 </NavLink>
               </li>

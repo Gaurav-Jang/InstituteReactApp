@@ -2,7 +2,8 @@ import React, { useState, useEffect, forwardRef } from "react";
 import axios from "axios";
 // import ApplicationHealthApi from "../../ApiEndpoints/ApplicationHealthApi";
 import { Link, useSearchParams } from "react-router-dom";
-import DatePicker from "react-datepicker";
+import { DatePicker } from "antd";
+// import DatePicker from "react-datepicker";
 // import "react-datepicker/dist/react-datepicker.css";
 // import useLoader from "../../CustomHooks/useLoader";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -45,13 +46,13 @@ function AddFee() {
   }, []);
 
   const handleChange = (event) => {
-    if (event.target.name == "UserName")
-      setUserNameValidationClass(inputFieldClass);
-    else if (event.target.name == "Password")
-      setPasswordValidationClass(inputFieldClass);
-    else if (event.target.name == "DBName")
-      setdbNameValidationClass(inputFieldClass);
-    else if (event.target.name == "URL") seturlValidationClass(inputFieldClass);
+    // if (event.target.name == "UserName")
+    //   setUserNameValidationClass(inputFieldClass);
+    // else if (event.target.name == "Password")
+    //   setPasswordValidationClass(inputFieldClass);
+    // else if (event.target.name == "DBName")
+    //   setdbNameValidationClass(inputFieldClass);
+    // else if (event.target.name == "URL") seturlValidationClass(inputFieldClass);
     const name = event.target.name;
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
