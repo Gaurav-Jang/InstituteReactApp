@@ -193,7 +193,7 @@ const SideBar = ({ sidebarToggle }) => {
             </ul>
           )}
 
-          {/* fee */}
+          {/* fee structure */}
           <li onClick={() => toggleDropdown("fee")} className="nav-dropdown">
             <div className="nav-item" onClick={hidePopup}>
               <md.MdCurrencyRupee style={{ fontSize: "28px" }} />
@@ -208,7 +208,7 @@ const SideBar = ({ sidebarToggle }) => {
           {/* dropdown */}
           {dropdownOpen.fee && (
             <ul className="sub-menu">
-              {/* add fee */}
+              {/* add fee structure */}
               <li>
                 <NavLink
                   to="/AddFeeStructure"
@@ -226,9 +226,13 @@ const SideBar = ({ sidebarToggle }) => {
                 </NavLink>
               </li>
 
-              {/* edit fee */}
+              {/* edit fee structure */}
               <li>
-                <NavLink to="/EditFee" className="sub-item" onClick={hidePopup}>
+                <NavLink
+                  to="/EditFeeStructure"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={

@@ -39,10 +39,26 @@ const InstituteSoft = {
     UpdateStudent: "/api/Student/UpdateStudent",
   },
 
-  // Fees structure api
+  // fees structure api
   FeeStructure: {
+    // get method
+    GetActiveFeeStructure: "/api/FeeStructure/GetActiveFeeStructure",
+
+    // post method
     SetFeeStructure: "/api/FeeStructure/SetFeeStructure",
+
+    // delete fee structure
+    DeleteFeeStructure:
+      "/api/FeeStructure/DeleteFeeStructure?FeeStructureId={0}",
+
+    // edit fee structure
+    GetFeeStructureByFeeStructureId:
+      "/api/FeeStructure/GetFeeStructureByFeeStructureId?FeeStructureId={0}",
+
+    // update fee structure
+    UpdateFeeStructure: "/api/FeeStructure/UpdateFeeStructure",
   },
+
   // support api
   Support: {
     // post method

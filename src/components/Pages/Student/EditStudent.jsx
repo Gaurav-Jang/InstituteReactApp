@@ -106,7 +106,7 @@ const EditStudent = ({ setProgress }) => {
           <input
             type="text"
             className="form-control search-input"
-            placeholder="Search by ClassRoom Name"
+            placeholder="Search by Student Name"
             value={searchItem}
             onChange={handleInputChange}
           />

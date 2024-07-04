@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types"; // prop-types
 import { FiUpload } from "react-icons/fi"; // react icons
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
@@ -170,7 +172,14 @@ const AddStudent = ({ setProgress }) => {
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
-    hidePopup(); // hide popups
+  };
+
+  // input date (onChange)
+  const handleDateChange = (date) => {
+    setData((prevData) => ({
+      ...prevData,
+      Dob: date,
+    }));
   };
 
   // handle submit
@@ -456,17 +465,18 @@ const AddStudent = ({ setProgress }) => {
                   Date of Birth (DOB){" "}
                   <span className="text-red-500 text-base">*</span>
                 </label>
-                <input
-                  type="date"
-                  name="Dob"
-                  className={`form-control 
-                    ${errors.Dob ? "is-invalid" : ""}`}
-                  value={data.Dob}
-                  onChange={handleInputChange}
-                />
-                {errors.Dob && (
-                  <div className="invalid-feedback">{errors.Dob}</div>
-                )}
+                <div>
+                  <DatePicker
+                    name="Dob"
+                    selected={data.Dob}
+                    onChange={handleDateChange}
+                    className={`form-control ${errors.Dob ? "is-invalid" : ""}`}
+                    placeholderText="mm/dd/yyyy"
+                  />
+                  {errors.Dob && (
+                    <div className="invalid-feedback">{errors.Dob}</div>
+                  )}
+                </div>
               </div>
 
               {/* Father Name */}

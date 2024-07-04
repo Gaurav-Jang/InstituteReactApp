@@ -7,15 +7,15 @@ import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/EditClassRoom.css"; // custom css file
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 
-const EditClassroom = ({ setProgress }) => {
+const EditFeeStructure = ({ setProgress }) => {
   const navigate = useNavigate(); // navigation
-  const [activeClassRoom, setActiveClassRoom] = useState([]); // classroom
+  const [activeFeeStructure, setActiveFeeStructure] = useState([]); // fee structure
   const { renderPopup, showPopup, hidePopup } = usePopup(); // popup
   const [searchItem, setSearchItem] = useState(""); // search
 
-  // classroom api hook
+  // fee structure api hook
   useEffect(() => {
-    getActiveClassRoom();
+    getActiveFeeStructure();
   }, []);
 
   // top loading bar
@@ -26,13 +26,14 @@ const EditClassroom = ({ setProgress }) => {
     }, 300);
   }, [setProgress]);
 
-  // classroom api
-  const getActiveClassRoom = async () => {
+  // fee structure api
+  const getActiveFeeStructure = async () => {
     try {
       const apiGetData =
-        InstituteSoft.BaseURL + InstituteSoft.ClassRoom.GetActiveClassRoom; // api's endpoint
+        InstituteSoft.BaseURL +
+        InstituteSoft.FeeStructure.GetActiveFeeStructure; // api's endpoint
       const response = await axios.get(apiGetData);
-      setActiveClassRoom(response.data); // data
+      setActiveFeeStructure(response.data); // data
     } catch (error) {
       showPopup("error", {
         title: "Error!",
@@ -42,28 +43,31 @@ const EditClassroom = ({ setProgress }) => {
   };
 
   // edit
-  const handleEdit = (classRoomId) => {
-    navigate(`/AddClassRoom?ClassRoomId=${classRoomId}`); // api's endpoint
+  const handleEdit = (feeStructureId) => {
+    navigate(`/AddFeeStructure?FeeStructureId=${feeStructureId}`); // api's endpoint
   };
 
   // delete
-  const handleDelete = (classRoomId) => {
+  const handleDelete = (feeStructureId) => {
     showPopup("delete", {
       // shows delete popup
-      onConfirm: () => confirmDelete(classRoomId),
+      onConfirm: () => confirmDelete(feeStructureId),
       onCancel: hidePopup, // hide all the popups on cancel button
     });
   };
 
   // confirm delete
-  const confirmDelete = (classRoomId) => {
+  const confirmDelete = (feeStructureId) => {
     const apiDeleteData =
       InstituteSoft.BaseURL +
-      InstituteSoft.ClassRoom.DeleteClassRoom.replace("{0}", classRoomId); // api's endpoint
+      InstituteSoft.FeeStructure.DeleteFeeStructure.replace(
+        "{0}",
+        feeStructureId
+      ); // api's endpoint
     axios
       .get(apiDeleteData)
       .then((response) => {
-        getActiveClassRoom(); // data
+        getActiveFeeStructure(); // data
         hidePopup(); // hide all the popups
         showPopup("deleteConfirm"); // shows delete confirm popup
       })
@@ -106,7 +110,7 @@ const EditClassroom = ({ setProgress }) => {
           <input
             type="text"
             className="form-control search-input"
-            placeholder="Search by ClassRoom Name"
+            placeholder="Search by Class Name"
             value={searchItem}
             onChange={handleInputChange}
           />
@@ -119,14 +123,20 @@ const EditClassroom = ({ setProgress }) => {
             <thead>
               {/* table head row */}
               <tr>
-                {/* classroom name */}
-                <th scope="col">ClassRoom Name</th>
                 {/* class */}
                 <th scope="col">Class</th>
-                {/* classroom type */}
-                <th scope="col">ClassRoom Type</th>
-                {/* price */}
-                <th scope="col">Price</th>
+                {/* registration fee */}
+                <th scope="col">Registration Fee</th>
+                {/* admission fee */}
+                <th scope="col">Admission Fee</th>
+                {/* tuition fee */}
+                <th scope="col">Tuition Fee</th>
+                {/* welcome kit */}
+                <th scope="col">Welcome Kit</th>
+                {/* school fee */}
+                <th scope="col">School Fee</th>
+                {/* migration charges */}
+                <th scope="col">Migration Charges</th>
                 {/* buttons */}
                 <th scope="col">Action</th>
               </tr>
@@ -135,28 +145,36 @@ const EditClassroom = ({ setProgress }) => {
             {/* table body */}
             <tbody>
               {/* table body row */}
-              {activeClassRoom
-                .filter((classRoom) =>
-                  classRoom.classRoomName
-                    .toLowerCase()
-                    .includes(searchItem.toLowerCase())
+              {activeFeeStructure
+                .filter(
+                  (feeStructure) =>
+                    feeStructure.studentClass &&
+                    feeStructure.studentClass
+                      .toLowerCase()
+                      .includes(searchItem.toLowerCase())
                 )
-                .map((classRoom) => (
-                  <tr key={classRoom.classRoomId}>
-                    {/* classroom name */}
-                    <td>{classRoom.classRoomName}</td>
+                .map((feeStructure) => (
+                  <tr key={feeStructure.feeStructureId}>
                     {/* class */}
-                    <td>{classRoom.class}</td>
-                    {/* classroom type */}
-                    <td>{classRoom.classRoomType}</td>
-                    {/* price */}
-                    <td>{classRoom.price}</td>
+                    <td>{feeStructure.studentClass}</td>
+                    {/* registration fee */}
+                    <td>{feeStructure.registrationFees}</td>
+                    {/* admission fee */}
+                    <td>{feeStructure.admissionFees}</td>
+                    {/* tuition fee */}
+                    <td>{feeStructure.tuitionFees}</td>
+                    {/* welcome kit */}
+                    <td>{feeStructure.welcomeKit}</td>
+                    {/* school fee */}
+                    <td>{feeStructure.schoolFees}</td>
+                    {/* migration charges */}
+                    <td>{feeStructure.migrationCharges}</td>
                     {/* buttons */}
                     <td>
                       {/* edit */}
                       <button
                         className="btn text-primary"
-                        onClick={() => handleEdit(classRoom.classRoomId)}
+                        onClick={() => handleEdit(feeStructure.feeStructureId)}
                       >
                         <PencilSquare />
                       </button>
@@ -164,7 +182,9 @@ const EditClassroom = ({ setProgress }) => {
                       {/* delete */}
                       <button
                         className="btn text-danger"
-                        onClick={() => handleDelete(classRoom.classRoomId)}
+                        onClick={() =>
+                          handleDelete(feeStructure.feeStructureId)
+                        }
                       >
                         <Trash />
                       </button>
@@ -182,8 +202,8 @@ const EditClassroom = ({ setProgress }) => {
   );
 };
 
-EditClassroom.propTypes = {
+EditFeeStructure.propTypes = {
   setProgress: PropTypes.func.isRequired,
 };
 
-export default EditClassroom;
+export default EditFeeStructure;

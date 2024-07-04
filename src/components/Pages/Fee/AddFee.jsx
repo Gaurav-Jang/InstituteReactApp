@@ -57,6 +57,7 @@ function AddFee() {
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
+
   // const calculateExpiryDateByExpiryDays = (e) => {
   //   const val = e.target.value;
   //   if (val != null && val != "") {
@@ -104,6 +105,7 @@ function AddFee() {
       setRenderWebsiteDiv("row mt-2 d-none");
     }
   };
+
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <div>
       <label className="mb-1">Last Set Date</label>
@@ -369,6 +371,7 @@ function AddFee() {
                 placeholder="Enter url"
               />
             </div>
+
             <div className="form-group col-md-4">
               <label className="mb-1">Point of Contact</label>
               <input
@@ -396,6 +399,7 @@ function AddFee() {
                 placeholder="Enter user name"
               />
             </div>
+
             <div className="form-group col-md-4">
               <label className="mb-1">Password New</label>
               <input
@@ -408,6 +412,7 @@ function AddFee() {
                 placeholder="Enter password"
               />
             </div>
+
             <div className="form-group col-md-4">
               <label className="mb-1">Previous Password</label>
               <input
@@ -421,6 +426,7 @@ function AddFee() {
               />
             </div>
           </div>
+
           <div className="row mt-2">
             <div className="form-group col-md-3">
               <DatePicker
@@ -433,6 +439,7 @@ function AddFee() {
                 customInput={<ExampleCustomInput />}
               />
             </div>
+
             <div className="form-group col-md-4">
               <label className="mb-1">Expiry Days</label>
               <input
@@ -448,6 +455,7 @@ function AddFee() {
                 placeholder="Enter expiry days"
               />
             </div>
+
             <div className="form-group col-md-4">
               <label className="mb-1">Expiry Date</label>
               <input
@@ -461,6 +469,7 @@ function AddFee() {
               />
             </div>
           </div>
+
           <div className="row mt-2">
             <div className="form-group col-md-8">
               <label className="mb-1">Applications</label>
@@ -474,6 +483,7 @@ function AddFee() {
                 placeholder="Enter applications"
               />
             </div>
+
             <div className="form-group col-md-4">
               <label className="mb-1">Remarks</label>
               <input
@@ -487,9 +497,11 @@ function AddFee() {
               />
             </div>
           </div>
+
           <button type="submit" className={saveButtonClass}>
             Submit
           </button>
+
           <button type="submit" className={updateButtonClass}>
             Update
           </button>

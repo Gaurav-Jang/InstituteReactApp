@@ -6,7 +6,7 @@ import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/AddClassroom.css"; // custom css file
 import { useSearchParams } from "react-router-dom"; // search param
 
-const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
+const AddClassroom = ({ setProgress }) => {
   // top loading bar
   useEffect(() => {
     setProgress(40);
@@ -224,14 +224,13 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
       .post(
         InstituteSoft.BaseURL + InstituteSoft.ClassRoom.UpdateClassRoom,
         dataSet
-      ) // api's endpoint
+      )
       .then((response) => {
-        // compares api's return message with your message
         if (response.data === "Class room already exists, make some changes.") {
           showPopup("error", {
             title: "Duplicate Classroom",
             text: "The classroom already exists. Please try a different name.",
-          }); // duplicate error popup
+          });
         } else {
           showPopup("success", {
             title: "Classroom Updated Successfully",
@@ -239,15 +238,15 @@ const AddClassroom = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
             link: "/EditClassRoom",
             linkText: "Edit ClassRoom",
           });
-          resetForm(); // resets form data
+          resetForm(); // Reset form only when this success popup is closed
         }
       })
       .catch((error) => {
-        console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
+        console.error(error.response ? error.response.data : error.message);
         showPopup("error", {
           title: "Error!",
           text: "You didn't edit anything in the form.",
-        }); // show error popup
+        });
       });
   };
 
