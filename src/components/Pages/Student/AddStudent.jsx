@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types"; // prop-types
 import { FiUpload } from "react-icons/fi"; // react icons
+// react date picker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
@@ -11,9 +12,8 @@ import usePopup from "../../CustomHooks/usePopup"; // custom hook
 
 const AddStudent = ({ setProgress }) => {
   const { showPopup, hidePopup, renderPopup } = usePopup(); // popup's custom hook
+  const [errors, setErrors] = useState({}); // validation errors state
 
-  // validation errors state
-  const [errors, setErrors] = useState({});
   // top loading bar
   useEffect(() => {
     setProgress(40);

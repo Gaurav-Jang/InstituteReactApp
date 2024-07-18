@@ -366,7 +366,7 @@ const AddClassroom = ({ setProgress }) => {
 
               {/* price */}
               <div>
-                <label className="form-label dark:text-white">Price</label>
+                <label className="form-label">Price</label>
                 <input
                   type="number"
                   className={`form-control ${errors.Price ? "is-invalid" : ""}`}

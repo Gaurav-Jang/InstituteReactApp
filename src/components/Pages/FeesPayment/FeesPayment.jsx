@@ -6,15 +6,17 @@ import { Search } from "react-bootstrap-icons"; // bootstrap icon
 import "../../css/FeesPayment.css"; // custom css file
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api
 import usePopup from "../../CustomHooks/usePopup"; // custom popup hook
+import { useSearchParams } from "react-router-dom"; // search param
 
 const FeesPayment = ({ setProgress }) => {
   const [activeStudents, setActiveStudents] = useState([]); // student's data state
+  const [activeFeeStructure, setActiveFeeStructure] = useState([]); // fee structure data state
   const [searchQuery, setSearchQuery] = useState(""); // search
   const [filteredStudents, setFilteredStudents] = useState([]); // search filter
   const [selectedStudent, setSelectedStudent] = useState(null); // filtered search
 
   // student data fields
-  const [data, setData] = useState({
+  const [studentData, setStudentData] = useState({
     StudentId: "",
     StudentFirstName: "",
     Dob: "",
@@ -23,10 +25,24 @@ const FeesPayment = ({ setProgress }) => {
     AvailingHostel: "",
     AvailingTransport: "",
     AvailingSchool: "",
-    CourseFee: "",
-    TransportFee: "",
-    SchoolFee: "",
-    HostelFee: "",
+  });
+
+  // fees data fields
+  const [feeData, setFeeData] = useState({
+    RegistrationFees: "",
+    AdmissionFees: "",
+    TuitionFees: "",
+    WelcomeKit: "",
+    SchoolFees: "",
+    MigrationCharges: "",
+    ExamFees: "",
+  });
+
+  // billing amount fields
+  const [amount, setAmount] = useState({
+    SubTotal: "",
+    Discount: "",
+    TotalAmount: "",
   });
 
   // validation errors state
@@ -47,6 +63,7 @@ const FeesPayment = ({ setProgress }) => {
   // api's hook
   useEffect(() => {
     getActiveStudents();
+    getActiveFeeStructure();
   }, []);
 
   // search
@@ -69,46 +86,237 @@ const FeesPayment = ({ setProgress }) => {
         setActiveStudents(response.data);
       })
       .catch((error) => {
-        console.error("API Error:", error);
+        console.error("API Error: ", error);
       });
   };
 
-  // search selected student
-  const handleSelectStudent = (student) => {
-    setSearchQuery(student.studentFirstName); // update search query
-    setSelectedStudent(student); // set selected student
+  // fetching fee structure data
+  const getActiveFeeStructure = async () => {
+    try {
+      const apiGetData =
+        InstituteSoft.BaseURL +
+        InstituteSoft.FeeStructure.GetActiveFeeStructure; // api's endpoint
+      const response = await axios.get(apiGetData);
+      setActiveFeeStructure(response.data);
+    } catch (error) {
+      showPopup("error", {
+        title: "Error!",
+        text: "Server is down. Please try again later.",
+      }); // show error popup
+    }
+  };
 
-    // student's data fields
+  const getFeeStructureByClassRoom = async (classRoomName) => {
+    try {
+      const apiGetData =
+        InstituteSoft.BaseURL +
+        InstituteSoft.FeeStructure.GetFeeStructureByClassRoom.replace(
+          "{0}",
+          classRoomName
+        );
+      const response = await axios.get(apiGetData);
+      return response;
+    } catch (error) {
+      console.error("Error fetching fee structure:", error);
+      showPopup("error", {
+        title: "Error!",
+        text: "Server is down. Please try again later.",
+      });
+    }
+  };
+
+  // function to reset form data
+  const resetForm = () => {
     setData({
-      StudentId: student.studentId,
-      StudentFirstName: student.studentFirstName,
-      Dob: student.dob,
-      FatherFirstName: student.fatherFirstName,
-      StudentClassRoomName: student.studentClassRoomName,
-      AvailingHostel: student.availingHostel,
-      AvailingTransport: student.availingTransport,
-      AvailingSchool: student.availingSchool,
-      CourseFee: "",
-      TransportFee: "",
-      SchoolFee: "",
-      HostelFee: "",
+      StudentId: "",
+      StudentFirstName: "",
+      Dob: "",
+      FatherFirstName: "",
+      StudentClassRoomName: "",
+      AvailingHostel: "",
+      AvailingTransport: "",
+      AvailingSchool: "",
+      RegistrationFees: "",
+      AdmissionFees: "",
+      TuitionFees: "",
+      WelcomeKit: "",
+      SchoolFees: "",
+      MigrationCharges: "",
+      ExamFees: "",
+      SubTotal: "",
+      Discount: "",
+      TotalAmount: "",
     });
+    setErrors("error in resetting form data");
+  };
 
-    setFilteredStudents([]); // Reset search field
+  // fees payment api
+  const setFeesPaymentData = () => {
+    const dataSet = {
+      FeesPaymentId: data.FeesPaymentId,
+      StudentFirstName: data.StudentFirstName,
+      Dob: data.Dob,
+      FatherFirstName: data.FatherFirstName,
+      StudentClassRoomName: data.StudentClassRoomName,
+      AvailingHostel: data.AvailingHostel,
+      AvailingTransport: data.AvailingTransport,
+      AvailingSchool: data.AvailingSchool,
+      RegistrationFees: data.RegistrationFees,
+      AdmissionFees: data.AdmissionFees,
+      WelcomeKit: data.WelcomeKit,
+      TuitionFees: data.TuitionFees,
+      SchoolFees: data.SchoolFees,
+      MigrationCharges: data.MigrationCharges,
+      ExamFees: data.ExamFees,
+      SubTotal: data.SubTotal,
+      Discount: data.Discount,
+      TotalAmount: data.TotalAmount,
+    };
+
+    // sending data to APIs endpoint using POST method
+    axios
+      .post(
+        InstituteSoft.BaseURL + InstituteSoft.FeesPayment.SetFeesPayment,
+        dataSet
+      ) // api's endpoint
+      .then((response) => {
+        if (response.data === "fees payment already exists.") {
+          // compares api's return message with your message
+          showPopup("error", {
+            title: "Duplicate Fees Payment",
+            text: "The Fees Payment already exists. Please try again.",
+          }); // duplicate error popup
+        } else {
+          showPopup("success", {
+            title: "Fees Payment Added Successfully",
+            confirmBtn: true,
+            link: "/EditFeePayment",
+            linkText: "Edit FeePayment",
+          }); // success popup
+          resetForm(); // reset form after submission
+        }
+      })
+      .catch((error) => {
+        console.error(error.response ? error.response.data : error.message); // prints error message or error data came from api
+        showPopup("error", {
+          title: "Error!",
+          text: "Please add some data in the form.",
+        }); // show error popup
+      });
+  };
+
+  // format date to "yyyy-MM-dd"
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // search selected student
+  const handleSelectStudent = async (student) => {
+    setSearchQuery(student.studentFirstName);
+    setSelectedStudent(student);
+
+    // Fetch the fee structure data for the selected student's classroom
+    const response = await getFeeStructureByClassRoom(
+      student.studentClassRoomName
+    );
+
+    if (response && response.data && response.data.length > 0) {
+      const feeStructureData = response.data[0]; // Assuming the response is an array with a single object
+
+      const feeStructure = {
+        RegistrationFees: feeStructureData.registrationFees || "",
+        AdmissionFees: feeStructureData.admissionFees || "",
+        TuitionFees: feeStructureData.tuitionFees || "",
+        WelcomeKit: feeStructureData.welcomeKit || "",
+        SchoolFees: feeStructureData.schoolFees || "",
+        MigrationCharges: feeStructureData.migrationCharges || "",
+        ExamFees: feeStructureData.examFees || "",
+      };
+
+      // student's data fields
+      setStudentData({
+        StudentId: student.studentId,
+        StudentFirstName: student.studentFirstName,
+        Dob: formatDate(student.dob),
+        FatherFirstName: student.fatherFirstName,
+        StudentClassRoomName: student.studentClassRoomName,
+        AvailingHostel: student.availingHostel,
+        AvailingTransport: student.availingTransport,
+        AvailingSchool: student.availingSchool,
+      });
+
+      // fee structure data fields
+      setFeeData(feeStructure);
+
+      // billing amount
+      const subTotal =
+        Number(feeStructure.RegistrationFees) +
+        Number(feeStructure.AdmissionFees) +
+        Number(feeStructure.TuitionFees) +
+        Number(feeStructure.WelcomeKit) +
+        Number(feeStructure.SchoolFees) +
+        Number(feeStructure.MigrationCharges) +
+        Number(feeStructure.ExamFees);
+
+      const discount = 10000;
+      const totalAmount = subTotal - discount;
+
+      setAmount({
+        SubTotal: subTotal,
+        Discount: discount,
+        TotalAmount: totalAmount,
+      });
+
+      setFilteredStudents([]); // Reset search field
+    } else {
+      console.warn(
+        "No fee structure data found for classroom:",
+        student.studentClassRoomName
+      );
+    }
   };
 
   // input handler (onChange)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setData((prevData) => ({
-      ...prevData,
+
+    // Update feeData state
+    setFeeData((prevFeeData) => ({
+      ...prevFeeData,
       [name]: value,
     }));
+
+    // Recalculate amounts based on updated feeData
+    const subTotal =
+      Number(feeData.RegistrationFees || 0) +
+      Number(feeData.AdmissionFees || 0) +
+      Number(feeData.TuitionFees || 0) +
+      Number(feeData.WelcomeKit || 0) +
+      Number(feeData.SchoolFees || 0) +
+      Number(feeData.MigrationCharges || 0) +
+      Number(feeData.ExamFees || 0);
+
+    const discount = 10000;
+    const totalAmount = subTotal - discount;
+
+    // Update amount state with the recalculated values
+    setAmount({
+      SubTotal: subTotal,
+      Discount: discount,
+      TotalAmount: totalAmount,
+    });
+
+    // Clear errors for the current input
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
     }));
-    hidePopup(); // hide popup's
+
+    hidePopup(); // Hide popup
   };
 
   // handle submit
@@ -116,61 +324,133 @@ const FeesPayment = ({ setProgress }) => {
     e.preventDefault();
     let newErrors = {}; // new var for displaying empty input boxes
 
-    // course fee
-    if (!data.CourseFee || data.CourseFee <= 0)
-      newErrors.CourseFee = "Please enter a valid amount";
-    // transport fee
-    if (!data.TransportFee || data.TransportFee <= 0)
-      newErrors.TransportFee = "Please enter a valid amount";
-    // School fee
-    if (!data.SchoolFee || data.SchoolFee <= 0)
-      newErrors.SchoolFee = "Please enter a valid amount";
-    // hostel fee
-    if (!data.HostelFee || data.HostelFee <= 0)
-      newErrors.HostelFee = "Please enter a valid amount";
-    // sub total
-    if (!data.SubTotal || data.SubTotal <= 0)
+    // student data
+    if (!studentData.StudentFirstName)
+      newErrors.StudentFirstName = "Student Name is required";
+    if (!studentData.Dob) newErrors.Dob = "Dob is required";
+    if (!studentData.FatherFirstName)
+      newErrors.FatherFirstName = "Father Name is required";
+    if (!studentData.StudentClassRoomName)
+      newErrors.StudentClassRoomName = "Student ClassRoom Name is required";
+    if (!studentData.AvailingHostel)
+      newErrors.AvailingHostel = "Availing Hostel is required";
+    if (!studentData.AvailingTransport)
+      newErrors.AvailingTransport = "Availing Transport is required";
+    if (!studentData.AvailingSchool)
+      newErrors.AvailingSchool = "Availing School is required";
+
+    // fee data
+    if (!feeData.RegistrationFees || feeData.RegistrationFees <= 0)
+      newErrors.RegistrationFees = "Please enter a valid amount";
+    if (!feeData.AdmissionFees || feeData.AdmissionFees <= 0)
+      newErrors.AdmissionFees = "Please enter a valid amount";
+    if (!feeData.TuitionFees || feeData.TuitionFees <= 0)
+      newErrors.TuitionFees = "Please enter a valid amount";
+    if (!feeData.WelcomeKit || feeData.WelcomeKit <= 0)
+      newErrors.WelcomeKit = "Please enter a valid amount";
+    if (!feeData.SchoolFees || feeData.SchoolFees <= 0)
+      newErrors.SchoolFees = "Please enter a valid amount";
+    if (!feeData.MigrationCharges || feeData.MigrationCharges <= 0)
+      newErrors.MigrationCharges = "Please enter a valid amount";
+    if (!feeData.ExamFees || feeData.ExamFees <= 0)
+      newErrors.ExamFees = "Please enter a valid amount";
+
+    // billing amount
+    if (!amount.SubTotal || amount.SubTotal <= 0)
       newErrors.SubTotal = "Please enter a valid amount";
-    // grand total
-    if (!data.GrandTotal || data.GrandTotal <= 0)
-      newErrors.GrandTotal = "Please enter a valid amount";
-    // total amount
-    if (!data.TotalAmount || data.TotalAmount <= 0)
+    if (!amount.Discount || amount.Discount <= 0)
+      newErrors.Discount = "Please enter a valid amount";
+    if (!amount.TotalAmount || amount.TotalAmount <= 0)
       newErrors.TotalAmount = "Please enter a valid amount";
-    // check if there is any error
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       showPopup("error", {
         title: "Error!",
         text: "Please complete the form.",
-      }); // shows error popup
+      });
     } else {
       if (paramData === "Submit") {
-        setStudentFeeData(); // submit fee data
+        setFeesPaymentData(); // submit fee data
       } else {
-        updateStudentFee(); // update fee data
+        updateFeesPaymentData(); // update the data
       }
     }
   };
 
-  // handle key press
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      if (filteredStudents.length > 0) {
-        setSearchQuery(filteredStudents[0].studentFirstName);
-        setSelectedStudent(filteredStudents[0]);
-        setFilteredStudents([]);
-      }
-    } else {
-      setSearchQuery(e.target.value);
-    }
+  // search param
+  const [searchParam] = useSearchParams();
+  const paramData =
+    searchParam.get("FeePaymentId") != null ? "Update" : "Submit";
+
+  // edit hook
+  useEffect(() => {
+    if (searchParam.get("StudentId") != null) getFeesPaymentByFeesPaymentId();
+  }, [searchParam]);
+
+  // update data
+  const updateFeesPaymentData = () => {
+    const dataSet = {
+      FeesPaymentId: data.FeesPaymentId,
+      StudentFirstName: data.StudentFirstName,
+      Dob: data.Dob,
+      FatherFirstName: data.FatherFirstName,
+      StudentClassRoomName: data.StudentClassRoomName,
+      AvailingHostel: data.AvailingHostel,
+      AvailingTransport: data.AvailingTransport,
+      AvailingSchool: data.AvailingSchool,
+      RegistrationFees: data.RegistrationFees,
+      AdmissionFees: data.AdmissionFees,
+      WelcomeKit: data.WelcomeKit,
+      TuitionFees: data.TuitionFees,
+      SchoolFees: data.SchoolFees,
+      MigrationCharges: data.MigrationCharges,
+      ExamFees: data.ExamFees,
+      SubTotal: data.SubTotal,
+      Discount: data.Discount,
+      TotalAmount: data.TotalAmount,
+    };
+
+    axios
+      .post(
+        InstituteSoft.BaseURL + InstituteSoft.FeesPayment.UpdateFeesPayment,
+        dataSet
+      )
+      .then((response) => {
+        if (
+          response.data === "Fees payment already exists, make some changes."
+        ) {
+          showPopup("error", {
+            title: "Duplicate fees payment",
+            text: "The fees payment already exists. Please try something else.",
+          });
+        } else {
+          showPopup("success", {
+            title: "Fees Payment Updated Successfully",
+            confirmBtn: true,
+            link: "/EditFeePayment",
+            linkText: "Edit FeePayment",
+          });
+          resetForm(); // Reset form only when this success popup is closed
+        }
+      })
+      .catch((error) => {
+        console.error(error.response ? error.response.data : error.message);
+        showPopup("error", {
+          title: "Error!",
+          text: "You didn't edit anything in the form.",
+        });
+      });
   };
+
+  // price field validation
+  const priceVal = ["e", "E", "+", "-", "."];
 
   return (
     <div
       style={{
         marginLeft: "auto",
         backgroundColor: "#FBFBFE",
+        padding: "80px 0px",
         width: "calc(100% - 250px)",
         backgroundImage: "url(/backGround.webp)",
         backgroundPosition: "center",
@@ -191,7 +471,6 @@ const FeesPayment = ({ setProgress }) => {
             className="form-control search-input"
             placeholder="Search by Student Name"
             value={searchQuery}
-            onKeyUp={handleKeyPress}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
 
@@ -228,7 +507,7 @@ const FeesPayment = ({ setProgress }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={data.StudentFirstName}
+                  value={studentData.StudentFirstName}
                   disabled
                 />
               </div>
@@ -239,7 +518,7 @@ const FeesPayment = ({ setProgress }) => {
                 <input
                   type="date"
                   className="form-control"
-                  value={data.Dob}
+                  value={studentData.Dob}
                   disabled
                 />
               </div>
@@ -250,7 +529,7 @@ const FeesPayment = ({ setProgress }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={data.FatherFirstName}
+                  value={studentData.FatherFirstName}
                   disabled
                 />
               </div>
@@ -261,7 +540,7 @@ const FeesPayment = ({ setProgress }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={data.StudentClassRoomName}
+                  value={studentData.StudentClassRoomName}
                   disabled
                 />
               </div>
@@ -272,7 +551,7 @@ const FeesPayment = ({ setProgress }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={data.AvailingHostel}
+                  value={studentData.AvailingHostel}
                   disabled
                 />
               </div>
@@ -283,7 +562,7 @@ const FeesPayment = ({ setProgress }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={data.AvailingTransport}
+                  value={studentData.AvailingTransport}
                   disabled
                 />
               </div>
@@ -294,7 +573,7 @@ const FeesPayment = ({ setProgress }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={data.AvailingSchool}
+                  value={studentData.AvailingSchool}
                   disabled
                 />
               </div>
@@ -311,16 +590,16 @@ const FeesPayment = ({ setProgress }) => {
 
             {/* student fees */}
             <div className="fees-details mt-3">
-              {/* course fee */}
+              {/* registration fees */}
               <div>
-                <label className="form-label">Course Fee</label>
+                <label className="form-label ">Registration Fees</label>
                 <input
                   type="number"
                   className={`form-control ${
-                    errors.CourseFee ? "is-invalid" : ""
+                    errors.RegistrationFees ? "is-invalid" : ""
                   }`}
-                  name="CourseFee"
-                  value={data.CourseFee}
+                  name="RegistrationFees"
+                  value={feeData.RegistrationFees}
                   onChange={handleInputChange}
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                   onKeyDown={(e) =>
@@ -328,18 +607,23 @@ const FeesPayment = ({ setProgress }) => {
                   }
                   placeholder="0"
                 />
+                {errors.RegistrationFees && (
+                  <div className="invalid-feedback">
+                    {errors.RegistrationFees}
+                  </div>
+                )}
               </div>
 
-              {/* transport fee */}
+              {/* admission fees */}
               <div>
-                <label className="form-label">Transport Fee</label>
+                <label className="form-label ">Admission Fees</label>
                 <input
                   type="number"
                   className={`form-control ${
-                    errors.TransportFee ? "is-invalid" : ""
+                    errors.AdmissionFees ? "is-invalid" : ""
                   }`}
-                  name="TransportFee"
-                  value={data.TransportFee}
+                  name="AdmissionFees"
+                  value={feeData.AdmissionFees}
                   onChange={handleInputChange}
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                   onKeyDown={(e) =>
@@ -347,18 +631,21 @@ const FeesPayment = ({ setProgress }) => {
                   }
                   placeholder="0"
                 />
+                {errors.AdmissionFees && (
+                  <div className="invalid-feedback">{errors.AdmissionFees}</div>
+                )}
               </div>
 
-              {/* school fee */}
+              {/* tuition fees */}
               <div>
-                <label className="form-label">School Fee</label>
+                <label className="form-label ">Tuition Fees</label>
                 <input
                   type="number"
                   className={`form-control ${
-                    errors.SchoolFee ? "is-invalid" : ""
+                    errors.TuitionFees ? "is-invalid" : ""
                   }`}
-                  name="SchoolFee"
-                  value={data.SchoolFee}
+                  name="TuitionFees"
+                  value={feeData.TuitionFees}
                   onChange={handleInputChange}
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                   onKeyDown={(e) =>
@@ -366,18 +653,21 @@ const FeesPayment = ({ setProgress }) => {
                   }
                   placeholder="0"
                 />
+                {errors.TuitionFees && (
+                  <div className="invalid-feedback">{errors.TuitionFees}</div>
+                )}
               </div>
 
-              {/* hostel fee */}
+              {/* welcome kit */}
               <div>
-                <label className="form-label">Hostel Fee</label>
+                <label className="form-label ">Welcome Kit</label>
                 <input
                   type="number"
                   className={`form-control ${
-                    errors.HostelFee ? "is-invalid" : ""
+                    errors.WelcomeKit ? "is-invalid" : ""
                   }`}
-                  name="HostelFee"
-                  value={data.HostelFee}
+                  name="WelcomeKit"
+                  value={feeData.WelcomeKit}
                   onChange={handleInputChange}
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                   onKeyDown={(e) =>
@@ -385,6 +675,77 @@ const FeesPayment = ({ setProgress }) => {
                   }
                   placeholder="0"
                 />
+                {errors.WelcomeKit && (
+                  <div className="invalid-feedback">{errors.WelcomeKit}</div>
+                )}
+              </div>
+
+              {/* school fees */}
+              <div>
+                <label className="form-label ">School Fees</label>
+                <input
+                  type="number"
+                  className={`form-control ${
+                    errors.SchoolFees ? "is-invalid" : ""
+                  }`}
+                  name="SchoolFees"
+                  value={feeData.SchoolFees}
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    priceVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="0"
+                />
+                {errors.SchoolFees && (
+                  <div className="invalid-feedback">{errors.SchoolFees}</div>
+                )}
+              </div>
+
+              {/* migration charges  */}
+              <div>
+                <label className="form-label ">Migration Charges</label>
+                <input
+                  type="number"
+                  className={`form-control ${
+                    errors.MigrationCharges ? "is-invalid" : ""
+                  }`}
+                  name="MigrationCharges"
+                  value={feeData.MigrationCharges}
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    priceVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="0"
+                />
+                {errors.MigrationCharges && (
+                  <div className="invalid-feedback">
+                    {errors.MigrationCharges}
+                  </div>
+                )}
+              </div>
+
+              {/* exam fees */}
+              <div>
+                <label className="form-label ">Exam Fees</label>
+                <input
+                  type="number"
+                  className={`form-control ${
+                    errors.ExamFees ? "is-invalid" : ""
+                  }`}
+                  name="ExamFees"
+                  value={feeData.ExamFees}
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    priceVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="0"
+                />
+                {errors.ExamFees && (
+                  <div className="invalid-feedback">{errors.ExamFees}</div>
+                )}
               </div>
             </div>
           </div>
@@ -400,32 +761,34 @@ const FeesPayment = ({ setProgress }) => {
                   errors.SubTotal ? "is-invalid" : ""
                 }`}
                 name="SubTotal"
-                value={data.SubTotal}
+                value={amount.SubTotal}
                 onChange={handleInputChange}
                 onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                 onKeyDown={(e) =>
                   priceVal.includes(e.key) && e.preventDefault()
                 }
                 placeholder="0"
+                disabled
               />
             </div>
 
-            {/* grand total */}
+            {/* discount */}
             <div className="pay-amount my-3">
-              <label className="form-label">Grand Total</label>
+              <label className="form-label">Discount</label>
               <input
                 type="number"
                 className={`form-control ${
-                  errors.GrandTotal ? "is-invalid" : ""
+                  errors.Discount ? "is-invalid" : ""
                 }`}
-                name="GrandTotal"
-                value={data.GrandTotal}
+                name="Discount"
+                value={amount.Discount}
                 onChange={handleInputChange}
                 onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                 onKeyDown={(e) =>
                   priceVal.includes(e.key) && e.preventDefault()
                 }
                 placeholder="0"
+                disabled
               />
             </div>
 
@@ -438,31 +801,26 @@ const FeesPayment = ({ setProgress }) => {
                   errors.TotalAmount ? "is-invalid" : ""
                 }`}
                 name="TotalAmount"
-                value={data.TotalAmount}
+                value={amount.TotalAmount}
                 onChange={handleInputChange}
                 onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
                 onKeyDown={(e) =>
                   priceVal.includes(e.key) && e.preventDefault()
                 }
                 placeholder="0"
+                disabled
               />
             </div>
 
             {/* buttons */}
-            <div className="flex justify-end gap-4 mt-3">
-              {/* payment button */}
-              <div>
-                <button className="btn btn-primary" onClick={handleSubmit}>
-                  Pay
-                </button>
-              </div>
-
-              {/* receipt button */}
-              <div>
-                <button className="btn btn-primary" disabled>
-                  Download Receipt
-                </button>
-              </div>
+            <div className="flex justify-end mt-3">
+              <button
+                className="btn btn-primary"
+                type="submit"
+                onClick={handleSubmit}
+              >
+                {paramData}
+              </button>
             </div>
           </div>
         </div>

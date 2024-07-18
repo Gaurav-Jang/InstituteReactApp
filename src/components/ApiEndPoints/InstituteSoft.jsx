@@ -6,6 +6,7 @@ const InstituteSoft = {
     // get method
     GetActiveClassRoom: "/api/ClassRoom/GetActiveClassRoom",
     GetActiveClass: "/api/ClassRoom/GetActiveClass",
+    GetActiveClassRoomName: "/api/ClassRoom/GetActiveClassRoomName",
     GetActiveClassRoomType: "/api/ClassRoom/GetActiveClassRoomType",
 
     // post method
@@ -24,6 +25,7 @@ const InstituteSoft = {
 
   // student api
   Student: {
+    // get method
     GetActiveStudent: "/api/Student/GetActiveStudent",
 
     // post method
@@ -43,6 +45,8 @@ const InstituteSoft = {
   FeeStructure: {
     // get method
     GetActiveFeeStructure: "/api/FeeStructure/GetActiveFeeStructure",
+    GetFeeStructureByClassRoom:
+      "/api/FeeStructure/GetFeeStructureByClassRoom?ClassRoomName={0}",
 
     // post method
     SetFeeStructure: "/api/FeeStructure/SetFeeStructure",
@@ -57,6 +61,25 @@ const InstituteSoft = {
 
     // update fee structure
     UpdateFeeStructure: "/api/FeeStructure/UpdateFeeStructure",
+  },
+
+  // payment
+  FeesPayment: {
+    // get method
+    GetActiveFeesPayment: "/api/FeesPayment/GetActiveFeesPayment",
+
+    // post method
+    SetFeesPayment: "/api/FeesPayment/SetFeesPayment",
+
+    // delete payment
+    DeleteFeesPayment: "/api/FeesPayment/DeleteFeesPayment?FeesPaymentId={0}",
+
+    // edit payment
+    GetFeesPaymentByFeesPaymentId:
+      "/api/FeesPayment/GetFeesPaymentByFeesPaymentId?FeesPaymentId={0}",
+
+    // update payment
+    UpdateFeesPayment: "/api/FeesPayment/UpdateFeesPayment",
   },
 
   // support api

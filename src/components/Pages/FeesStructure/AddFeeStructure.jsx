@@ -1,10 +1,10 @@
 import PropTypes from "prop-types"; // prop type
 import { useEffect, useState } from "react"; // hooks
+import { useSearchParams } from "react-router-dom"; // search param
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/AddFeesStructure.css"; // custom css
-import { useSearchParams } from "react-router-dom"; // search param
 
 const AddFeeStructure = ({ setProgress }) => {
   // top loading bar
@@ -18,21 +18,22 @@ const AddFeeStructure = ({ setProgress }) => {
 
   // api's hook
   useEffect(() => {
-    getActiveClass();
+    getActiveClassRoomName();
   }, []);
 
-  const [activeClass, setActiveClass] = useState([]); // class dropdown
+  const [activeClassRoomName, setActiveClassRoomName] = useState([]); // classroom dropdown
 
   // initial data in form's input field
   const [data, setData] = useState({
     FeeStructureId: "",
-    StudentClass: "8th",
+    StudentClassRoomNames: "Emerald",
     RegistrationFees: "",
     AdmissionFees: "",
     TuitionFees: "",
     WelcomeKit: "",
     SchoolFees: "",
     MigrationCharges: "",
+    ExamFees: "",
   });
 
   // validation errors state
@@ -41,14 +42,14 @@ const AddFeeStructure = ({ setProgress }) => {
   // custom hook for popups
   const { renderPopup, showPopup, hidePopup } = usePopup();
 
-  // class api (dropdown)
-  const getActiveClass = () => {
+  // classroom api (dropdown)
+  const getActiveClassRoomName = () => {
     axios
       .get(
-        InstituteSoft.BaseURL + InstituteSoft.ClassRoom.GetActiveClass // api's endpoint
+        InstituteSoft.BaseURL + InstituteSoft.ClassRoom.GetActiveClassRoomName // api's endpoint
       )
       .then((response) => {
-        setActiveClass(response.data); // displays class dropdown
+        setActiveClassRoomName(response.data); // displays class dropdown
       })
       .catch((error) => {
         console.log(error);
@@ -59,28 +60,30 @@ const AddFeeStructure = ({ setProgress }) => {
   const resetForm = () => {
     setData({
       FeeStructureId: "",
-      Class: "8th",
+      StudentClassRoomNames: "Emerald",
       RegistrationFees: "",
       AdmissionFees: "",
       TuitionFees: "",
       WelcomeKit: "",
       SchoolFees: "",
       MigrationCharges: "",
+      ExamFees: "",
     });
-    setErrors("error in resetting form data");
+    setErrors({});
   };
 
   // fee structure api
   const setFeeStructureData = () => {
     const dataSet = {
       FeeStructureId: data.FeeStructureId,
-      StudentClass: data.StudentClass,
+      StudentClassRoomNames: data.StudentClassRoomNames,
       RegistrationFees: data.RegistrationFees,
       AdmissionFees: data.AdmissionFees,
       WelcomeKit: data.WelcomeKit,
       TuitionFees: data.TuitionFees,
       SchoolFees: data.SchoolFees,
       MigrationCharges: data.MigrationCharges,
+      ExamFees: data.ExamFees,
     };
 
     // sending data to APIs endpoint using POST method
@@ -117,9 +120,16 @@ const AddFeeStructure = ({ setProgress }) => {
 
   // input handler (onChange)
   const handleInputChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setData((values) => ({ ...values, [name]: value }));
+    const { name, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+    hidePopup(); // hide popups
   };
 
   // handle submit
@@ -127,8 +137,9 @@ const AddFeeStructure = ({ setProgress }) => {
     e.preventDefault();
     let newErrors = {}; // new var for displaying empty input boxes
 
-    // student class
-    if (!data.StudentClass) newErrors.StudentClass = "Class is required";
+    // classroom name
+    if (!data.StudentClassRoomNames)
+      newErrors.StudentClassRoomNames = "ClassRoom Name is required";
 
     // registration fees
     if (!data.RegistrationFees || data.RegistrationFees <= 0)
@@ -153,6 +164,9 @@ const AddFeeStructure = ({ setProgress }) => {
     // migration charges
     if (!data.MigrationCharges || data.MigrationCharges <= 0)
       newErrors.MigrationCharges = "Migration Charges is required";
+
+    if (!data.ExamFees || data.ExamFees <= 0)
+      newErrors.ExamFees = "Exam Fees is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -196,13 +210,15 @@ const AddFeeStructure = ({ setProgress }) => {
         setData((prevData) => ({
           ...prevData,
           FeeStructureId: response.data.feeStructureId || "",
-          StudentClass: response.data.studentClass || "8th",
+          StudentClassRoomNames:
+            response.data.StudentClassRoomNames || "Emerald",
           RegistrationFees: response.data.registrationFees || "",
           AdmissionFees: response.data.admissionFees || "",
           TuitionFees: response.data.tuitionFees || "",
           WelcomeKit: response.data.welcomeKit || "",
           SchoolFees: response.data.schoolFees || "",
           MigrationCharges: response.data.migrationCharges || "",
+          ExamFees: response.data.ExamFees || "",
         }));
       })
       .catch((error) => {
@@ -218,13 +234,14 @@ const AddFeeStructure = ({ setProgress }) => {
   const updateFeeStructure = () => {
     const dataSet = {
       FeeStructureId: data.FeeStructureId,
-      StudentClass: data.StudentClass,
+      StudentClassRoomNames: data.StudentClassRoomNames,
       RegistrationFees: data.RegistrationFees,
       AdmissionFees: data.AdmissionFees,
       WelcomeKit: data.WelcomeKit,
       TuitionFees: data.TuitionFees,
       SchoolFees: data.SchoolFees,
       MigrationCharges: data.MigrationCharges,
+      ExamFees: data.ExamFees,
     };
 
     axios
@@ -274,28 +291,32 @@ const AddFeeStructure = ({ setProgress }) => {
 
             {/* form fields */}
             <div className="fs-input">
-              {/* class */}
+              {/* classroom */}
               <div>
-                <label className="form-label dark:text-white">Class</label>
-
-                {/* select class */}
+                <label className="form-label dark:text-white">
+                  ClassRoom Name
+                </label>
                 <select
-                  name="StudentClass"
+                  name="StudentClassRoomNames"
                   className={`form-select cursor-pointer ${
-                    errors.StudentClass ? "is-invalid" : ""
+                    errors.StudentClassRoomNames ? "is-invalid" : ""
                   }`}
-                  value={data.StudentClass}
+                  value={data.StudentClassRoomNames}
                   onChange={handleInputChange}
                 >
-                  {/* class options */}
-                  {activeClass.map((Class) => (
-                    <option value={Class.className} key={Class.classId}>
-                      {Class.className}
+                  {activeClassRoomName.map((ClassRoomName) => (
+                    <option
+                      value={ClassRoomName.classRoomNameField}
+                      key={ClassRoomName.classRoomFieldId}
+                    >
+                      {ClassRoomName.classRoomNameField}
                     </option>
                   ))}
                 </select>
-                {errors.StudentClass && (
-                  <div className="invalid-feedback">{errors.StudentClass}</div>
+                {errors.StudentClassRoomNames && (
+                  <div className="invalid-feedback">
+                    {errors.StudentClassRoomNames}
+                  </div>
                 )}
               </div>
 
@@ -432,6 +453,28 @@ const AddFeeStructure = ({ setProgress }) => {
                   <div className="invalid-feedback">
                     {errors.MigrationCharges}
                   </div>
+                )}
+              </div>
+
+              {/* exam fees */}
+              <div>
+                <label className="form-label ">Exam Fees</label>
+                <input
+                  type="number"
+                  className={`form-control ${
+                    errors.ExamFees ? "is-invalid" : ""
+                  }`}
+                  name="ExamFees"
+                  value={data.ExamFees || ""}
+                  onChange={handleInputChange}
+                  onInput={(e) => (e.target.value = e.target.value.slice(0, 7))}
+                  onKeyDown={(e) =>
+                    priceVal.includes(e.key) && e.preventDefault()
+                  }
+                  placeholder="0"
+                />
+                {errors.ExamFees && (
+                  <div className="invalid-feedback">{errors.ExamFees}</div>
                 )}
               </div>
 

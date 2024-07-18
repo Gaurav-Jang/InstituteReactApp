@@ -264,10 +264,10 @@ const SideBar = ({ sidebarToggle }) => {
           {/* dropdown */}
           {dropdownOpen.payment && (
             <ul className="sub-menu">
-              {/* fees */}
+              {/* add fees payment */}
               <li>
                 <NavLink
-                  to="/FeesPayment"
+                  to="/FeePayment"
                   className="sub-item"
                   onClick={hidePopup}
                 >
@@ -277,21 +277,25 @@ const SideBar = ({ sidebarToggle }) => {
                       sidebarToggle ? "menu-item" : "menu-item-collapse"
                     }
                   >
-                    Fees
+                    FeePayment
                   </span>
                 </NavLink>
               </li>
 
-              {/* hostel */}
+              {/* edit fees payment */}
               <li>
-                <NavLink to="/Hostel" className="sub-item" onClick={hidePopup}>
+                <NavLink
+                  to="/EditFeePayment"
+                  className="sub-item"
+                  onClick={hidePopup}
+                >
                   <FaRegCircle />
                   <span
                     className={
                       sidebarToggle ? "menu-item" : "menu-item-collapse"
                     }
                   >
-                    Hostel
+                    Edit FeePayment
                   </span>
                 </NavLink>
               </li>
