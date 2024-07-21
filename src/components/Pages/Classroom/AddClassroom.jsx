@@ -270,7 +270,7 @@ const AddClassroom = ({ setProgress }) => {
         {/* main content */}
         <section className="add-container p-4">
           {/* page head */}
-          <div className="space-y-2 xs:ml-0">
+          {/* <div className="space-y-2 xs:ml-0">
             <p className="text-slate-500 text-lg">Say hello</p>
             <h1 className="dark:text-white text-3xl font-bold">
               Let's Work <span className="text-sky-500">Together</span>.
@@ -279,7 +279,7 @@ const AddClassroom = ({ setProgress }) => {
               I'd love to meet up with you to discuss your venture, and
               potential collaborations.
             </p>
-          </div>
+          </div> */}
 
           {/* form */}
           <div className="mt-4 md:mx-10 xs:mx-0">

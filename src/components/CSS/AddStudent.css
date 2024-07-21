@@ -1,0 +1,49 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.addstudent-main {
+  margin-left: auto;
+  background-color: #fbfbfe;
+  padding-top: 80px;
+  padding-bottom: 80px;
+  width: calc(100% - 250px);
+  transition: all 0.2s ease-in-out;
+  background-image: url("./../public/background.webp");
+  background-position: left;
+  background-repeat: no-repeat;
+  height: 100%;
+  overflow: scroll;
+}
+.addstudent-main-toggle {
+  margin-left: auto;
+  background-color: #fbfbfe;
+  padding-top: 80px;
+  padding-bottom: 80px;
+  width: calc(100% - 70px);
+  transition: all 0.2s ease-in-out;
+  background-image: url("./../public/background.webp");
+  background-position: left;
+  background-repeat: no-repeat;
+  height: 100%;
+  overflow: scroll;
+}
+.add-container {
+  width: 95% !important;
+  background-color: #ffffffba;
+}
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+.form-head {
+  text-align: center;
+  font-weight: 900;
+  font-size: 23px;
+  margin-top: 45px !important;
+}
+.top-head {
+  text-align: center;
+  font-weight: 900;
+  font-size: 23px;
+}

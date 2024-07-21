@@ -8,15 +8,27 @@
   width: 95% !important;
   border-radius: 5px;
 }
-.feesStructure {
+.container-collapse {
+  width: 85% !important;
+}
+.feesStructure,
+.feesStructure-collapse {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 100vh;
   margin-left: auto;
-  background-color: #fbfbfe;
+  transition: all 0.2s ease-in-out;
+  background-image: url("./../public/background.webp");
+  background-position: left;
+  background-repeat: no-repeat;
+  height: 100%;
+  overflow: scroll;
   width: calc(100% - 250px);
+}
+.feesStructure-collapse {
+  width: calc(100% - 70px) !important;
 }
 .fs-header {
   font-size: 21px;

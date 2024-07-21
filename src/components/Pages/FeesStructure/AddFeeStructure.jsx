@@ -6,7 +6,7 @@ import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/AddFeesStructure.css"; // custom css
 
-const AddFeeStructure = ({ setProgress }) => {
+const AddFeeStructure = ({ setProgress, sidebarToggle }) => {
   // top loading bar
   useEffect(() => {
     setProgress(40);
@@ -282,7 +282,9 @@ const AddFeeStructure = ({ setProgress }) => {
 
   return (
     <>
-      <div className="feesStructure">
+      <div
+        className={sidebarToggle ? "feesStructure" : "feesStructure-collapse"}
+      >
         <div className="container">
           {/* main form container */}
           <form className="fs-form" method="post" onSubmit={handleSubmit}>
@@ -479,7 +481,7 @@ const AddFeeStructure = ({ setProgress }) => {
               </div>
 
               {/* submit button */}
-              <div className="text-right">
+              <div className="text-right w-100">
                 <button
                   className="btn btn-primary"
                   type="button"

@@ -9,8 +9,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
+import "../../css/AddStudent.css";
 
-const AddStudent = ({ setProgress }) => {
+const AddStudent = ({ setProgress, sidebarToggle }) => {
   const { showPopup, hidePopup, renderPopup } = usePopup(); // popup's custom hook
   const [errors, setErrors] = useState({}); // validation errors state
 
@@ -342,39 +343,15 @@ const AddStudent = ({ setProgress }) => {
   return (
     <>
       <div
-        style={{
-          marginLeft: "auto",
-          backgroundColor: "#FBFBFE",
-          paddingTop: "80px",
-          paddingBottom: "80px",
-          width: "calc(100% - 250px)",
-          backgroundImage: "url(/backGround.webp)",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
+        className={sidebarToggle ? "addstudent-main" : "addstudent-main-toggle"}
       >
         {/* Main Container */}
         <div className="add-container p-4">
-          {/* Header Text */}
-          <div className="space-y-2 xs:ml-0">
-            <p className="text-slate-500 text-lg">Say hello</p>
-            <h1 className="dark:text-white text-6xl font-bold">
-              Let's Work <span className="text-sky-500">Together</span>.
-            </h1>
-            <p className="dark:text-white text-lg font-medium">
-              I'd love to meet up with you to discuss your venture, and
-              potential collaborations.
-            </p>
-          </div>
-
           {/* Form */}
           <div className="mt-4 md:mx-10 xs:mx-0">
             <form className="needs-validation w-full space-y-5">
               {/* Personal Details */}
-              <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
-                Personal Details
-              </h1>
+              <h1 className="top-head">Personal Details</h1>
 
               {/* Student Name */}
               <div>
@@ -443,42 +420,44 @@ const AddStudent = ({ setProgress }) => {
                   placeholder="Mobile number"
                 />
               </div>
+              <div className="flex  gap-3 justify-center align-items-flex-start">
+                {/* Gender */}
+                <div className="w-100">
+                  <label className="form-label">Gender</label>
+                  <select
+                    name="Gender"
+                    className="form-select cursor-pointer"
+                    value={data.Gender}
+                    onChange={handleInputChange}
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Others</option>
+                  </select>
+                </div>
 
-              {/* Gender */}
-              <div>
-                <label className="form-label">Gender</label>
-                <select
-                  name="Gender"
-                  className="form-select cursor-pointer"
-                  value={data.Gender}
-                  onChange={handleInputChange}
-                >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
-
-              {/* Date of Birth (DOB) */}
-              <div>
-                <label className="form-label">
-                  Date of Birth (DOB){" "}
-                  <span className="text-red-500 text-base">*</span>
-                </label>
-                <div>
-                  <DatePicker
-                    name="Dob"
-                    selected={data.Dob}
-                    onChange={handleDateChange}
-                    className={`form-control ${errors.Dob ? "is-invalid" : ""}`}
-                    placeholderText="mm/dd/yyyy"
-                  />
-                  {errors.Dob && (
-                    <div className="invalid-feedback">{errors.Dob}</div>
-                  )}
+                {/* Date of Birth (DOB) */}
+                <div className="w-100">
+                  <label className="form-label">
+                    Date of Birth (DOB){" "}
+                    <span className="text-red-500 text-base">*</span>
+                  </label>
+                  <div>
+                    <DatePicker
+                      name="Dob"
+                      selected={data.Dob}
+                      onChange={handleDateChange}
+                      className={`form-control  ${
+                        errors.Dob ? "is-invalid" : ""
+                      }`}
+                      placeholderText="mm/dd/yyyy"
+                    />
+                    {errors.Dob && (
+                      <div className="invalid-feedback">{errors.Dob}</div>
+                    )}
+                  </div>
                 </div>
               </div>
-
               {/* Father Name */}
               <div>
                 <label className="form-label">
@@ -556,9 +535,7 @@ const AddStudent = ({ setProgress }) => {
               </div>
 
               {/* Additional Details */}
-              <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
-                Additional Details:
-              </h1>
+              <h1 className="form-head">Additional Details:</h1>
 
               {/* mother's name */}
               <div>
@@ -593,53 +570,53 @@ const AddStudent = ({ setProgress }) => {
                   </div>
                 </div>
               </div>
+              <div className="flex  gap-3 justify-center align-items-flex-start">
+                {/* Mother Mobile Number */}
+                <div className="w-100">
+                  <label className="form-label">Mother Mobile Number</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="MotherMobileNumber"
+                    value={data.MotherMobileNumber}
+                    onChange={handleInputChange}
+                    onInput={(e) =>
+                      (e.target.value = e.target.value.slice(0, 10))
+                    }
+                    onKeyDown={(e) =>
+                      numVal.includes(e.key) && e.preventDefault()
+                    }
+                    placeholder="Mobile number"
+                  />
+                </div>
 
-              {/* Mother Mobile Number */}
-              <div>
-                <label className="form-label">Mother Mobile Number</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  name="MotherMobileNumber"
-                  value={data.MotherMobileNumber}
-                  onChange={handleInputChange}
-                  onInput={(e) =>
-                    (e.target.value = e.target.value.slice(0, 10))
-                  }
-                  onKeyDown={(e) =>
-                    numVal.includes(e.key) && e.preventDefault()
-                  }
-                  placeholder="Mobile number"
-                />
-              </div>
-
-              {/* Classroom Name */}
-              <div>
-                <label className="form-label">
-                  Class Room Name{" "}
-                  <span className="text-base text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  className={`form-control 
+                {/* Classroom Name */}
+                <div className="w-100">
+                  <label className="form-label">
+                    Class Room Name{" "}
+                    <span className="text-base text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={`form-control 
                     ${errors.StudentClassRoomName ? "is-invalid" : ""}`}
-                  name="StudentClassRoomName"
-                  minLength={3}
-                  maxLength={50}
-                  value={data.StudentClassRoomName}
-                  onChange={handleInputChange}
-                  placeholder="ClassRoom name"
-                />
-                <span className="text-slate-500 dark:text-slate-400 text-sm">
-                  ClassRoom Name should be between 3-50
-                </span>
-                {errors.StudentClassRoomName && (
-                  <div className="invalid-feedback">
-                    {errors.StudentClassRoomName}
-                  </div>
-                )}
+                    name="StudentClassRoomName"
+                    minLength={3}
+                    maxLength={50}
+                    value={data.StudentClassRoomName}
+                    onChange={handleInputChange}
+                    placeholder="ClassRoom name"
+                  />
+                  <span className="text-slate-500 dark:text-slate-400 text-sm">
+                    ClassRoom Name should be between 3-50
+                  </span>
+                  {errors.StudentClassRoomName && (
+                    <div className="invalid-feedback">
+                      {errors.StudentClassRoomName}
+                    </div>
+                  )}
+                </div>
               </div>
-
               {/* Address */}
               <div>
                 <label className="form-label">
@@ -660,23 +637,6 @@ const AddStudent = ({ setProgress }) => {
                   <div className="invalid-feedback">{errors.Address}</div>
                 )}
               </div>
-
-              {/* Category */}
-              <div>
-                <label className="form-label">Category</label>
-                <select
-                  name="Category"
-                  className="form-select cursor-pointer"
-                  value={data.Category}
-                  onChange={handleInputChange}
-                >
-                  <option value="General">General</option>
-                  <option value="SC">SC</option>
-                  <option value="ST">ST</option>
-                  <option value="OBC">OBC</option>
-                </select>
-              </div>
-
               {/* Photo */}
               <div className="space-y-1">
                 <label className="form-label">Photo</label>
@@ -710,32 +670,46 @@ const AddStudent = ({ setProgress }) => {
                   </div>
                 </div>
               </div>
+              <div className="flex  gap-3 justify-center align-items-end">
+                {/* Category */}
+                <div className="w-100">
+                  <label className="form-label">Category</label>
+                  <select
+                    name="Category"
+                    className="form-select cursor-pointer"
+                    value={data.Category}
+                    onChange={handleInputChange}
+                  >
+                    <option value="General">General</option>
+                    <option value="SC">SC</option>
+                    <option value="ST">ST</option>
+                    <option value="OBC">OBC</option>
+                  </select>
+                </div>
 
-              {/* Remarks */}
-              <div>
-                <label className="form-label"></label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="Remarks"
-                  minLength={3}
-                  maxLength={50}
-                  value={data.Remarks}
-                  onChange={handleInputChange}
-                  placeholder="Remarks"
-                />
+                {/* Remarks */}
+                <div className="w-100">
+                  <label className="form-label"></label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="Remarks"
+                    minLength={3}
+                    maxLength={50}
+                    value={data.Remarks}
+                    onChange={handleInputChange}
+                    placeholder="Remarks"
+                  />
+                </div>
               </div>
-
               {/* Additional Facility Details */}
-              <h1 className="text-slate-900 font-semibold text-center xs:text-xl lg:text-2xl dark:text-white">
-                Additional Facility Details:
-              </h1>
+              <h1 className="form-head">Additional Facility Details:</h1>
 
               {/* check boxes */}
-              <div className="flex justify-between">
-                <div>
+              <div>
+                <div className="flex  gap-3 justify-center align-items-end">
                   {/* Transport */}
-                  <div className="form-check">
+                  <div className="form-check w-100">
                     <label className="form-check-label">
                       Availing Transport
                     </label>
@@ -750,7 +724,7 @@ const AddStudent = ({ setProgress }) => {
                   </div>
 
                   {/* School */}
-                  <div className="form-check">
+                  <div className="form-check w-100">
                     <label className="form-check-label">Availing School</label>
                     <input
                       className="form-check-input cursor-pointer"
@@ -763,9 +737,9 @@ const AddStudent = ({ setProgress }) => {
                   </div>
                 </div>
 
-                <div>
+                <div className="flex  gap-3 justify-center align-items-end">
                   {/* Hostel */}
-                  <div className="form-check">
+                  <div className="form-check w-100">
                     <label className="form-check-label">Availing Hostel</label>
                     <input
                       className="form-check-input cursor-pointer"
@@ -778,7 +752,7 @@ const AddStudent = ({ setProgress }) => {
                   </div>
 
                   {/* Migrated */}
-                  <div className="form-check">
+                  <div className="form-check w-100">
                     <label className="form-check-label">Migrated</label>
                     <input
                       className="form-check-input cursor-pointer"

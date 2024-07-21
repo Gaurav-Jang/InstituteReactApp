@@ -4,10 +4,12 @@ import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api's endpoint
 import axios from "axios"; // axios (get : post)
 import usePopup from "../../CustomHooks/usePopup"; // custom hook
 import "../../css/Support.css"; // custom css file
-import validator from "validator"; // email validator
-// import backGround from "/background.webp";
+import validator from "validator"; // email val
+import { IoLocationSharp } from "react-icons/io5";
+import { FaPhone } from "react-icons/fa6";
+import { IoMdMail } from "react-icons/io";
 
-const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
+const Support = ({ setProgress, sidebarToggle }) => {
   // top loading bar
   useEffect(() => {
     setProgress(40);
@@ -119,30 +121,58 @@ const Support = ({ setProgress, sidebarToggle, setSidebarToggle }) => {
   return (
     <>
       <div
-        style={{
-          marginLeft: "auto",
-          backgroundColor: "#FBFBFE",
-          paddingTop: "50px",
-          width: "calc(100% - 250px)",
-          backgroundImage: "url(/backGround.webp)",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
+        className={sidebarToggle ? "support-main " : "support-main-collapse"}
       >
+        {/* left section contact details  */}
+        <div className="contact-section">
+          {/* location  */}
+          <div className="details">
+            <div className="icon-type">
+              <IoLocationSharp />
+            </div>
+            <div className="detail-type">
+              <h3>Address</h3>
+              <p>
+                2nd Floor Bharpai Tower near old DC Office, Rewari (Hry.) -
+                123401
+              </p>
+            </div>
+          </div>
+          {/* phone */}
+          <div className="details my-5">
+            <div className="icon-type">
+              <FaPhone />
+            </div>
+            <div className="detail-type">
+              <h3>Phone</h3>
+              <p>7015533573 | 9896070325</p>
+            </div>
+          </div>
+          {/* mail  */}
+          <div className="details">
+            <div className="icon-type">
+              <IoMdMail />
+            </div>
+            <div className="detail-type">
+              <h3>Mail</h3>
+              <p>IWS@info.com</p>
+            </div>
+          </div>
+        </div>
+
         {/* main content */}
         <section className="support-container p-4">
           {/* head text */}
-          <div>
+          {/* <div>
             <h1 className="mb-2 text-4xl font-bold text-blue-600">Support</h1>
             <p className="text-lg">
               We are here to help you. Please fill out the form below and we
               will get back to you as soon as possible.
             </p>
-          </div>
+          </div> */}
 
           {/* form */}
-          <div className="mt-4 md:mx-10 xs:mx-0">
+          <div className="mt-3">
             <form className="needs-validation w-full space-y-4">
               {/* full name */}
               <div>

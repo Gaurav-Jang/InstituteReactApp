@@ -8,7 +8,7 @@ import InstituteSoft from "../../ApiEndPoints/InstituteSoft"; // api
 import usePopup from "../../CustomHooks/usePopup"; // custom popup hook
 import { useSearchParams } from "react-router-dom"; // search param
 
-const FeesPayment = ({ setProgress }) => {
+const FeesPayment = ({ setProgress, sidebarToggle }) => {
   const [activeStudents, setActiveStudents] = useState([]); // student's data state
   const [activeFeeStructure, setActiveFeeStructure] = useState([]); // fee structure data state
   const [searchQuery, setSearchQuery] = useState(""); // search
@@ -447,17 +447,7 @@ const FeesPayment = ({ setProgress }) => {
 
   return (
     <div
-      style={{
-        marginLeft: "auto",
-        backgroundColor: "#FBFBFE",
-        padding: "80px 0px",
-        width: "calc(100% - 250px)",
-        backgroundImage: "url(/backGround.webp)",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      }}
-      className="main-container"
+      className={sidebarToggle ? "main-container" : "main-container-collapse"}
     >
       <div className="container">
         {/* search box */}

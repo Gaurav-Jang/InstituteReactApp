@@ -98,7 +98,13 @@ const App = () => {
             {/* add student */}
             <Route
               path="/AddStudent"
-              element={<AddStudent setProgress={setProgress} />}
+              element={
+                <AddStudent
+                  setProgress={setProgress}
+                  sidebarToggle={sidebarToggle}
+                  setSidebarToggle={setSidebarToggle}
+                />
+              }
             />
 
             {/* edit student */}
@@ -110,7 +116,13 @@ const App = () => {
             {/* add fee structure */}
             <Route
               path="/AddFeeStructure"
-              element={<AddFeeStructure setProgress={setProgress} />}
+              element={
+                <AddFeeStructure
+                  setProgress={setProgress}
+                  sidebarToggle={sidebarToggle}
+                  setSidebarToggle={setSidebarToggle}
+                />
+              }
             />
 
             {/* edit fee structure */}
@@ -122,7 +134,13 @@ const App = () => {
             {/* fees payment */}
             <Route
               path="/FeePayment"
-              element={<FeesPayment setProgress={setProgress} />}
+              element={
+                <FeesPayment
+                  setProgress={setProgress}
+                  sidebarToggle={sidebarToggle}
+                  setSidebarToggle={setSidebarToggle}
+                />
+              }
             />
 
             {/* edit fees payment */}
@@ -134,7 +152,13 @@ const App = () => {
             {/* support */}
             <Route
               path="/Support"
-              element={<Support setProgress={setProgress} />}
+              element={
+                <Support
+                  setProgress={setProgress}
+                  sidebarToggle={sidebarToggle}
+                  setSidebarToggle={setSidebarToggle}
+                />
+              }
             />
 
             {/* 404 not found */}
@@ -144,7 +168,12 @@ const App = () => {
       </div>
 
       {/* footer */}
-      {isKnownPath && <Footer />}
+      {isKnownPath && (
+        <Footer
+          sidebarToggle={sidebarToggle}
+          setSidebarToggle={setSidebarToggle}
+        />
+      )}
     </div>
   );
 };
